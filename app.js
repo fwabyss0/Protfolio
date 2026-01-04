@@ -9,28 +9,28 @@ function enableAudioOnInteraction() {
                 globalAudioContext = new (window.AudioContext || window.webkitAudioContext)();
                 console.log('Audio context created');
             }
-            
+
             if (globalAudioContext.state === 'suspended') {
                 await globalAudioContext.resume();
                 console.log('Audio context resumed');
             }
-            
+
             console.log('✅ Audio context ready for notifications');
-            
+
             // Test the audio immediately
             testNotificationSound();
-            
+
         } catch (e) {
             console.log('⚠️ Audio context not available:', e.message);
         }
-        
+
         // Remove listeners after first interaction
         document.removeEventListener('click', enableAudio, { once: true });
         document.removeEventListener('touchstart', enableAudio, { once: true });
         document.removeEventListener('keydown', enableAudio, { once: true });
         document.removeEventListener('mousedown', enableAudio, { once: true });
     };
-    
+
     // Add listeners for first user interaction with 'once' option
     document.addEventListener('click', enableAudio, { once: true });
     document.addEventListener('touchstart', enableAudio, { once: true });
@@ -47,13 +47,13 @@ function testNotificationSound() {
 }
 
 // DOM Content Loaded Event
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Enable audio on first interaction
     enableAudioOnInteraction();
-    
+
     // Show loading screen first
     showLoadingScreen();
-    
+
     // Initialize all functionality after loading
     setTimeout(() => {
         initializeNavigation();
@@ -73,10 +73,10 @@ function showLoadingScreen() {
     const loadingStatus = document.querySelector('.loading-status');
     const progressFill = document.getElementById('loading-progress-fill');
     const progressText = document.querySelector('.progress-text');
-    
+
     if (loadingScreen) {
         loadingScreen.style.display = 'flex';
-        
+
         // Update loading messages
         const messages = [
             'Initializing Portfolio...',
@@ -85,18 +85,18 @@ function showLoadingScreen() {
             'Preparing Interface...',
             'Almost Ready...'
         ];
-        
+
         let messageIndex = 0;
         let progress = 0;
-        
+
         const loadingInterval = setInterval(() => {
             progress += Math.random() * 15 + 5; // Random progress increment
-            
+
             if (progress > 100) {
                 progress = 100;
                 clearInterval(loadingInterval);
             }
-            
+
             // Update progress bar
             if (progressFill) {
                 progressFill.style.width = progress + '%';
@@ -104,7 +104,7 @@ function showLoadingScreen() {
             if (progressText) {
                 progressText.textContent = Math.round(progress) + '%';
             }
-            
+
             // Update status message based on progress
             const messageIndex = Math.floor((progress / 100) * messages.length);
             if (messageIndex < messages.length && loadingStatus) {
@@ -131,25 +131,25 @@ function initializeNavigation() {
 
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
             const targetSection = document.getElementById(targetId);
-            
+
             if (targetSection) {
                 let offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-                
+
                 // Special handling for about section
                 if (targetId === 'about') {
                     offsetTop = targetSection.offsetTop - 60;
                 }
-                
+
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
                 });
             }
-            
+
             // Close mobile menu if open
             const navMenu = document.querySelector('.nav-menu');
             navMenu.classList.remove('active');
@@ -157,7 +157,7 @@ function initializeNavigation() {
     });
 
     // Update active navigation link on scroll
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         let current = '';
         sections.forEach(section => {
             const sectionTop = section.offsetTop - 100;
@@ -172,7 +172,7 @@ function initializeNavigation() {
                 link.classList.add('active');
             }
         });
-        
+
         // Trigger skill bar animations when skills section is in view
         if (current === 'skills') {
             triggerSkillBarAnimations();
@@ -186,15 +186,15 @@ function initializeMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
 
     if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
+        hamburger.addEventListener('click', function () {
             navMenu.classList.toggle('active');
-            
+
             // Animate hamburger bars
             this.classList.toggle('active');
         });
 
         // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
                 hamburger.classList.remove('active');
@@ -211,7 +211,7 @@ function initializeAnimations() {
         rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    const observer = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('fade-in');
@@ -220,13 +220,13 @@ function initializeAnimations() {
     }, observerOptions);
 
     // Observe all sections for animations
-    const elementsToAnimate = document.querySelectorAll('.education-card, .experience-card, .about-content, .contact-container');
+    const elementsToAnimate = document.querySelectorAll('.education-card, .about-content, .contact-container');
     elementsToAnimate.forEach(el => observer.observe(el));
 
     // Profile image error handling with placeholder
     const profileImg = document.getElementById('profile-img');
     if (profileImg) {
-        profileImg.onerror = function() {
+        profileImg.onerror = function () {
             this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMmEyYTJhIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSIzMCIgZmlsbD0iIzhmNWZiZiIvPgo8cGF0aCBkPSJNNTAgMTcwYzAtMzMuMTM3IDI2Ljg2My02MCA2MC02MHM2MCAyNi44NjMgNjAgNjB2MzBINTB2LTMweiIgZmlsbD0iIzhmNWZiZiIvPgo8L3N2Zz4K';
         };
     }
@@ -245,17 +245,17 @@ function initializeSkillBars() {
 
 function triggerSkillBarAnimations() {
     if (skillBarsAnimated) return; // Prevent multiple triggers
-    
+
     const skillBars = document.querySelectorAll('.skill-progress');
     const skillCards = document.querySelectorAll('.skill-card');
-    
+
     // Add stagger animation to cards
     skillCards.forEach((card, index) => {
         setTimeout(() => {
             card.classList.add('animate-in');
         }, index * 200);
     });
-    
+
     // Animate progress bars with delay
     skillBars.forEach((bar, index) => {
         setTimeout(() => {
@@ -264,7 +264,7 @@ function triggerSkillBarAnimations() {
             bar.style.transition = 'width 1.5s ease-out';
         }, 800 + (index * 200));
     });
-    
+
     skillBarsAnimated = true;
 }
 
@@ -272,9 +272,9 @@ function triggerSkillBarAnimations() {
 function initializeScrollEffects() {
     const navbar = document.querySelector('.navbar');
 
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
+
         // Make navbar more opaque on scroll
         if (scrollTop > 100) {
             navbar.style.background = 'rgba(26, 26, 26, 0.3)';
@@ -303,42 +303,42 @@ function initializeChatbot() {
     let isTyping = false;
 
     // Toggle chatbot visibility
-    chatbotToggle?.addEventListener('click', function() {
+    chatbotToggle?.addEventListener('click', function () {
         chatbot.classList.toggle('active');
-        
+
         if (chatbot.classList.contains('active')) {
             chatbotInput.focus();
-            
+
             // Initialize initial option button listeners
             initializeInitialOptionButtons();
         }
     });
 
     // Close chatbot
-    chatbotClose?.addEventListener('click', function() {
+    chatbotClose?.addEventListener('click', function () {
         chatbot.classList.remove('active');
     });
 
     // Send message functionality
     function sendMessage() {
         const message = chatbotInput.value.trim();
-        
+
         if (message && !isTyping) {
             // Add user message
             addMessage(message, 'user');
             chatbotInput.value = '';
-            
+
             // Show typing indicator
             showTypingIndicator();
-            
+
             // Send to backend (simulate for now)
             sendToBot(message);
         }
     }
 
     chatbotSend?.addEventListener('click', sendMessage);
-    
-    chatbotInput?.addEventListener('keypress', function(e) {
+
+    chatbotInput?.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             sendMessage();
         }
@@ -350,17 +350,17 @@ function initializeChatbot() {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
+
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
+
             if (type === 'user') {
                 // User message sound - higher pitch, short
                 oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
                 gainNode.gain.setValueAtTime(0, audioContext.currentTime);
                 gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
-                
+
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.15);
             } else {
@@ -370,7 +370,7 @@ function initializeChatbot() {
                 gainNode.gain.setValueAtTime(0, audioContext.currentTime);
                 gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.02);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.25);
-                
+
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.25);
             }
@@ -378,24 +378,24 @@ function initializeChatbot() {
             console.log('Audio not available');
         }
     }
-    
+
     // Play typing sound effect
     function playTypingSound() {
         try {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
+
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
+
             // Soft typing sound
             oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
             oscillator.frequency.linearRampToValueAtTime(320, audioContext.currentTime + 0.05);
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + 0.01);
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-            
+
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.1);
         } catch (e) {
@@ -407,26 +407,26 @@ function initializeChatbot() {
     function addMessage(text, type) {
         // Play sound effect
         playChatSound(type);
-        
+
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}-message`;
         if (type === 'user') {
             messageDiv.classList.add('user');
         }
-        
+
         // Create avatar
         const avatar = document.createElement('div');
         avatar.className = `message-avatar ${type}`;
-        
+
         // Use custom images for avatars
         const avatarImg = document.createElement('img');
         avatarImg.className = 'avatar-image';
         avatarImg.alt = type === 'user' ? 'User Avatar' : 'Abyss Avatar';
         avatarImg.src = type === 'user' ? 'user.png' : 'a.png';
-        
+
         // No fallback - just use the image
         avatar.appendChild(avatarImg);
-        
+
         // Create message content
         const messageP = document.createElement('p');
         // Support HTML content for links
@@ -435,7 +435,7 @@ function initializeChatbot() {
         } else {
             messageP.textContent = text;
         }
-        
+
         // Append in correct order
         if (type === 'user') {
             messageDiv.appendChild(messageP);
@@ -444,19 +444,19 @@ function initializeChatbot() {
             messageDiv.appendChild(avatar);
             messageDiv.appendChild(messageP);
         }
-        
+
         chatbotMessages.appendChild(messageDiv);
-        
+
         // Scroll to bottom
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
-    
+
     // Clear all chat messages with loading state
     function clearChatMessages() {
         if (chatbotMessages) {
             // Show clearing message with loading
             chatbotMessages.innerHTML = '';
-            
+
             // Add clearing message
             const clearingDiv = document.createElement('div');
             clearingDiv.className = 'message bot-message clearing-message';
@@ -468,7 +468,7 @@ function initializeChatbot() {
             `;
             chatbotMessages.appendChild(clearingDiv);
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            
+
             // After 2 seconds, clear everything and restore default state
             setTimeout(() => {
                 chatbotMessages.innerHTML = '';
@@ -476,7 +476,7 @@ function initializeChatbot() {
             }, 2000);
         }
     }
-    
+
     // Restore the default chat state with initial greeting and options
     function restoreDefaultChatState() {
         // Add default greeting message
@@ -489,7 +489,7 @@ function initializeChatbot() {
             <p>Hi! I'm Abyss, Alish's AI assistant. How can I help you today?</p>
         `;
         chatbotMessages.appendChild(defaultMessage);
-        
+
         // Add initial options
         const initialOptionsDiv = document.createElement('div');
         initialOptionsDiv.className = 'initial-options';
@@ -503,23 +503,23 @@ function initializeChatbot() {
             </div>
         `;
         chatbotMessages.appendChild(initialOptionsDiv);
-        
+
         // Re-initialize the option button listeners
         initializeInitialOptionButtons();
-        
+
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
     // Show typing indicator with Abyss logo
     function showTypingIndicator() {
         isTyping = true;
-        
+
         // Play typing sound
         playTypingSound();
-        
+
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message bot-message typing-indicator';
-        
+
         // Create avatar for typing indicator
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar bot';
@@ -528,11 +528,11 @@ function initializeChatbot() {
         avatarImg.src = 'a.png';
         avatarImg.alt = 'Abyss thinking';
         avatar.appendChild(avatarImg);
-        
+
         // Create typing message
         const messageP = document.createElement('p');
         messageP.innerHTML = '<span class="typing-text">Abyss is thinking...</span>';
-        
+
         typingDiv.appendChild(avatar);
         typingDiv.appendChild(messageP);
         chatbotMessages.appendChild(typingDiv);
@@ -547,29 +547,29 @@ function initializeChatbot() {
         }
         isTyping = false;
     }
-    
+
     // Initialize initial option button listeners
     function initializeInitialOptionButtons() {
         const optionButtons = document.querySelectorAll('.option-btn');
         optionButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const action = this.getAttribute('data-action');
                 handleInitialOptionClick(action);
             });
         });
     }
-    
+
     // Handle initial option button clicks
     function handleInitialOptionClick(action) {
         let message = '';
-        
+
         // Hide initial options after first click
         const initialOptions = document.querySelector('.initial-options');
         if (initialOptions) {
             initialOptions.style.display = 'none';
         }
-        
-        switch(action) {
+
+        switch (action) {
             case 'about':
                 message = 'Tell me about Alish';
                 break;
@@ -583,18 +583,18 @@ function initializeChatbot() {
                 message = 'Where is he from?';
                 break;
         }
-        
+
         if (message) {
             addMessage(message, 'user');
             showTypingIndicator();
             sendToBot(message);
         }
     }
-    
+
     // Add social media option buttons
     function addSocialMediaOptions() {
         console.log('Adding social media options...'); // Debug log
-        
+
         const socialOptionsDiv = document.createElement('div');
         socialOptionsDiv.className = 'social-options';
         socialOptionsDiv.innerHTML = `
@@ -614,17 +614,17 @@ function initializeChatbot() {
                 </button>
             </div>
         `;
-        
+
         // Add event listeners to social buttons
         socialOptionsDiv.querySelectorAll('.social-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const social = this.getAttribute('data-social');
                 console.log('Social button clicked:', social); // Debug log
                 handleSocialMediaClick(social);
                 socialOptionsDiv.remove(); // Remove social options after click
             });
         });
-        
+
         if (chatbotMessages) {
             chatbotMessages.appendChild(socialOptionsDiv);
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
@@ -633,11 +633,11 @@ function initializeChatbot() {
             console.error('chatbotMessages element not found');
         }
     }
-    
+
     // Handle social media button clicks
     function handleSocialMediaClick(social) {
         let message = '';
-        switch(social) {
+        switch (social) {
             case 'facebook':
                 message = 'facebook';
                 break;
@@ -651,7 +651,7 @@ function initializeChatbot() {
                 message = 'discord';
                 break;
         }
-        
+
         if (message) {
             addMessage(`Show me ${social} profile`, 'user');
             showTypingIndicator();
@@ -665,7 +665,7 @@ function initializeChatbot() {
             }, 100);
         }
     }
-    
+
     // Add new quick options after social media interaction
     function addNewQuickOptions() {
         const newQuickActionsDiv = document.createElement('div');
@@ -677,21 +677,21 @@ function initializeChatbot() {
                 <button class="action-btn" data-action="clear">Clear Chat</button>
             </div>
         `;
-        
+
         // Add event listeners to new action buttons
         newQuickActionsDiv.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const action = this.getAttribute('data-action');
                 handleQuickAction(action);
                 // Remove this quick actions div after click
                 newQuickActionsDiv.remove();
             });
         });
-        
+
         chatbotMessages.appendChild(newQuickActionsDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
-    
+
     // Add quick action buttons to chatbot
     function addQuickActionButtons() {
         const quickActionsDiv = document.createElement('div');
@@ -705,23 +705,23 @@ function initializeChatbot() {
                 <button class="action-btn" data-action="location">Location</button>
             </div>
         `;
-        
+
         // Add event listeners to action buttons
         quickActionsDiv.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const action = this.getAttribute('data-action');
                 handleQuickAction(action);
             });
         });
-        
+
         chatbotMessages.appendChild(quickActionsDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
-    
+
     // Handle quick action button clicks
     function handleQuickAction(action) {
         let message = '';
-        switch(action) {
+        switch (action) {
             case 'about':
                 message = 'Tell me about Alish';
                 break;
@@ -747,7 +747,7 @@ function initializeChatbot() {
                 }, 500);
                 return;
         }
-        
+
         if (message) {
             addMessage(message, 'user');
             showTypingIndicator();
@@ -767,7 +767,7 @@ function initializeChatbot() {
                 "Young at 18 with big dreams for the future."
             ]
         },
-        
+
         // Alish-related keywords
         alish: {
             keywords: ["alish", "who", "about", "tell me", "introduce", "background", "person"],
@@ -777,7 +777,7 @@ function initializeChatbot() {
                 "Alish is a creative developer and AI student who combines technical skills with artistic vision. He's always learning and building amazing projects."
             ]
         },
-        
+
         // Abyss (chatbot) related keywords
         abyss: {
             keywords: ["abyss", "you", "chatbot", "ai assistant", "who are you", "yourself", "what are you", "tell me about you"],
@@ -791,8 +791,8 @@ function initializeChatbot() {
                 "I'm Abyss - a conversational AI with personality! I enjoy learning, chatting, and helping people. I'm passionate about technology and I love making new connections. What would you like to explore together?"
             ]
         },
-        
-        
+
+
         // College and learning keywords
         college: {
             keywords: ["college", "university", "softwarica", "coventry", "learning", "study"],
@@ -802,7 +802,7 @@ function initializeChatbot() {
                 "Softwarica College is where Alish studies AI. The curriculum covers machine learning, neural networks, computer vision, natural language processing, and practical AI applications."
             ]
         },
-        
+
         // Clear chat command
         clear: {
             keywords: ["clear", "clear chat", "reset", "clean", "delete messages", "start over", "new conversation"],
@@ -810,8 +810,8 @@ function initializeChatbot() {
                 "CLEAR_CHAT_COMMAND"
             ]
         },
-        
-        
+
+
         // LinkedIn keywords
         linkedin: {
             keywords: ["linkedin", "professional", "network", "career", "job", "work"],
@@ -819,7 +819,7 @@ function initializeChatbot() {
                 "Connect with Alish on LinkedIn for professional networking. He shares AI journey updates and career progress.<br><br><a href='https://www.linkedin.com/in/alish-shrestha-4276b8379/' target='_blank' style='color: #0077b5; text-decoration: none; font-weight: bold;'>Visit LinkedIn Profile</a>"
             ]
         },
-        
+
         // Facebook keywords
         facebook: {
             keywords: ["facebook", "fb", "social", "friends"],
@@ -827,7 +827,7 @@ function initializeChatbot() {
                 "Connect with Alish on Facebook. He shares updates and connects with friends.<br><br><a href='https://www.facebook.com/alish.shrestha.138982' target='_blank' style='color: #1877f2; text-decoration: none; font-weight: bold;'>Visit Facebook Profile</a>"
             ]
         },
-        
+
         // Discord keywords
         discord: {
             keywords: ["discord", "gaming", "chat", "fwabyss", "friend request"],
@@ -837,7 +837,7 @@ function initializeChatbot() {
                 "Connect with Alish on Discord! Username: fwabyss - send him a friend request to chat."
             ]
         },
-        
+
         // GitHub keywords
         github: {
             keywords: ["github", "git", "code", "repositories", "projects", "coding"],
@@ -846,8 +846,8 @@ function initializeChatbot() {
                 "Explore Alish's GitHub repositories at github.com/fwabyss0 - lots of interesting projects and code samples!<br><br><a href='https://github.com/fwabyss0' target='_blank' style='color: #333; text-decoration: none; font-weight: bold;'>Check out GitHub</a>"
             ]
         },
-        
-        
+
+
         // Experience keywords
         experience: {
             keywords: ["experience", "work", "projects", "portfolio", "built", "created", "developed"],
@@ -857,7 +857,7 @@ function initializeChatbot() {
                 "While he's still a student, Alish has hands-on experience with web development, AI programming, and creative projects. He's eager to gain more real-world experience."
             ]
         },
-        
+
         // Location keywords
         location: {
             keywords: ["location", "where", "from", "live", "nepal", "bhaktapur", "address", "place"],
@@ -867,7 +867,7 @@ function initializeChatbot() {
                 "From the beautiful country of Nepal. Specifically Bhaktapur - a UNESCO World Heritage site."
             ]
         },
-        
+
         // Greeting keywords
         greetings: {
             keywords: ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "namaste"],
@@ -878,7 +878,7 @@ function initializeChatbot() {
                 "Namaste! Ask me anything about Alish."
             ]
         },
-        
+
         // CV keywords
         cv: {
             keywords: ["cv", "resume", "curriculum vitae", "download", "download cv", "get cv", "curriculum", "vitae"],
@@ -888,8 +888,8 @@ function initializeChatbot() {
                 "Ready to download Alish's professional CV? Click below to get it instantly:<br><br><a href='Alish_Shrestha_CV.html' download='Alish_Shrestha_CV.html' style='color: #8b5fbf; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;'><i class='fas fa-download'></i> Download Now</a>"
             ]
         },
-        
-        
+
+
         // High school keywords (should respond about Softwarica College)
         highschool: {
             keywords: ["high school", "higher secondary", "12th grade", "+2", "intermediate"],
@@ -899,7 +899,7 @@ function initializeChatbot() {
                 "Currently at Softwarica College studying AI, focusing on machine learning algorithms, neural networks, deep learning, and data science applications."
             ]
         },
-        
+
         // Secondary school keywords
         secondaryschool: {
             keywords: ["secondary school", "secondary education", "khwopa"],
@@ -909,7 +909,7 @@ function initializeChatbot() {
                 "His secondary education was at Khwopa Secondary School in Dekocha-06, Bhaktapur where he excelled in Computer Science subjects and developed his passion for technology."
             ]
         },
-        
+
         // Primary school keywords
         primaryschool: {
             keywords: ["primary school", "elementary school", "primary education", "elementary", "childhood school"],
@@ -919,7 +919,7 @@ function initializeChatbot() {
                 "His primary education was at North East English Secondary School where he developed excellent academic performance and discovered his love for learning."
             ]
         },
-        
+
         // General Skills keywords
         skills: {
             keywords: ["skills", "abilities", "can do", "technologies", "what skills", "expertise"],
@@ -929,7 +929,7 @@ function initializeChatbot() {
                 "Skills overview: Programming expertise (Python, JavaScript, HTML, CSS), AI/ML mastery (TensorFlow, Neural Networks, Deep Learning), Creative talents (Photography, Video Editing, UI/UX), plus Development tools proficiency. Ask about specific categories!"
             ]
         },
-        
+
         // AI & Machine Learning keywords
         ai: {
             keywords: ["ai", "artificial intelligence", "machine learning", "ml", "tensorflow", "neural networks", "deep learning", "data science"],
@@ -939,7 +939,7 @@ function initializeChatbot() {
                 "AI/ML focus areas: TensorFlow (Google's ML framework), Neural Networks (brain-inspired computing), Data Science (statistical analysis), Deep Learning (multi-layer neural networks). Currently studying advanced AI at Softwarica College."
             ]
         },
-        
+
         // Programming keywords
         programming: {
             keywords: ["programming", "coding", "development", "software development", "web development", "app development", "languages", "python", "javascript", "html", "css"],
@@ -949,7 +949,7 @@ function initializeChatbot() {
                 "Core programming skills: Python (primary language for AI/ML), JavaScript (web interactivity), HTML/CSS (modern web design). Focus on AI applications, web development, and machine learning projects."
             ]
         },
-        
+
         // Creative & Design keywords
         creativedesign: {
             keywords: ["creative", "design", "photography", "video editing", "ui/ux", "graphic design", "creative skills"],
@@ -959,7 +959,7 @@ function initializeChatbot() {
                 "Creative specializations: Photography (event coverage, portraits, artistic shots), Video Editing (storytelling, effects, transitions), UI/UX Design (user-centered design, prototyping), Graphic Design (logos, layouts, visual identity)."
             ]
         },
-        
+
         // Tools & Platforms keywords
         toolsplatforms: {
             keywords: ["tools", "platforms", "software", "vs code", "vscode", "terminal", "command line", "github", "git", "tensorflow"],
@@ -969,7 +969,7 @@ function initializeChatbot() {
                 "Technical toolkit: VS Code (code editor with extensions), GitHub (open source contributions and repositories), Git (distributed version control), Terminal (command line mastery), TensorFlow (deep learning and AI development)."
             ]
         },
-        
+
         // Email keywords
         email: {
             keywords: ["email", "contact email", "shresthaalish444@gmail.com", "gmail", "reach out", "contact him"],
@@ -984,7 +984,7 @@ function initializeChatbot() {
     // Smart keyword-based response generation
     function generateResponse(message) {
         const lowerMessage = message.toLowerCase();
-        
+
         // Check each keyword category
         for (const [category, data] of Object.entries(chatbotKeywords)) {
             // Check if any keyword from this category matches
@@ -999,7 +999,7 @@ function initializeChatbot() {
                 return randomResponse;
             }
         }
-        
+
         // Default responses for unmatched queries
         const defaultResponses = [
             "I'd love to help you learn more about Alish! Try asking about his age, skills, experience, CV download, or contact information!",
@@ -1008,7 +1008,7 @@ function initializeChatbot() {
             "Try keywords like 'age', 'skills', 'cv', 'linkedin', 'github', 'experience', or 'location' to learn about Alish!",
             "I know lots about Alish! Ask me about his programming journey, contact details, CV download, or where he's from!"
         ];
-        
+
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
 
@@ -1026,7 +1026,7 @@ function initializeChatbot() {
 
             if (response.ok) {
                 const data = await response.json();
-                
+
                 setTimeout(() => {
                     removeTypingIndicator();
                     addMessage(data.response, 'bot');
@@ -1036,10 +1036,10 @@ function initializeChatbot() {
         } catch (error) {
             console.log('Backend unavailable, using built-in AI responses');
         }
-        
+
         // Use built-in intelligent responses
         const response = generateResponse(message);
-        
+
         // Only add message if response is not null (for clear chat command)
         if (response !== null) {
             setTimeout(() => {
@@ -1058,7 +1058,7 @@ function initializeChatbot() {
 // Utility Functions
 function throttle(func, limit) {
     let inThrottle;
-    return function() {
+    return function () {
         const args = arguments;
         const context = this;
         if (!inThrottle) {
@@ -1070,7 +1070,7 @@ function throttle(func, limit) {
 }
 
 // Add smooth page transitions
-window.addEventListener('beforeunload', function() {
+window.addEventListener('beforeunload', function () {
     document.body.style.opacity = '0';
 });
 
@@ -1083,7 +1083,7 @@ function validateEmail(email) {
 // Performance optimization - lazy loading for images
 function initializeLazyLoading() {
     const images = document.querySelectorAll('img[data-src]');
-    
+
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1101,11 +1101,11 @@ function initializeLazyLoading() {
 // Dark mode toggle (future enhancement)
 function initializeDarkModeToggle() {
     const toggleButton = document.getElementById('dark-mode-toggle');
-    
+
     if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
+        toggleButton.addEventListener('click', function () {
             document.body.classList.toggle('light-mode');
-            
+
             // Store preference
             const isLightMode = document.body.classList.contains('light-mode');
             localStorage.setItem('lightMode', isLightMode);
@@ -1122,12 +1122,12 @@ function initializeDarkModeToggle() {
 // Social media link tracking (analytics)
 function initializeSocialTracking() {
     const socialLinks = document.querySelectorAll('.social-link');
-    
+
     socialLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             const platform = this.classList[1]; // Gets the social platform class
             console.log(`Social link clicked: ${platform}`);
-            
+
             // Here you could send analytics data
             // gtag('event', 'social_click', { 'platform': platform });
         });
@@ -1135,7 +1135,7 @@ function initializeSocialTracking() {
 }
 
 // Keyboard navigation
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     // ESC key closes chatbot
     if (e.key === 'Escape') {
         const chatbot = document.getElementById('chatbot');
@@ -1143,7 +1143,7 @@ document.addEventListener('keydown', function(e) {
             chatbot.classList.remove('active');
         }
     }
-    
+
     // Tab navigation improvements
     if (e.key === 'Tab') {
         document.body.classList.add('keyboard-nav');
@@ -1151,7 +1151,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Mouse navigation
-document.addEventListener('mousedown', function() {
+document.addEventListener('mousedown', function () {
     document.body.classList.remove('keyboard-nav');
 });
 
@@ -1160,75 +1160,75 @@ function initializeWelcomePopup() {
     const welcomePopup = document.getElementById('welcome-popup');
     const popupClose = document.querySelector('.popup-close');
     const popupProgressFill = document.getElementById('popup-progress-fill');
-    
+
     // Simple quick pop notification sound
     function playNotificationSound() {
         playPopSound();
     }
-    
+
     // Quick pop sound - simple and effective
     function playPopSound() {
         try {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
+
             const makePop = () => {
                 const oscillator = audioContext.createOscillator();
                 const gain = audioContext.createGain();
-                
+
                 oscillator.connect(gain);
                 gain.connect(audioContext.destination);
-                
+
                 // Quick pop sound: high frequency, very short
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
                 oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.05);
-                
+
                 // Quick attack and decay for "pop" effect
                 gain.gain.setValueAtTime(0, audioContext.currentTime);
                 gain.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-                
+
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.1);
-                
+
                 console.log('🔊 Pop sound played!');
             };
-            
+
             if (audioContext.state === 'suspended') {
                 audioContext.resume().then(makePop);
             } else {
                 makePop();
             }
-            
+
         } catch (error) {
             console.log('Pop sound failed:', error.message);
         }
     }
-    
+
     // Show popup with simple sound
     setTimeout(() => {
         if (welcomePopup) {
             console.log('🎉 Welcome popup showing...');
             welcomePopup.classList.add('show');
-            
+
             // Play quick pop sound
             setTimeout(() => {
                 console.log('🔊 Playing notification pop...');
                 playNotificationSound();
             }, 100);
-            
+
             // Start progress bar animation
             let progress = 0;
             const progressInterval = setInterval(() => {
                 progress += 2;
-                
+
                 if (popupProgressFill) {
                     popupProgressFill.style.width = progress + '%';
                 }
-                
+
                 if (progress >= 100) {
                     clearInterval(progressInterval);
-                    
+
                     // Hide popup after progress completes
                     setTimeout(() => {
                         if (welcomePopup) {
@@ -1239,16 +1239,16 @@ function initializeWelcomePopup() {
             }, 50);
         }
     }, 1200); // Give more time for user interaction to enable audio
-    
+
     // Close popup functionality
     if (popupClose) {
-        popupClose.addEventListener('click', function() {
+        popupClose.addEventListener('click', function () {
             welcomePopup.classList.remove('show');
         });
     }
-    
+
     // Close on click outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (welcomePopup && !welcomePopup.contains(e.target)) {
             welcomePopup.classList.remove('show');
         }
@@ -1259,23 +1259,23 @@ function initializeWelcomePopup() {
 function preventExternalRefresh() {
     // Get all external links (those with target="_blank" or href starting with http)
     const externalLinks = document.querySelectorAll('a[target="_blank"], a[href^="http"], a[href^="https"], a[href^="mailto:"], a[href^="javascript:"]');
-    
+
     externalLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
-            
+
             // Handle mailto links
             if (href && href.startsWith('mailto:')) {
                 // Let mailto links work normally
                 return;
             }
-            
+
             // Handle javascript links
             if (href && href.startsWith('javascript:')) {
                 // Let javascript links work normally
                 return;
             }
-            
+
             // Handle external http/https links
             if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
                 e.preventDefault();
@@ -1288,12 +1288,12 @@ function preventExternalRefresh() {
 }
 
 // Initialize additional features when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeLazyLoading();
     initializeDarkModeToggle();
     initializeSocialTracking();
     preventExternalRefresh();
-    
+
     // Console welcome message
     console.log(`
     🎉 Welcome to Alish Shrestha's Portfolio!
@@ -1321,22 +1321,22 @@ function safelyExecute(fn, errorMessage) {
 // Discord functionality - attempt to open Discord and show instructions
 function openDiscord(event) {
     const username = 'fwabyss';
-    
+
     // Try to open Discord app first
     try {
         // This will work if Discord is installed
         window.location.href = 'discord://users/fwabyss';
-        
+
         // Show instructions after a delay
         setTimeout(() => {
             showDiscordInstructions(username);
         }, 1000);
-        
+
     } catch (error) {
         // Fallback to showing instructions
         showDiscordInstructions(username);
     }
-    
+
     event.preventDefault();
 }
 
@@ -1344,7 +1344,7 @@ function openDiscord(event) {
 function showDiscordInstructions(username) {
     const message = `To add me on Discord:\n1. Open Discord\n2. Search for: ${username}\n3. Send a friend request!`;
     showCopyNotification(message, 5000); // Show for 5 seconds
-    
+
     // Also copy username to clipboard
     if (navigator.clipboard) {
         navigator.clipboard.writeText(username);
@@ -1361,7 +1361,7 @@ function fallbackCopyTextToClipboard(text) {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    
+
     try {
         const successful = document.execCommand('copy');
         if (successful) {
@@ -1372,7 +1372,7 @@ function fallbackCopyTextToClipboard(text) {
     } catch (err) {
         showCopyNotification('Discord: ' + text + ' (copy manually)');
     }
-    
+
     document.body.removeChild(textArea);
 }
 
@@ -1381,7 +1381,7 @@ function showCopyNotification(message, duration = 3000) {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = 'copy-notification';
-    
+
     // Handle multi-line messages
     if (message.includes('\n')) {
         const lines = message.split('\n');
@@ -1394,7 +1394,7 @@ function showCopyNotification(message, duration = 3000) {
     } else {
         notification.textContent = message;
     }
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -1413,9 +1413,9 @@ function showCopyNotification(message, duration = 3000) {
         line-height: 1.4;
         backdrop-filter: blur(10px);
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Remove notification after specified duration
     setTimeout(() => {
         notification.style.animation = 'slideOutRight 0.3s ease-out';
@@ -1429,12 +1429,12 @@ function showCopyNotification(message, duration = 3000) {
 
 // Service Worker registration for PWA features (future enhancement)
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
+            .then(function (registration) {
                 console.log('SW registered: ', registration);
             })
-            .catch(function(registrationError) {
+            .catch(function (registrationError) {
                 console.log('SW registration failed: ', registrationError);
             });
     });
