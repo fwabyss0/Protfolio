@@ -1,0 +1,85 @@
+CHATBOT KEYWORDS CONFIGURATION
+===============================
+
+This file contains all chatbot keywords and their categories for easy editing.
+Each category has keywords and sample responses.
+
+AGE KEYWORDS:
+- age, old, years, birthday, born, birth, when, how old
+
+ALISH KEYWORDS:
+- alish, who, about, tell me, introduce, background, person
+
+ABYSS KEYWORDS:
+- abyss, you, chatbot, ai assistant, who are you, yourself, what are you, tell me about you
+
+COLLEGE/HIGH SCHOOL KEYWORDS:
+- high school, higher secondary, 12th grade, +2, intermediate, college, university, softwarica, coventry
+
+SECONDARY KEYWORDS:
+- secondary school, secondary education, khwopa
+
+PRIMARY KEYWORDS:
+- primary school, elementary school, primary education, elementary, childhood
+
+GENERAL SKILLS KEYWORDS:
+- skills, abilities, can do, technologies, what skills
+
+PROGRAMMING KEYWORDS:
+- programming, coding, development, software development, web development, app development, languages, python, javascript, html, css
+
+CREATIVE & DESIGN KEYWORDS:
+- creative, design, photography, video editing, ui/ux, graphic design, creative skills
+
+TOOLS & PLATFORMS KEYWORDS:
+- tools, platforms, software, vs code, vscode, terminal, command line, github, git, tensorflow
+
+EXPERIENCE KEYWORDS:
+- experience, work, projects, portfolio, built, created, developed
+
+LOCATION KEYWORDS:
+- location, where, from, live, nepal, bhaktapur, address, place
+
+GREETING KEYWORDS:
+- hi, hello, hey, good morning, good afternoon, good evening, namaste
+
+CV KEYWORDS:
+- cv, resume, curriculum vitae, download, download cv, get cv, curriculum, vitae
+
+EMAIL KEYWORDS:
+- email, contact email, gmail, reach out, contact him
+
+CLEAR KEYWORDS:
+- clear, clear chat, reset, clean, delete messages, start over, new conversation
+
+LINKEDIN KEYWORDS:
+- linkedin, professional, network, career, job, work
+
+FACEBOOK KEYWORDS:
+- facebook, fb, social, friends
+
+DISCORD KEYWORDS:
+- discord, gaming, chat, fwabyss, friend request
+
+GITHUB KEYWORDS:
+- github, git, code, repositories, projects, coding
+
+QUICK OPTIONS (Only 4):
+- About
+- Age  
+- Skills
+- Location
+
+CHATTING SOUNDS ADDED:
+- User message sound (higher pitch, short)
+- Bot response sound (lower pitch, gentle)
+- Typing indicator sound (soft, brief)
+
+NOTES:
+- Remove: social media, instagram, education, school, github keywords from quick options
+- Update email to: shresthaalish444@gmail.com
+- Make email clickable with mailto: link
+- Education levels are separated: high school (Softwarica), secondary (Khwopa), primary (North East)
+- Skills should link to specific categories
+- Quick options simplified to 4 essential items
+- Audio feedback for better user experience

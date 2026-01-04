@@ -1,0 +1,9 @@
+@echo off
+echo 🤖 Starting Alish's AI Chatbot...
+echo.
+echo 📦 Installing dependencies...
+pip install -r requirements.txt
+echo.
+echo 🚀 Starting chatbot server...
+python chatbot.py
+pause
