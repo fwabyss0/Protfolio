@@ -1016,7 +1016,7 @@ function initializeChatbot() {
     async function sendToBot(message) {
         try {
             // Try to connect to backend first
-            const response = await fetch('http://localhost:5000/chat', {
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
