@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+﻿/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -269,7 +269,7 @@ body {
 }
 
 .shape-star:before {
-    content: '★';
+    content: 'â˜…';
 }
 
 /* Loading Floating Icons */
@@ -6127,6 +6127,8 @@ section {
 
 
 /* Projects Section */
+
+/* Projects Section */
 .projects {
     padding: 100px 0;
     min-height: 100vh;
@@ -6137,7 +6139,7 @@ section {
 }
 
 .projects::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -6157,7 +6159,7 @@ section {
 }
 
 .project-card {
-    background: rgba(26, 26, 26, 0.3);
+    background: linear-gradient(135deg, rgba(30, 30, 50, 0.4), rgba(20, 20, 35, 0.6));
     border-radius: 24px;
     overflow: hidden;
     backdrop-filter: blur(12px);
@@ -6171,7 +6173,7 @@ section {
 }
 
 .project-card::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: 24px;
@@ -6188,9 +6190,9 @@ section {
 .project-card:hover {
     transform: translateY(-15px) scale(1.02);
     border-color: rgba(139, 95, 191, 0.4);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(139, 95, 191, 0.2);
-    background: rgba(26, 26, 26, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(139, 95, 191, 0.2);
+    background: linear-gradient(135deg, rgba(40, 40, 70, 0.6), rgba(30, 30, 50, 0.8));
 }
 
 .project-card:hover::after {
@@ -6211,7 +6213,7 @@ section {
 }
 
 .project-image::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 150%;
     height: 150%;
@@ -6250,6 +6252,7 @@ section {
     background: linear-gradient(to right, #fff, var(--light-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .project-content p {
@@ -6333,7 +6336,6 @@ section {
     
     .project-image {
         height: 200px;
-        font-size: 4rem;
     }
 }
 
@@ -6364,7 +6366,6 @@ section {
 
     .project-image {
         height: 180px;
-        font-size: 3.5rem;
     }
 
     .project-content {
@@ -6403,194 +6404,176 @@ section {
 
     .project-image {
         height: 160px;
-        font-size: 3rem;
-    }
-
-    .project-tags span {
-        padding: 4px 10px;
-        font-size: 0.7rem;
     }
 }
 
+/* --- Advanced Project Animations (v2) --- */
 
-
-/* --- Fancy Project Animations --- */
-
-/* Plane Animation */
-@keyframes planeFly {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    20% {
-        transform: translate(5px, -5px) rotate(-5deg);
-    }
-    40% {
-        transform: translate(100px, -100px) rotate(-10deg);
-        opacity: 0;
-    }
-    41% {
-        transform: translate(-100px, 100px) rotate(-10deg);
-        opacity: 0;
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-    }
+/* Travel Animation (Earth, Plane, Car) */
+.earth-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.project-card:hover .plane-icon {
-    animation: planeFly 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.earth-icon {
+    font-size: 4.5rem;
+    color: #4ecdc4;
+    animation: earthRotate 15s linear infinite;
+    filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.4));
+    z-index: 2;
 }
 
-/* Printer Animation */
-@keyframes printerPrint {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    20% {
-        transform: translateY(2px) scaleY(0.95);
-    }
-    40% {
-        transform: translateY(-1px) scaleY(1.02);
-    }
-    60% {
-        transform: translateY(1px) scaleY(0.98);
-    }
-    80% {
-        transform: translateY(-2px) scaleY(1.05);
-    }
-}
-
-@keyframes paperSlide {
-    0% {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-}
-
-.project-card:hover .printer-icon {
-    animation: printerPrint 0.5s ease-in-out infinite;
-}
-
-/* Paper effect for printer */
-.printer-icon::after {
-    content: "\f15b"; /* fa-file-alt */
-    font-family: "Font Awesome 5 Free";
-    font-weight: 400;
+.orbit-path {
     position: absolute;
-    font-size: 1.5rem;
     top: 50%;
     left: 50%;
-    margin-left: -10px;
-    opacity: 0;
-    z-index: -1;
+    border-radius: 50%;
+    border: 1px dashed rgba(139, 95, 191, 0.3);
+    transform: translate(-50%, -50%);
 }
 
-.project-card:hover .printer-icon::after {
-    animation: paperSlide 1s linear infinite;
+.plane-path {
+    width: 200px;
+    height: 110px;
+    animation: orbit3D 5s linear infinite;
 }
 
-
-
-/* --- Advanced Project Animations --- */
-
-/* Travel Container / Plane Lines */
-.travel-container {
-    perspective: 1000px;
+.car-path {
+    width: 160px;
+    height: 70px;
+    animation: orbit3D 8s linear infinite reverse;
 }
 
-.travel-line {
+.plane-icon-fancy, .car-icon-fancy {
     position: absolute;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    width: 60px;
-    right: -100px;
-    border-radius: 2px;
-    opacity: 0;
+    color: var(--primary-purple);
+    filter: drop-shadow(0 0 8px var(--primary-purple));
+    transform-origin: center;
 }
 
-.l1 { top: 30%; animation-delay: 0s; }
-.l2 { top: 50%; animation-delay: 0.3s; }
-.l3 { top: 70%; animation-delay: 0.6s; }
-
-@keyframes linePass {
-    0% {
-        right: -100px;
-        opacity: 0;
-        transform: scaleX(0.5);
-    }
-    50% {
-        opacity: 1;
-        transform: scaleX(1.5);
-    }
-    100% {
-        right: 200px;
-        opacity: 0;
-        transform: scaleX(0.5);
-    }
+.plane-icon-fancy {
+    font-size: 1.4rem;
+    top: -10px;
+    left: 50%;
 }
 
-.project-card:hover .travel-line {
-    animation: linePass 0.8s linear infinite;
+.car-icon-fancy {
+    font-size: 1.2rem;
+    bottom: -10px;
+    left: 50%;
 }
 
-/* Printing Container / Spreading Paper */
-.printing-container {
+@keyframes earthRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes orbit3D {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Printer Animation (Scanner & Mechanical) */
+.printer-wrapper {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.printer-icon-fancy {
+    font-size: 5.5rem;
+    color: var(--primary-purple);
+    z-index: 2;
+    filter: drop-shadow(0 0 15px rgba(139, 95, 191, 0.3));
+}
+
+.scanner-light {
+    position: absolute;
+    width: 80%;
+    height: 5px;
+    background: #00ffff;
+    box-shadow: 0 0 20px #00ffff, 0 0 10px white;
+    top: 35%;
+    left: 10%;
+    opacity: 0;
+    z-index: 3;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover .scanner-light {
+    animation: scannerMove 1.5s ease-in-out infinite;
+}
+
+.paper-slot {
+    position: absolute;
+    width: 70px;
+    height: 4px;
+    background: #111;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+@keyframes scannerMove {
+    0%, 100% { top: 35%; opacity: 0; }
+    20%, 80% { opacity: 1; }
+    50% { top: 55%; opacity: 1; }
 }
 
 .spreading-paper {
     position: absolute;
-    width: 30px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 4px;
+    width: 35px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 2px;
     top: 50%;
     left: 50%;
-    margin-top: -20px;
-    margin-left: -15px;
+    margin-top: -22px;
+    margin-left: -17px;
     opacity: 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    z-index: -1;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    z-index: 1;
 }
 
+.sp1 { animation: paperFlyOut1 2s ease-out infinite; }
+.sp2 { animation: paperFlyOut2 2s ease-out infinite 0.6s; }
+.sp3 { animation: paperFlyOut3 2s ease-out infinite 1.2s; }
+
 @keyframes paperFlyOut1 {
-    0% { transform: translate(0, 0) rotate(0deg) scale(0.5); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(-80px, -60px) rotate(-15deg) scale(1.1); opacity: 0; }
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.4); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(-100px, -80px) rotate(-25deg) scale(1.1); opacity: 0; }
 }
 
 @keyframes paperFlyOut2 {
-    0% { transform: translate(0, 0) rotate(0deg) scale(0.5); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(80px, -60px) rotate(15deg) scale(1.1); opacity: 0; }
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.4); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(100px, -80px) rotate(25deg) scale(1.1); opacity: 0; }
 }
 
 @keyframes paperFlyOut3 {
-    0% { transform: translate(0, 0) rotate(0deg) scale(0.5); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(0, -90px) rotate(5deg) scale(1.1); opacity: 0; }
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.4); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(0, -120px) rotate(10deg) scale(1.1); opacity: 0; }
 }
 
-.project-card:hover .sp1 { animation: paperFlyOut1 1.5s ease-out infinite; }
-.project-card:hover .sp2 { animation: paperFlyOut2 1.5s ease-out infinite 0.5s; }
-.project-card:hover .sp3 { animation: paperFlyOut3 1.5s ease-out infinite 1s; }
-
-/* Enhanced Printer Vibration */
-@keyframes printerShake {
-    0%, 100% { transform: scale(1); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px) rotate(-1deg); }
-    20%, 40%, 60%, 80% { transform: translateX(2px) rotate(1deg); }
+.project-card:hover .printer-wrapper {
+    animation: printerWork 0.15s linear infinite;
 }
 
-.project-card:hover .printer-icon {
-    animation: printerShake 0.4s linear infinite !important;
+@keyframes printerWork {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -2px); }
+    75% { transform: translate(-2px, -2px); }
 }
 
