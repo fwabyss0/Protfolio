@@ -6412,3 +6412,88 @@ section {
     }
 }
 
+
+
+/* --- Fancy Project Animations --- */
+
+/* Plane Animation */
+@keyframes planeFly {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    20% {
+        transform: translate(5px, -5px) rotate(-5deg);
+    }
+    40% {
+        transform: translate(100px, -100px) rotate(-10deg);
+        opacity: 0;
+    }
+    41% {
+        transform: translate(-100px, 100px) rotate(-10deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.project-card:hover .plane-icon {
+    animation: planeFly 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Printer Animation */
+@keyframes printerPrint {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(2px) scaleY(0.95);
+    }
+    40% {
+        transform: translateY(-1px) scaleY(1.02);
+    }
+    60% {
+        transform: translateY(1px) scaleY(0.98);
+    }
+    80% {
+        transform: translateY(-2px) scaleY(1.05);
+    }
+}
+
+@keyframes paperSlide {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
+
+.project-card:hover .printer-icon {
+    animation: printerPrint 0.5s ease-in-out infinite;
+}
+
+/* Paper effect for printer */
+.printer-icon::after {
+    content: "\f15b"; /* fa-file-alt */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    position: absolute;
+    font-size: 1.5rem;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    opacity: 0;
+    z-index: -1;
+}
+
+.project-card:hover .printer-icon::after {
+    animation: paperSlide 1s linear infinite;
+}
+
