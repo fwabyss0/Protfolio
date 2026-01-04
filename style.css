@@ -3740,6 +3740,7 @@ section {
 .instagram i {
     background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     transition: all 0.3s ease;
 }
@@ -6132,93 +6133,157 @@ section {
     display: flex;
     align-items: center;
     background: transparent;
+    position: relative;
+}
+
+.projects::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(139, 95, 191, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    margin-top: 3rem;
+    gap: 40px;
+    margin-top: 4rem;
 }
 
 .project-card {
-    background: rgba(26, 26, 26, 0.4);
-    border-radius: 20px;
+    background: rgba(26, 26, 26, 0.3);
+    border-radius: 24px;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(139, 95, 191, 0.1);
-    transition: all 0.4s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, transparent, rgba(139, 95, 191, 0.3), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--primary-purple);
-    box-shadow: 0 20px 40px rgba(139, 95, 191, 0.2);
-    background: rgba(26, 26, 26, 0.6);
+    transform: translateY(-15px) scale(1.02);
+    border-color: rgba(139, 95, 191, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(139, 95, 191, 0.2);
+    background: rgba(26, 26, 26, 0.5);
+}
+
+.project-card:hover::after {
+    opacity: 1;
 }
 
 .project-image {
-    height: 200px;
-    background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(168, 85, 247, 0.1));
+    height: 220px;
+    background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(168, 85, 247, 0.05));
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4rem;
+    font-size: 5rem;
     color: var(--primary-purple);
-    transition: all 0.4s ease;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-image::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(139, 95, 191, 0.2) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.project-card:hover .project-image::before {
+    opacity: 1;
+    animation: rotate 10s linear infinite;
 }
 
 .project-card:hover .project-image {
-    background: linear-gradient(135deg, rgba(139, 95, 191, 0.2), rgba(168, 85, 247, 0.2));
+    background: linear-gradient(135deg, rgba(139, 95, 191, 0.2), rgba(168, 85, 247, 0.15));
 }
 
 .project-card:hover .project-image i {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1) rotate(8deg);
+    filter: drop-shadow(0 0 15px rgba(139, 95, 191, 0.6));
 }
 
 .project-content {
-    padding: 25px;
+    padding: 30px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    z-index: 1;
 }
 
 .project-content h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: var(--text-light);
-    background: var(--gradient);
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, #fff, var(--light-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .project-content p {
     color: var(--text-gray);
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: 1rem;
+    line-height: 1.7;
     flex-grow: 1;
 }
 
 .project-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 25px;
 }
 
 .project-tags span {
-    background: rgba(139, 95, 191, 0.2);
+    background: rgba(139, 95, 191, 0.1);
     color: var(--light-purple);
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    border: 1px solid rgba(139, 95, 191, 0.1);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(139, 95, 191, 0.2);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.project-card:hover .project-tags span {
+    background: rgba(139, 95, 191, 0.2);
+    border-color: rgba(139, 95, 191, 0.4);
+    transform: translateY(-2px);
 }
 
 .project-links {
@@ -6229,19 +6294,30 @@ section {
 .btn-sm {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: transparent;
-    border: 1px solid var(--primary-purple);
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(139, 95, 191, 0.3);
     color: var(--text-light);
-    border-radius: 8px;
+    border-radius: 12px;
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-sm:hover {
     background: var(--primary-purple);
-    transform: translateY(-2px);
+    border-color: var(--primary-purple);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(139, 95, 191, 0.5);
+}
+
+.btn-sm i {
+    transition: transform 0.3s ease;
+}
+
+.btn-sm:hover i {
+    transform: translate(2px, -2px);
 }
