@@ -1,4 +1,4 @@
-﻿/* ================================================================
+/* ================================================================
    ALISH SHRESTHA — PORTFOLIO v4.0
    Theme: Retro-Tech Interactive | Bold & Playful
    ================================================================ */
@@ -70,7 +70,7 @@ img {
 }
 
 .sec-title {
-    font-size: clamp(1.8rem, 3.5vw, 2.9rem);
+    font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 700;
     margin-bottom: 3rem;
     line-height: 1.15;
@@ -82,21 +82,21 @@ img {
    ────────────────────────────────────────────────────────── */
 
 .hl {
-    padding: 0.08em 0.38em;
+    padding: 0.1em 0.4em;
     border-radius: 5px;
-    font-weight: 600;
-    font-size: 0.97em;
+    font-weight: 700;
+    font-size: inherit;           /* always matches parent text */
+    display: inline;
     /* Slide substrate — starts at 0 width, grows to 100% */
     background-repeat: no-repeat;
     background-position: left center;
-    background-size: 0% 85%;           /* hidden initially */
-    transition: background-size 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* colour is set per-variant below */
+    background-size: 0% 88%;      /* hidden initially */
+    transition: background-size 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* When JS adds .revealed (or .hl-animate), the marker sweeps in */
+/* When JS adds .revealed, the marker sweeps in */
 .hl.revealed {
-    background-size: 100% 85%;
+    background-size: 100% 88%;
 }
 
 /* Per‑colour background images (solid fill via same-colour gradient) */
@@ -513,10 +513,11 @@ img {
 }
 
 .hero-name {
-    font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
     font-weight: 700;
     line-height: 1.05;
     margin-bottom: 1.1rem;
+    white-space: nowrap;
 }
 
 .name-accent {
@@ -571,8 +572,8 @@ img {
 
 .hero-bio {
     color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.75;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.8;
     margin-bottom: 1.9rem;
 }
 
@@ -794,8 +795,8 @@ img {
 
 .bio-p {
     color: var(--muted);
-    font-size: 1.02rem;
-    line-height: 1.82;
+    font-size: clamp(1rem, 1.4vw, 1.12rem);
+    line-height: 1.85;
     margin-bottom: 1.1rem;
 }
 
@@ -1029,11 +1030,11 @@ img {
 .sc {
     display: inline-flex;
     align-items: center;
-    gap: 0.38rem;
-    padding: 0.38rem 0.75rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    gap: 0.45rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.07);
     transition: all 0.22s ease;
@@ -1044,7 +1045,7 @@ img {
 
 .sc i {
     color: var(--cc, var(--teal));
-    font-size: 0.88rem;
+    font-size: 1rem;
 }
 
 .sc:hover {
@@ -1276,7 +1277,7 @@ img {
 
 /* Project visual area */
 .project-visual {
-    height: 160px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1315,19 +1316,29 @@ img {
     left: 50%;
 }
 
+/* Plane: slow orbit always, FAST on card hover */
 .plane-path {
-    width: 88px;
-    height: 88px;
+    width: 100px;
+    height: 100px;
     transform: translate(-50%, -50%);
     animation: orbit 5s linear infinite;
+    transition: animation-duration 0.3s;
+}
+
+.project-card:hover .plane-path {
+    animation-duration: 1.2s;
 }
 
 .car-path {
-    width: 118px;
-    height: 118px;
+    width: 134px;
+    height: 134px;
     transform: translate(-50%, -50%);
     animation: orbit 9s linear infinite reverse;
     border-color: rgba(255, 225, 65, 0.18);
+}
+
+.project-card:hover .car-path {
+    animation-duration: 2.5s;
 }
 
 .plane-icon-fancy {
@@ -1381,16 +1392,42 @@ img {
     border-radius: 2px;
 }
 
+/* Papers: hidden by default, eject out on printer card hover */
 .spreading-paper {
     position: absolute;
-    background: rgba(199, 125, 255, 0.06);
-    border: 1px solid rgba(199, 125, 255, 0.15);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(199, 125, 255, 0.4);
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(0px);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.sp1 { width: 30px; height: 40px; bottom: 10%;  left: 20%; animation: spreadPaper 3s ease-in-out infinite 0s; }
-.sp2 { width: 25px; height: 35px; bottom: 8%;   left: 50%; animation: spreadPaper 3s ease-in-out infinite 1s; }
-.sp3 { width: 28px; height: 38px; bottom: 12%;  right: 18%; animation: spreadPaper 3s ease-in-out infinite 2s; }
+.project-card:hover .spreading-paper {
+    opacity: 1;
+}
+
+.sp1 { width: 38px; height: 50px; bottom: 10%;  left: 18%;  transition-delay: 0s; }
+.sp2 { width: 32px; height: 44px; bottom: 8%;   left: 48%;  transition-delay: 0.1s; }
+.sp3 { width: 34px; height: 48px; bottom: 12%;  right: 16%; transition-delay: 0.2s; }
+
+.project-card:hover .sp1 { transform: translateY(12px) rotate(-5deg); }
+.project-card:hover .sp2 { transform: translateY(16px) rotate(2deg);  }
+.project-card:hover .sp3 { transform: translateY(10px) rotate(6deg);  }
+
+/* Paper lines to make them look like documents */
+.spreading-paper::before,
+.spreading-paper::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 1.5px;
+    background: rgba(199, 125, 255, 0.5);
+    border-radius: 1px;
+}
+.spreading-paper::before { top: 30%; }
+.spreading-paper::after  { top: 55%; }
 
 /* Project info */
 .pc-body {
@@ -2138,10 +2175,10 @@ img {
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 2rem 1.6rem 1.6rem;
+    padding: 2.4rem 2rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.9rem;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
@@ -2195,8 +2232,8 @@ img {
 .status-done    { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
 .status-current { background: rgba(199,125,255,0.14); color: var(--purple); border: 1px solid rgba(199,125,255,0.35); }
 
-.edu-card-title  { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0; }
-.edu-card-school { font-size: 0.82rem; font-weight: 600; color: var(--text); margin: 0; line-height: 1.4; }
+.edu-card-title  { font-size: 1.2rem;  font-weight: 700; color: var(--text); margin: 0; }
+.edu-card-school { font-size: 0.92rem; font-weight: 600; color: var(--text); margin: 0; line-height: 1.4; }
 .edu-sub-school  { font-size: 0.74rem; color: var(--muted); font-weight: 400; }
 
 .edu-card-loc {
@@ -2205,7 +2242,7 @@ img {
 }
 .edu-card-loc i { font-size: 0.65rem; }
 
-.edu-card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0; flex: 1; }
+.edu-card-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin: 0; flex: 1; }
 
 .edu-card-tags { display: flex; flex-wrap: wrap; gap: 0.38rem; margin-top: 0.2rem; }
 
