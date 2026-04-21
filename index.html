@@ -103,7 +103,18 @@
             </div>
 
             <div class="hero-right">
-                <div class="photo-frame">
+                <div class="photo-frame" id="photo-frame-parallax">
+                    <!-- Decorative rings -->
+                    <div class="pr-ring pr-ring-2"></div>
+                    <div class="pr-ring pr-ring-3"></div>
+                    <div class="pr-ring pr-ring-4"></div>
+                    <div class="pr-ring pr-ring-5"></div>
+                    <!-- Glowing orbs -->
+                    <div class="pr-orb pr-orb-1"></div>
+                    <div class="pr-orb pr-orb-2"></div>
+                    <div class="pr-orb pr-orb-3"></div>
+                    <div class="pr-orb pr-orb-4"></div>
+                    <!-- Photo -->
                     <img src="prof.jpg" alt="Alish Shrestha" id="profile-img" class="hero-photo">
                     <div class="photo-sticker ps-top">🧠 AI Student</div>
                     <div class="photo-sticker ps-bottom">📍 Nepal, 18</div>
@@ -276,6 +287,84 @@
         <div class="container">
             <div class="sec-label">// My Journey</div>
             <h2 class="sec-title">Education Timeline</h2>
+
+            <!-- ── 3D Flipping Book ── -->
+            <div class="edu-book-scene">
+                <div class="edu-book">
+                    <div class="book-spine"></div>
+                    <div class="book-back"></div>
+
+                    <!-- ─ Page 4: Higher Education (bottom of stack, revealed last) ─ -->
+                    <div class="book-page bp-uni">
+                        <div class="bp-inner">
+                            <div class="bp-face bp-front bp-blank"></div>
+                            <div class="bp-face bp-back">
+                                <span class="bp-emoji">🏛️</span>
+                                <span class="bp-label">Higher Education</span>
+                                <span class="bp-school">Softwarica College</span>
+                                <span class="bp-detail">Coventry University</span>
+                                <span class="bp-badge bp-badge-purple">🤖 AI &amp; Machine Learning</span>
+                                <span class="bp-year">Current ✨</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─ Page 3: Secondary School (revealed after primary flips) ─ -->
+                    <div class="book-page bp-secondary">
+                        <div class="bp-inner">
+                            <div class="bp-face bp-front bp-blank"></div>
+                            <div class="bp-face bp-back">
+                                <span class="bp-emoji">🎓</span>
+                                <span class="bp-label">Secondary School</span>
+                                <span class="bp-school">Khwopa Secondary School</span>
+                                <span class="bp-detail">Bhaktapur, Nepal</span>
+                                <span class="bp-badge bp-badge-teal">💻 Computer Science</span>
+                                <span class="bp-year">2023 – 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─ Page 2: Primary School (revealed after journey page flips) ─ -->
+                    <div class="book-page bp-primary">
+                        <div class="bp-inner">
+                            <div class="bp-face bp-front bp-blank"></div>
+                            <div class="bp-face bp-back">
+                                <span class="bp-emoji">🏫</span>
+                                <span class="bp-label">Primary School</span>
+                                <span class="bp-school">North East English<br>Secondary School</span>
+                                <span class="bp-detail">Bhaktapur, Nepal</span>
+                                <span class="bp-badge bp-badge-yellow">📚 Strong Foundation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─ Page 1: Journey Overview (revealed when cover opens) ─ -->
+                    <div class="book-page bp-journey">
+                        <div class="bp-inner">
+                            <div class="bp-face bp-front bp-blank"></div>
+                            <div class="bp-face bp-back">
+                                <span class="bp-emoji">🗺️</span>
+                                <span class="bp-label">My Journey</span>
+                                <span class="bp-sub">From Bhaktapur&rsquo;s classrooms<br>to Coventry University&rsquo;s AI labs<br>— every chapter matters.</span>
+                                <span class="bp-badge bp-badge-pink">✨ 3 Chapters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─ Cover (first to flip, reveals journey page beneath) ─ -->
+                    <div class="book-page bp-cover">
+                        <div class="bp-inner">
+                            <div class="bp-face bp-front bp-cover-front">
+                                <i class="fas fa-graduation-cap book-icon"></i>
+                                <span class="book-title">My Journey</span>
+                                <span class="book-by">Alish Shrestha</span>
+                            </div>
+                            <div class="bp-face bp-back bp-cover-back"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="book-hint">▶ Pages turn automatically ✨</p>
+            </div>
 
             <div class="timeline">
                 <!-- Primary -->

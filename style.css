@@ -2015,6 +2015,514 @@ img {
     }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   PHOTO FRAME — RINGS & ORBS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Ring 2 — teal dotted, counter-clockwise */
+.photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: -24px;
+    border: 1.5px dotted rgba(20, 241, 217, 0.2);
+    border-radius: 32px;
+    animation: rotateSlow 15s linear infinite reverse;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.pr-ring {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Ring 3 — pink dashed, clockwise */
+.pr-ring-2 {
+    inset: -40px;
+    border: 1px dashed rgba(255, 107, 157, 0.16);
+    border-radius: 46px;
+    animation: rotateSlow 28s linear infinite;
+}
+
+/* Ring 4 — purple solid, counter-clockwise */
+.pr-ring-3 {
+    inset: -58px;
+    border: 1px solid rgba(199, 125, 255, 0.1);
+    border-radius: 62px;
+    animation: rotateSlow 42s linear infinite reverse;
+}
+
+/* Ring 5 — yellow dashed, clockwise, very faint */
+.pr-ring-4 {
+    inset: -78px;
+    border: 1.5px dashed rgba(255, 225, 65, 0.07);
+    border-radius: 84px;
+    animation: rotateSlow 58s linear infinite;
+}
+
+/* Ring 6 — teal faint, counter-clockwise */
+.pr-ring-5 {
+    inset: -102px;
+    border: 1px dotted rgba(20, 241, 217, 0.05);
+    border-radius: 110px;
+    animation: rotateSlow 75s linear infinite reverse;
+}
+
+/* Glowing orb dots */
+.pr-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.pr-orb-1 {
+    width: 10px;
+    height: 10px;
+    background: var(--teal);
+    box-shadow: 0 0 14px var(--teal), 0 0 28px rgba(20, 241, 217, 0.35);
+    top: -7px;
+    left: 34%;
+    animation: orbPulse 3s ease-in-out infinite 0s;
+}
+
+.pr-orb-2 {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    box-shadow: 0 0 12px var(--yellow), 0 0 24px rgba(255, 225, 65, 0.35);
+    bottom: 24%;
+    right: -5px;
+    animation: orbPulse 4s ease-in-out infinite 1.2s;
+}
+
+.pr-orb-3 {
+    width: 9px;
+    height: 9px;
+    background: var(--pink);
+    box-shadow: 0 0 12px var(--pink), 0 0 24px rgba(255, 107, 157, 0.33);
+    bottom: -5px;
+    left: 27%;
+    animation: orbPulse 3.5s ease-in-out infinite 0.75s;
+}
+
+.pr-orb-4 {
+    width: 7px;
+    height: 7px;
+    background: var(--purple);
+    box-shadow: 0 0 10px var(--purple), 0 0 20px rgba(199, 125, 255, 0.32);
+    top: 33%;
+    left: -4px;
+    animation: orbPulse 4.5s ease-in-out infinite 2.1s;
+}
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1);   opacity: 0.65; }
+    50%       { transform: scale(1.55); opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EDUCATION — 3D FLIPPING BOOK
+   ══════════════════════════════════════════════════════════════ */
+
+.edu-book-scene {
+    perspective: 1400px;
+    perspective-origin: 45% 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.edu-book {
+    width: 200px;
+    height: 265px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(8deg) rotateY(-28deg);
+    animation: bookSway 6s ease-in-out infinite;
+    cursor: default;
+}
+
+/* ── Spine (left face) ── */
+.book-spine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 100%;
+    background: linear-gradient(180deg, #6D28D9 0%, #C77DFF 50%, #6D28D9 100%);
+    transform-origin: right center;
+    transform: rotateY(-90deg) translateZ(11px);
+    border-radius: 5px 0 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.book-spine::after {
+    content: 'ALISH SHRESTHA · PORTFOLIO';
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 0.42rem;
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+/* ── Back cover ── */
+.book-back {
+    position: absolute;
+    inset: 0;
+    background: #06060E;
+    border-radius: 4px 10px 10px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transform: translateZ(-12px);
+}
+
+/* ── Pages ── */
+.book-page {
+    position: absolute;
+    top: 4%;
+    right: 2%;
+    width: 92%;
+    height: 92%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+}
+
+/* ─ Animation stagger: 16s cycle, 4s phase offset each page ─
+   DOM order (back→front): uni → secondary → primary → journey → cover
+   Cover flips first, revealing journey; journey flips revealing primary; etc. */
+.bp-cover     { animation: bookFlip 16s ease-in-out infinite 0s;  }
+.bp-journey   { animation: bookFlip 16s ease-in-out infinite 4s;  }
+.bp-primary   { animation: bookFlip 16s ease-in-out infinite 8s;  }
+.bp-secondary { animation: bookFlip 16s ease-in-out infinite 12s; }
+/* bp-uni stays static — it’s the final reveal at the bottom */
+
+.bp-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    border-radius: 0 8px 8px 0;
+}
+
+.bp-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 1.2rem 1rem;
+    border-radius: 0 9px 9px 0;
+    border: 1px solid;
+}
+
+.bp-back {
+    transform: rotateY(180deg);
+}
+
+/* Primary — yellow theme */
+.bp-primary .bp-front {
+    background: linear-gradient(135deg, rgba(255,225,65,0.13), rgba(255,225,65,0.04));
+    border-color: rgba(255, 225, 65, 0.3);
+}
+.bp-primary .bp-back {
+    background: linear-gradient(315deg, rgba(255,225,65,0.1), rgba(255,225,65,0.03));
+    border-color: rgba(255, 225, 65, 0.2);
+}
+
+/* Secondary — teal theme */
+.bp-secondary .bp-front {
+    background: linear-gradient(135deg, rgba(20,241,217,0.13), rgba(20,241,217,0.04));
+    border-color: rgba(20, 241, 217, 0.3);
+}
+.bp-secondary .bp-back {
+    background: linear-gradient(315deg, rgba(20,241,217,0.1), rgba(20,241,217,0.03));
+    border-color: rgba(20, 241, 217, 0.2);
+}
+
+/* University — purple theme */
+.bp-uni .bp-front, .bp-uni .bp-back {
+    background: linear-gradient(135deg, rgba(199,125,255,0.06), rgba(199,125,255,0.02));
+    border-color: rgba(199, 125, 255, 0.15);
+}
+
+.bp-emoji {
+    font-size: 1.9rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+.bp-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+}
+
+.bp-school {
+    font-size: 0.68rem;
+    color: var(--text);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.bp-detail {
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.bp-year {
+    font-size: 0.6rem;
+    font-family: var(--mono);
+    color: var(--purple);
+    font-weight: 700;
+}
+
+.bp-sub {
+    font-size: 0.63rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.55;
+}
+
+/* Colour badge chips inside pages */
+.bp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+}
+
+.bp-badge-yellow { background: rgba(255,225,65,0.15);  color: var(--yellow); border: 1px solid rgba(255,225,65,0.3); }
+.bp-badge-teal   { background: rgba(20,241,217,0.12);  color: var(--teal);   border: 1px solid rgba(20,241,217,0.3); }
+.bp-badge-purple { background: rgba(199,125,255,0.12); color: var(--purple); border: 1px solid rgba(199,125,255,0.3); }
+.bp-badge-pink   { background: rgba(255,107,157,0.12); color: var(--pink);   border: 1px solid rgba(255,107,157,0.3); }
+
+/* Blank front face — invisible placeholder (behind cover) */
+.bp-blank {
+    background: transparent;
+    border-color: transparent;
+}
+
+/* New page themes — journey (pink/orange) */
+.bp-journey .bp-back {
+    background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(255,159,67,0.05));
+    border-color: rgba(255, 107, 157, 0.28);
+}
+
+/* Cover page front face — mirrors old book-cover styling */
+.bp-cover-front {
+    background: linear-gradient(145deg, #16163E, #0C0C20) !important;
+    border: 1.5px solid rgba(199, 125, 255, 0.42) !important;
+    border-radius: 4px 11px 11px 4px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.bp-cover-front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent, transparent 12px,
+        rgba(199,125,255,0.027) 12px, rgba(199,125,255,0.027) 13px
+    );
+    pointer-events: none;
+}
+
+.bp-cover-front::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow), var(--teal), var(--purple));
+}
+
+.bp-cover-back {
+    background: #06060E !important;
+    border-color: rgba(255,255,255,0.04) !important;
+}
+
+/* ── Front cover (on top via translateZ) ── */
+.book-cover {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, #16163E, #0C0C20);
+    border: 1.5px solid rgba(199, 125, 255, 0.42);
+    border-radius: 4px 11px 11px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    transform: translateZ(2px);          /* sits just in front of pages */
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+/* Hatching pattern */
+.book-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 12px,
+        rgba(199, 125, 255, 0.028) 12px,
+        rgba(199, 125, 255, 0.028) 13px
+    );
+}
+
+/* Rainbow accent bar at bottom of cover */
+.book-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow), var(--teal), var(--purple));
+}
+
+.book-icon {
+    font-size: 2.4rem;
+    color: var(--yellow);
+    filter: drop-shadow(0 0 12px rgba(255, 225, 65, 0.5));
+    position: relative;
+    z-index: 1;
+}
+
+.book-title {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.book-by {
+    font-size: 0.63rem;
+    color: var(--muted);
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+/* Book hint text */
+.book-hint {
+    margin-top: 1.6rem;
+    font-size: 0.74rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    animation: floatBob 2.5s ease-in-out infinite;
+}
+
+/* ── Book keyframes ── */
+@keyframes bookFlip {
+    0%   { transform: rotateY(0deg);    }   /* closed — cover is in front */
+    16%  { transform: rotateY(-158deg); }   /* page flips out */
+    44%  { transform: rotateY(-158deg); }   /* stays open, showing page content */
+    60%  { transform: rotateY(0deg);    }   /* returns */
+    100% { transform: rotateY(0deg);    }   /* stays closed until next cycle */
+}
+
+@keyframes bookSway {
+    0%, 100% { transform: rotateX(8deg)  rotateY(-28deg); }
+    50%       { transform: rotateX(6deg)  rotateY(-22deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION VISUAL CONSISTENCY — ATMOSPHERE BLOBS & DIVIDERS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Sections need relative positioning for pseudo-elements */
+.skills, .education, .projects, .contact { position: relative; }
+
+/* Subtle radial atmosphere blobs per section */
+.skills::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(255, 225, 65, 0.03) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+}
+
+.education::before {
+    content: '';
+    position: absolute;
+    top: 60px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(199, 125, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+}
+
+.projects::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -40px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(20, 241, 217, 0.035) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+}
+
+.contact::before {
+    content: '';
+    position: absolute;
+    top: 0; right: -40px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(255, 225, 65, 0.03) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+}
+
+/* Gradient separator lines — consistent between every adjacent section */
+.hero::after,
+.about::after,
+.skills::after,
+.education::after,
+.projects::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 225, 65, 0.12) 30%,
+        rgba(20, 241, 217, 0.12) 70%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Section z-index so content sits above the atmosphere blobs */
+.education .container,
+.projects .container,
+.contact .container { position: relative; z-index: 1; }
+
 /* ── 15. RESPONSIVE ───────────────────────────────────────────── */
 @media (max-width: 1024px) {
     .about-grid {
