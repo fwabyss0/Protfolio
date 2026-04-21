@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -241,10 +241,10 @@
                         <h3 class="skill-cat-title">Programming</h3>
                     </div>
                     <div class="sc-row">
-                        <span class="sc" style="--cc: #3776ab"><i class="fab fa-python"></i> Python</span>
-                        <span class="sc" style="--cc: #f7df1e"><i class="fab fa-js-square"></i> JavaScript</span>
-                        <span class="sc" style="--cc: #e34f26"><i class="fab fa-html5"></i> HTML</span>
-                        <span class="sc" style="--cc: #1572b6"><i class="fab fa-css3-alt"></i> CSS</span>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #3776ab" data-percent="70"><i class="fab fa-python"></i> Python</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f7df1e" data-percent="65"><i class="fab fa-js-square"></i> JavaScript</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #e34f26" data-percent="85"><i class="fab fa-html5"></i> HTML</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #1572b6" data-percent="80"><i class="fab fa-css3-alt"></i> CSS</span></div>
                     </div>
                 </div>
 
@@ -255,10 +255,10 @@
                         <h3 class="skill-cat-title">AI &amp; Machine Learning</h3>
                     </div>
                     <div class="sc-row">
-                        <span class="sc" style="--cc: #ff6f00"><i class="fas fa-project-diagram"></i> TensorFlow</span>
-                        <span class="sc" style="--cc: #c77dff"><i class="fas fa-network-wired"></i> Neural Networks</span>
-                        <span class="sc" style="--cc: #14f1d9"><i class="fas fa-chart-line"></i> Data Science</span>
-                        <span class="sc" style="--cc: #b5ff6d"><i class="fas fa-robot"></i> Deep Learning</span>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6f00" data-percent="55"><i class="fas fa-project-diagram"></i> TensorFlow</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #c77dff" data-percent="50"><i class="fas fa-network-wired"></i> Neural Networks</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #14f1d9" data-percent="60"><i class="fas fa-chart-line"></i> Data Science</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #b5ff6d" data-percent="50"><i class="fas fa-robot"></i> Deep Learning</span></div>
                     </div>
                 </div>
 
@@ -269,10 +269,10 @@
                         <h3 class="skill-cat-title">Tools &amp; Platforms</h3>
                     </div>
                     <div class="sc-row">
-                        <span class="sc" style="--cc: #007acc"><i class="fas fa-code"></i> VS Code</span>
-                        <span class="sc" style="--cc: #f0f0f0"><i class="fab fa-github"></i> GitHub</span>
-                        <span class="sc" style="--cc: #f05032"><i class="fab fa-git-alt"></i> Git</span>
-                        <span class="sc" style="--cc: #4caf50"><i class="fas fa-laptop-code"></i> DevTools</span>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #007acc" data-percent="90"><i class="fas fa-code"></i> VS Code</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f0f0f0" data-percent="75"><i class="fab fa-github"></i> GitHub</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f05032" data-percent="70"><i class="fab fa-git-alt"></i> Git</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #4caf50" data-percent="65"><i class="fas fa-laptop-code"></i> DevTools</span></div>
                     </div>
                 </div>
 
@@ -283,10 +283,10 @@
                         <h3 class="skill-cat-title">Creative &amp; Design</h3>
                     </div>
                     <div class="sc-row">
-                        <span class="sc" style="--cc: #ff6b9d"><i class="fas fa-video"></i> Video Editing</span>
-                        <span class="sc" style="--cc: #ff9f43"><i class="fas fa-palette"></i> UI/UX Design</span>
-                        <span class="sc" style="--cc: #4ecdc4"><i class="fas fa-camera"></i> Photography</span>
-                        <span class="sc" style="--cc: #a29bfe"><i class="fas fa-comments"></i> Communication</span>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6b9d" data-percent="75"><i class="fas fa-video"></i> Video Editing</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff9f43" data-percent="60"><i class="fas fa-palette"></i> UI/UX Design</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #4ecdc4" data-percent="70"><i class="fas fa-camera"></i> Photography</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #a29bfe" data-percent="80"><i class="fas fa-comments"></i> Communication</span></div>
                     </div>
                 </div>
 
@@ -723,6 +723,108 @@
             setTimeout(init, DELAY);
         }
 
+    })();
+    </script>
+
+    <!-- ── Skill Ring Click Handler ── -->
+    <script>
+    (function () {
+        'use strict';
+
+        function getColor(chip) {
+            // Read --cc CSS variable value from inline style
+            const style = chip.getAttribute('style') || '';
+            const m = style.match(/--cc:\s*([^;]+)/);
+            return m ? m[1].trim() : '#14F1D9';
+        }
+
+        function removeRing(wrap) {
+            wrap.querySelector('.sc-ring')?.remove();
+            wrap.querySelector('.sc-pct-label')?.remove();
+        }
+
+        function createRing(wrap, chip, pct) {
+            const color = getColor(chip);
+            const w = chip.offsetWidth + 8;
+            const h = chip.offsetHeight + 8;
+            const rx = 10;
+
+            // Perimeter of rounded rectangle
+            const perim = 2 * (w - 2 * rx) + 2 * (h - 2 * rx) + 2 * Math.PI * rx;
+            const offset = perim * (1 - pct / 100);
+
+            const ns = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(ns, 'svg');
+            svg.classList.add('sc-ring');
+            svg.setAttribute('width', w);
+            svg.setAttribute('height', h);
+            svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+            // Track (background circle)
+            const track = document.createElementNS(ns, 'rect');
+            track.setAttribute('x', 2); track.setAttribute('y', 2);
+            track.setAttribute('width', w - 4); track.setAttribute('height', h - 4);
+            track.setAttribute('rx', rx);
+            track.setAttribute('fill', 'none');
+            track.setAttribute('stroke', 'rgba(255,255,255,0.07)');
+            track.setAttribute('stroke-width', '2');
+
+            // Progress stroke
+            const prog = document.createElementNS(ns, 'rect');
+            prog.setAttribute('x', 2); prog.setAttribute('y', 2);
+            prog.setAttribute('width', w - 4); prog.setAttribute('height', h - 4);
+            prog.setAttribute('rx', rx);
+            prog.setAttribute('fill', 'none');
+            prog.setAttribute('stroke', color);
+            prog.setAttribute('stroke-width', '2.5');
+            prog.setAttribute('stroke-linecap', 'round');
+            prog.setAttribute('stroke-dasharray', perim);
+            prog.setAttribute('stroke-dashoffset', perim);          // start hidden
+            prog.setAttribute('transform', `rotate(-90 ${w / 2} ${h / 2})`); // top-start
+            prog.style.transition = 'stroke-dashoffset 0.85s cubic-bezier(0.25,0.46,0.45,0.94)';
+
+            svg.appendChild(track);
+            svg.appendChild(prog);
+            wrap.appendChild(svg);
+
+            // Percentage label
+            const label = document.createElement('div');
+            label.className = 'sc-pct-label';
+            label.textContent = `${pct}%`;
+            label.style.color = color;
+            wrap.appendChild(label);
+
+            // Trigger animation next frame
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                prog.setAttribute('stroke-dashoffset', offset);
+            }));
+        }
+
+        function init() {
+            document.querySelectorAll('.sc[data-percent]').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const wrap = chip.parentElement;
+                    const isActive = chip.classList.contains('sc-active');
+
+                    // Deactivate all chips first
+                    document.querySelectorAll('.sc.sc-active').forEach(c => {
+                        c.classList.remove('sc-active');
+                        removeRing(c.parentElement);
+                    });
+
+                    if (!isActive) {
+                        chip.classList.add('sc-active');
+                        createRing(wrap, chip, parseInt(chip.dataset.percent));
+                    }
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     })();
     </script>
 

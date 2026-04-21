@@ -1068,26 +1068,75 @@ img {
     margin: 0;
 }
 
+/* 2×2 grid for skills inside each card */
 .sc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+}
+
+/* Wrapper needed so SVG ring can be positioned absolutely over chip */
+.sc-wrap {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+}
+
+/* Percentage label above chip */
+.sc-pct-label {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    font-family: var(--mono);
+    font-weight: 700;
+    white-space: nowrap;
+    z-index: 10;
+    background: var(--bg);
+    padding: 0.12rem 0.45rem;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.08);
+    pointer-events: none;
+    animation: pctFadeIn 0.25s ease forwards;
+}
+
+@keyframes pctFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* SVG ring sits over the chip */
+.sc-ring {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    pointer-events: none;
+    z-index: 5;
+    overflow: visible;
 }
 
 .sc {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.45rem;
-    padding: 0.5rem 1rem;
+    padding: 0.55rem 0.5rem;
     border-radius: 10px;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.07);
     transition: all 0.22s ease;
-    cursor: default;
-    transform-style: preserve-3d;
-    will-change: transform;
+    cursor: pointer;
+    width: 100%;
+    user-select: none;
+}
+
+/* Active (clicked) state */
+.sc.sc-active {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--cc, var(--teal));
+    box-shadow: 0 0 12px rgba(255,255,255,0.05);
 }
 
 .sc i {
