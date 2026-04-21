@@ -1,4 +1,4 @@
-﻿/* Reset and Base Styles */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -2704,19 +2704,24 @@ section {
     gap: 2rem;
     max-width: 1000px;
     margin: 0 auto;
+    perspective: 1000px;
 }
 
+/* ── 3-D FLIP-RISE card ── */
 .about-card {
     background: linear-gradient(135deg, rgba(30, 30, 50, 0.4), rgba(20, 20, 35, 0.6));
     border-radius: 24px;
     padding: 2.5rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.5s ease,
+                border-color 0.5s ease;
     position: relative;
-    overflow: hidden;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
 .about-card::after {
@@ -2735,16 +2740,19 @@ section {
 }
 
 .about-card:hover {
-    transform: translateY(-15px) scale(1.02);
-    border-color: rgba(139, 95, 191, 0.4);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        0 0 30px rgba(139, 95, 191, 0.2);
+    transform: perspective(900px) rotateX(12deg) rotateY(-6deg) translateY(-18px) translateZ(20px);
+    border-color: rgba(139, 95, 191, 0.5);
+    box-shadow:
+        0 30px 60px -10px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(139, 95, 191, 0.25),
+        0 2px 0 rgba(139, 95, 191, 0.6) inset;
 }
 
 .about-card:hover::after {
     opacity: 1;
 }
 
+/* Icon – static, no spin */
 .about-card .card-icon {
     font-size: 3rem;
     color: var(--primary-purple);
@@ -2754,24 +2762,41 @@ section {
     align-items: center;
     height: 70px;
     filter: drop-shadow(0 0 10px rgba(139, 95, 191, 0.3));
-    transition: transform 0.5s ease;
+    transition: filter 0.4s ease, transform 0.4s ease;
+    transform: translateZ(0);
 }
 
+/* Remove rotation / scale – just brighten glow */
 .about-card:hover .card-icon {
-    transform: scale(1.2) rotate(10deg);
+    filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.7));
+    transform: translateZ(40px);
 }
 
+/* Text rises forward in 3-D space */
 .about-card h3 {
     font-size: 1.3rem;
     color: var(--text-light);
     margin-bottom: 1rem;
     font-weight: 600;
+    transition: transform 0.45s ease, text-shadow 0.45s ease;
+    transform: translateZ(0);
+}
+
+.about-card:hover h3 {
+    transform: translateZ(50px);
+    text-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
 }
 
 .about-card p {
     color: var(--text-gray);
     line-height: 1.6;
     font-size: 0.95rem;
+    transition: transform 0.45s ease;
+    transform: translateZ(0);
+}
+
+.about-card:hover p {
+    transform: translateZ(35px);
 }
 
 .about-card strong {
@@ -2988,46 +3013,52 @@ section {
     background: rgba(26, 26, 26, 0.6);
     border-radius: 8px;
     border: 1px solid rgba(139, 95, 191, 0.1);
-    transition: all 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s ease,
+                border-color 0.4s ease,
+                background 0.4s ease;
     color: var(--text-light);
     font-size: 0.9rem;
     font-weight: 500;
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
-/* Unified skill item hover effects - using creative & design style */
+/* Group-coloured 3-D tilt on hover */
 .skills-group:nth-child(1) .skill-item:hover {
     background: rgba(78, 205, 196, 0.15);
     border-color: #4ecdc4;
-    transform: translateY(-5px) rotateZ(-3deg) scale(1.03);
-    border-radius: 25px 5px 25px 5px;
+    transform: perspective(600px) rotateX(10deg) rotateY(-6deg) translateY(-6px) translateZ(12px);
+    box-shadow: 0 12px 28px rgba(78, 205, 196, 0.25), 0 0 16px rgba(78, 205, 196, 0.15);
 }
 
 .skills-group:nth-child(2) .skill-item:hover {
     background: rgba(168, 85, 247, 0.15);
     border-color: var(--secondary-purple);
-    transform: translateY(-5px) rotateZ(-3deg) scale(1.03);
-    border-radius: 25px 5px 25px 5px;
+    transform: perspective(600px) rotateX(10deg) rotateY(-6deg) translateY(-6px) translateZ(12px);
+    box-shadow: 0 12px 28px rgba(168, 85, 247, 0.25), 0 0 16px rgba(168, 85, 247, 0.15);
 }
 
 .skills-group:nth-child(3) .skill-item:hover {
     background: rgba(249, 202, 36, 0.15);
     border-color: #f9ca24;
-    transform: translateY(-5px) rotateZ(-3deg) scale(1.03);
-    border-radius: 25px 5px 25px 5px;
+    transform: perspective(600px) rotateX(10deg) rotateY(-6deg) translateY(-6px) translateZ(12px);
+    box-shadow: 0 12px 28px rgba(249, 202, 36, 0.25), 0 0 16px rgba(249, 202, 36, 0.15);
 }
 
 .skills-group:nth-child(4) .skill-item:hover {
     background: rgba(255, 107, 107, 0.15);
     border-color: #ff6b6b;
-    transform: translateY(-5px) rotateZ(-3deg) scale(1.03);
-    border-radius: 25px 5px 25px 5px;
+    transform: perspective(600px) rotateX(10deg) rotateY(-6deg) translateY(-6px) translateZ(12px);
+    box-shadow: 0 12px 28px rgba(255, 107, 107, 0.25), 0 0 16px rgba(255, 107, 107, 0.15);
 }
 
 /* Generic fallback */
 .skill-item:hover {
     background: rgba(139, 95, 191, 0.1);
     border-color: var(--primary-purple);
-    transform: translateX(5px);
+    transform: perspective(600px) rotateX(10deg) rotateY(-6deg) translateY(-6px) translateZ(12px);
+    box-shadow: 0 12px 28px rgba(139, 95, 191, 0.25);
 }
 
 .skill-item i {
@@ -3579,11 +3610,14 @@ section {
     padding: 2.5rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.5s ease,
+                border-color 0.5s ease;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     position: relative;
-    overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
 .contact-item::after {
@@ -3602,9 +3636,12 @@ section {
 }
 
 .contact-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    border-color: rgba(139, 95, 191, 0.3);
+    transform: perspective(800px) rotateX(12deg) rotateY(-5deg) translateY(-16px) translateZ(18px);
+    box-shadow:
+        0 28px 55px -10px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(139, 95, 191, 0.22),
+        0 2px 0 rgba(139, 95, 191, 0.5) inset;
+    border-color: rgba(139, 95, 191, 0.5);
 }
 
 .contact-item:hover::after {
@@ -3620,18 +3657,38 @@ section {
     justify-content: center;
     align-items: center;
     height: 50px;
+    transition: transform 0.45s ease, filter 0.45s ease;
+    transform: translateZ(0);
+}
+
+.contact-item:hover .contact-icon {
+    transform: translateZ(45px);
+    filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.65));
 }
 
 .contact-item h3 {
     color: var(--text-light);
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
+    transition: transform 0.45s ease, text-shadow 0.45s ease;
+    transform: translateZ(0);
+}
+
+.contact-item:hover h3 {
+    transform: translateZ(50px);
+    text-shadow: 0 3px 18px rgba(168, 85, 247, 0.45);
 }
 
 .contact-item p {
     color: var(--text-gray);
     margin: 0;
     font-size: 0.95rem;
+    transition: transform 0.45s ease;
+    transform: translateZ(0);
+}
+
+.contact-item:hover p {
+    transform: translateZ(35px);
 }
 
 .social-title {
@@ -4746,7 +4803,7 @@ section {
 
     /* Enhanced mobile interactions */
     .about-card:hover {
-        transform: translateY(-8px) scale(1.02);
+        transform: perspective(900px) rotateX(8deg) rotateY(-4deg) translateY(-10px) translateZ(12px);
     }
 
     .education-card:nth-child(odd):hover {
@@ -4759,7 +4816,7 @@ section {
 
     .skill-item:hover {
         background: rgba(139, 95, 191, 0.2);
-        transform: translateX(8px) scale(1.02);
+        transform: perspective(600px) rotateX(8deg) rotateY(-4deg) translateY(-4px) translateZ(8px);
     }
 
     .hero-left {
