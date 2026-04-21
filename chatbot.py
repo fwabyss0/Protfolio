@@ -36,6 +36,7 @@ KNOWLEDGE_BASE = {
             "Hey! 🎉 Abyss here, ready to chat about Alish!",
             "Namaste! 🙏 I'm Abyss - ask me anything about Alish!",
             "Hello! ✨ Abyss here, I know all about Alish's journey!"
+            
         ]
     },
     'about': {
