@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -76,8 +76,8 @@
             <div class="hero-left">
                 <div class="hero-badge">Hi there! 👋 Welcome to my portfolio</div>
                 <h1 class="hero-name">
-                    <span class="hero-im">I'm</span>
-                    <span class="name-accent" id="typed-name"></span><span class="typed-cursor">|</span>
+                    <span class="hero-line1">I'm <span class="name-alish">Alish</span></span>
+                    <span class="hero-line2">Shrestha</span>
                 </h1>
                 <div class="hero-chips">
                     <span class="chip chip-teal">AI Student</span>
@@ -232,56 +232,66 @@
             <div class="sec-label">// My Arsenal</div>
             <h2 class="sec-title">Skills & Technologies</h2>
 
-            <div class="terminal-win">
-                <div class="t-chrome">
-                    <div class="t-dots">
-                        <span class="td td-r"></span>
-                        <span class="td td-y"></span>
-                        <span class="td td-g"></span>
+            <div class="skills-grid">
+
+                <!-- Programming -->
+                <div class="skill-cat skill-cat-teal">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="skill-cat-title">Programming</h3>
                     </div>
-                    <span class="t-title">alish@portfolio:~$ ls skills/</span>
-                </div>
-                <div class="t-body">
-                    <div class="sg">
-                        <div class="sg-label" style="--lc: var(--teal)">// Programming</div>
-                        <div class="sc-row">
-                            <span class="sc" style="--cc: #3776ab"><i class="fab fa-python"></i> Python</span>
-                            <span class="sc" style="--cc: #f7df1e"><i class="fab fa-js-square"></i> JavaScript</span>
-                            <span class="sc" style="--cc: #e34f26"><i class="fab fa-html5"></i> HTML</span>
-                            <span class="sc" style="--cc: #1572b6"><i class="fab fa-css3-alt"></i> CSS</span>
-                        </div>
-                    </div>
-                    <div class="sg">
-                        <div class="sg-label" style="--lc: var(--purple)">// AI & Machine Learning</div>
-                        <div class="sc-row">
-                            <span class="sc" style="--cc: #ff6f00"><i class="fas fa-project-diagram"></i> TensorFlow</span>
-                            <span class="sc" style="--cc: #c77dff"><i class="fas fa-network-wired"></i> Neural Networks</span>
-                            <span class="sc" style="--cc: #14f1d9"><i class="fas fa-chart-line"></i> Data Science</span>
-                            <span class="sc" style="--cc: #b5ff6d"><i class="fas fa-robot"></i> Deep Learning</span>
-                        </div>
-                    </div>
-                    <div class="sg">
-                        <div class="sg-label" style="--lc: var(--yellow)">// Tools & Platforms</div>
-                        <div class="sc-row">
-                            <span class="sc" style="--cc: #007acc"><i class="fas fa-code"></i> VS Code</span>
-                            <span class="sc" style="--cc: #f0f0f0"><i class="fab fa-github"></i> GitHub</span>
-                            <span class="sc" style="--cc: #f05032"><i class="fab fa-git-alt"></i> Git</span>
-                            <span class="sc" style="--cc: #4caf50"><i class="fas fa-terminal"></i> Terminal</span>
-                        </div>
-                    </div>
-                    <div class="sg">
-                        <div class="sg-label" style="--lc: var(--pink)">// Creative & Design</div>
-                        <div class="sc-row">
-                            <span class="sc" style="--cc: #ff6b9d"><i class="fas fa-video"></i> Video Editing</span>
-                            <span class="sc" style="--cc: #ff9f43"><i class="fas fa-paint-brush"></i> UI/UX Design</span>
-                            <span class="sc" style="--cc: #4ecdc4"><i class="fas fa-camera"></i> Photography</span>
-                            <span class="sc" style="--cc: #a29bfe"><i class="fas fa-comments"></i> Communication</span>
-                        </div>
+                    <div class="sc-row">
+                        <span class="sc" style="--cc: #3776ab"><i class="fab fa-python"></i> Python</span>
+                        <span class="sc" style="--cc: #f7df1e"><i class="fab fa-js-square"></i> JavaScript</span>
+                        <span class="sc" style="--cc: #e34f26"><i class="fab fa-html5"></i> HTML</span>
+                        <span class="sc" style="--cc: #1572b6"><i class="fab fa-css3-alt"></i> CSS</span>
                     </div>
                 </div>
+
+                <!-- AI & ML -->
+                <div class="skill-cat skill-cat-purple">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon"><i class="fas fa-brain"></i></div>
+                        <h3 class="skill-cat-title">AI &amp; Machine Learning</h3>
+                    </div>
+                    <div class="sc-row">
+                        <span class="sc" style="--cc: #ff6f00"><i class="fas fa-project-diagram"></i> TensorFlow</span>
+                        <span class="sc" style="--cc: #c77dff"><i class="fas fa-network-wired"></i> Neural Networks</span>
+                        <span class="sc" style="--cc: #14f1d9"><i class="fas fa-chart-line"></i> Data Science</span>
+                        <span class="sc" style="--cc: #b5ff6d"><i class="fas fa-robot"></i> Deep Learning</span>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div class="skill-cat skill-cat-yellow">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon"><i class="fas fa-tools"></i></div>
+                        <h3 class="skill-cat-title">Tools &amp; Platforms</h3>
+                    </div>
+                    <div class="sc-row">
+                        <span class="sc" style="--cc: #007acc"><i class="fas fa-code"></i> VS Code</span>
+                        <span class="sc" style="--cc: #f0f0f0"><i class="fab fa-github"></i> GitHub</span>
+                        <span class="sc" style="--cc: #f05032"><i class="fab fa-git-alt"></i> Git</span>
+                        <span class="sc" style="--cc: #4caf50"><i class="fas fa-laptop-code"></i> DevTools</span>
+                    </div>
+                </div>
+
+                <!-- Creative -->
+                <div class="skill-cat skill-cat-pink">
+                    <div class="skill-cat-header">
+                        <div class="skill-cat-icon"><i class="fas fa-paint-brush"></i></div>
+                        <h3 class="skill-cat-title">Creative &amp; Design</h3>
+                    </div>
+                    <div class="sc-row">
+                        <span class="sc" style="--cc: #ff6b9d"><i class="fas fa-video"></i> Video Editing</span>
+                        <span class="sc" style="--cc: #ff9f43"><i class="fas fa-palette"></i> UI/UX Design</span>
+                        <span class="sc" style="--cc: #4ecdc4"><i class="fas fa-camera"></i> Photography</span>
+                        <span class="sc" style="--cc: #a29bfe"><i class="fas fa-comments"></i> Communication</span>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </section>
+        </div></section>
 
     <!-- ══ EDUCATION ══ -->
     <section id="education" class="education">
@@ -639,24 +649,38 @@
         }
 
         /* ─────────────────────────────────────────
-           3. PARALLAX — hero elements shift gently
-              on scroll
+           3. HERO SCROLL RESPONSIVE
+              Hero fades & scales as user scrolls,
+              creates a smooth parallax dissolve
         ───────────────────────────────────────── */
-        function initParallax() {
+        function initHeroScroll() {
+            const hero      = document.querySelector('.hero');
             const heroLeft  = document.querySelector('.hero-left');
             const heroRight = document.querySelector('.hero-right');
             const stickers  = document.querySelectorAll('.sticker');
+            if (!hero) return;
+
+            const heroH = hero.offsetHeight;
 
             window.addEventListener('scroll', () => {
-                const y = window.scrollY;
-                if (!heroLeft) return;
-                const speed = y * 0.18;
-                heroLeft.style.transform  = `translateY(${speed * 0.6}px)`;
-                heroRight.style.transform = `translateY(${speed * 0.35}px)`;
+                const y       = window.scrollY;
+                const prog    = Math.min(y / (heroH * 0.6), 1); // 0→1 as you scroll
+
+                // Fade + shrink the hero wrap
+                if (heroLeft) {
+                    heroLeft.style.opacity   = 1 - prog * 0.85;
+                    heroLeft.style.transform = `translateY(${y * 0.25}px)`;
+                }
+                if (heroRight) {
+                    heroRight.style.opacity   = 1 - prog * 0.7;
+                    heroRight.style.transform = `translateY(${y * 0.15}px)`;
+                }
+
+                // Stickers drift upward at different speeds
                 stickers.forEach((s, idx) => {
                     const dir = idx % 2 === 0 ? 1 : -1;
-                    s.style.transform = s.style.transform.replace(/translateY\([^)]*\)/, '')
-                        + ` translateY(${dir * speed * 0.22}px)`;
+                    s.style.opacity   = Math.max(0, 1 - prog * 1.5);
+                    s.style.transform = `translateY(${dir * y * 0.12}px)`;
                 });
             }, { passive: true });
         }
