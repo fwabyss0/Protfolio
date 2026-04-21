@@ -76,7 +76,8 @@
             <div class="hero-left">
                 <div class="hero-badge">Hi there! 👋 Welcome to my portfolio</div>
                 <h1 class="hero-name">
-                    I'm <span class="name-accent">Alish Shrestha</span>.
+                    <span class="hero-im">I'm</span>
+                    <span class="name-accent" id="typed-name"></span><span class="typed-cursor">|</span>
                 </h1>
                 <div class="hero-chips">
                     <span class="chip chip-teal">AI Student</span>
@@ -564,58 +565,140 @@
 
     <script src="app.js"></script>
 
-    <!-- ── Sliding Highlight Observer ── -->
+    <!-- ── Portfolio Enhancement Scripts ── -->
     <script>
     (function () {
         'use strict';
 
-        // Add data-index attributes for stagger delay
-        function indexHighlights(container) {
-            const spans = container.querySelectorAll('.hl');
-            spans.forEach((span, i) => {
-                span.dataset.hlIndex = i;
-            });
+        /* ─────────────────────────────────────────
+           1. TYPING EFFECT — "Alish Shrestha."
+           Runs once after loading screen clears (~4.2s)
+        ───────────────────────────────────────── */
+        function startTyping() {
+            const el     = document.getElementById('typed-name');
+            const cursor = document.querySelector('.typed-cursor');
+            if (!el) return;
+
+            const text  = 'Alish Shrestha.';
+            let   i     = 0;
+            el.textContent = '';
+
+            const type = () => {
+                if (i < text.length) {
+                    el.textContent += text[i++];
+                    setTimeout(type, 80 + Math.random() * 60);
+                } else {
+                    // After typing finishes, blink cursor then fade it out
+                    setTimeout(() => {
+                        if (cursor) cursor.style.animation = 'cursorFade 0.6s ease forwards';
+                    }, 1200);
+                }
+            };
+            type();
         }
 
-        // Reveal all .hl in a paragraph with stagger
+        /* ─────────────────────────────────────────
+           2. REPEATING HIGHLIGHT OBSERVER
+           Reveals .hl when paragraph scrolls IN,
+           resets when it scrolls OUT again.
+        ───────────────────────────────────────── */
         function revealHighlights(paragraph) {
             const spans = paragraph.querySelectorAll('.hl');
             spans.forEach((span, i) => {
-                setTimeout(() => {
-                    span.classList.add('revealed');
-                }, i * 160); // 160ms gap between each word highlight
+                span.classList.remove('revealed');          // reset first
+                // force reflow so transition re-fires
+                void span.offsetWidth;
+                setTimeout(() => span.classList.add('revealed'), i * 160);
+            });
+        }
+
+        function hideHighlights(paragraph) {
+            paragraph.querySelectorAll('.hl').forEach(span => {
+                span.classList.remove('revealed');
             });
         }
 
         function initHighlightObserver() {
-            // Observe each bio paragraph that contains .hl
             const paragraphs = document.querySelectorAll('.bio-p');
             if (!paragraphs.length) return;
-
-            // Pre-index
-            paragraphs.forEach(indexHighlights);
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         revealHighlights(entry.target);
-                        observer.unobserve(entry.target); // fire only once
+                    } else {
+                        hideHighlights(entry.target);       // reset when out of view
                     }
                 });
             }, {
-                threshold: 0.3,           // trigger when 30% visible
-                rootMargin: '0px 0px -40px 0px'  // slight bottom offset
+                threshold: 0.25,
+                rootMargin: '0px 0px -30px 0px'
             });
 
             paragraphs.forEach(p => observer.observe(p));
         }
 
-        // Wait until the loading screen is gone (app.js hides it after ~4s)
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => setTimeout(initHighlightObserver, 4200));
-        } else {
-            setTimeout(initHighlightObserver, 4200);
+        /* ─────────────────────────────────────────
+           3. PARALLAX — hero elements shift gently
+              on scroll
+        ───────────────────────────────────────── */
+        function initParallax() {
+            const heroLeft  = document.querySelector('.hero-left');
+            const heroRight = document.querySelector('.hero-right');
+            const stickers  = document.querySelectorAll('.sticker');
+
+            window.addEventListener('scroll', () => {
+                const y = window.scrollY;
+                if (!heroLeft) return;
+                const speed = y * 0.18;
+                heroLeft.style.transform  = `translateY(${speed * 0.6}px)`;
+                heroRight.style.transform = `translateY(${speed * 0.35}px)`;
+                stickers.forEach((s, idx) => {
+                    const dir = idx % 2 === 0 ? 1 : -1;
+                    s.style.transform = s.style.transform.replace(/translateY\([^)]*\)/, '')
+                        + ` translateY(${dir * speed * 0.22}px)`;
+                });
+            }, { passive: true });
         }
+
+        /* ─────────────────────────────────────────
+           4. SECTION BACKGROUND BLEND
+              Adds a subtle gradient that transitions
+              colours as you scroll between sections
+        ───────────────────────────────────────── */
+        function initSectionBlend() {
+            const sections = document.querySelectorAll('section[id]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('section-visible');
+                    } else {
+                        entry.target.classList.remove('section-visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            sections.forEach(s => observer.observe(s));
+        }
+
+        /* ─────────────────────────────────────────
+           INIT — after loading screen clears
+        ───────────────────────────────────────── */
+        const DELAY = 4200;
+
+        function init() {
+            startTyping();
+            initHighlightObserver();
+            initParallax();
+            initSectionBlend();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(init, DELAY));
+        } else {
+            setTimeout(init, DELAY);
+        }
+
     })();
     </script>
 

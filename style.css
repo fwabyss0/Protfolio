@@ -372,6 +372,7 @@ img {
     overflow: hidden;
     background: var(--bg);
     padding-top: 5rem;
+    will-change: transform;
 }
 
 /* Grid background */
@@ -499,6 +500,9 @@ img {
     width: 100%;
 }
 
+.hero-left  { will-change: transform; transition: transform 0.1s linear; }
+.hero-right { will-change: transform; transition: transform 0.1s linear; }
+
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -515,9 +519,36 @@ img {
 .hero-name {
     font-size: clamp(2.8rem, 5.5vw, 5rem);
     font-weight: 700;
-    line-height: 1.05;
+    line-height: 1.1;
     margin-bottom: 1.1rem;
-    white-space: nowrap;
+    display: flex;
+    flex-direction: column;   /* I'm on top, name below */
+    gap: 0.1em;
+}
+
+.hero-im {
+    font-size: 0.55em;         /* smaller "I'm" above */
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+}
+
+/* Blinking typing cursor */
+.typed-cursor {
+    display: inline-block;
+    color: var(--yellow);
+    font-weight: 300;
+    animation: cursorBlink 0.75s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+@keyframes cursorFade {
+    to { opacity: 0; width: 0; overflow: hidden; }
 }
 
 .name-accent {
@@ -2407,4 +2438,112 @@ img {
     .hero-name { font-size: 2.1rem; }
     .hero-wrap { padding: 1.5rem 20px 3.5rem; }
     .container { padding: 0 16px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION BACKGROUND BLEND & PARALLAX FADE
+   ══════════════════════════════════════════════════════════════ */
+
+/* Remove hard borders between sections — use unified gradient bg */
+body {
+    background: linear-gradient(
+        180deg,
+        #0D0D1A 0%,
+        #0F0F22 15%,
+        #101028 30%,
+        #0E0E20 45%,
+        #13132B 60%,
+        #0D0D1A 75%,
+        #0F0F22 90%,
+        #0D0D1A 100%
+    );
+}
+
+.hero,
+.about,
+.skills,
+.education,
+.projects,
+.contact {
+    background: transparent;
+    border-top: none;
+}
+
+/* Decorative colour blobs at section boundaries for seamless blending */
+.hero::before,
+.about::before,
+.skills::before,
+.education::before,
+.projects::before,
+.contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero::before {
+    background:
+        radial-gradient(ellipse at 20% 40%, rgba(255,225,65,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(20,241,217,0.04) 0%, transparent 55%);
+}
+
+.about::before {
+    background:
+        radial-gradient(ellipse at 75% 30%, rgba(199,125,255,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 70%, rgba(20,241,217,0.03) 0%, transparent 55%);
+}
+
+.skills::before {
+    background:
+        radial-gradient(ellipse at 90% 20%, rgba(255,225,65,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 80%, rgba(255,107,157,0.03) 0%, transparent 55%);
+}
+
+.education::before {
+    background:
+        radial-gradient(ellipse at 15% 40%, rgba(199,125,255,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 70%, rgba(20,241,217,0.03) 0%, transparent 55%);
+}
+
+.projects::before {
+    background:
+        radial-gradient(ellipse at 70% 30%, rgba(20,241,217,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 70%, rgba(255,225,65,0.03) 0%, transparent 55%);
+}
+
+.contact::before {
+    background:
+        radial-gradient(ellipse at 50% 50%, rgba(255,107,157,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(199,125,255,0.03) 0%, transparent 55%);
+}
+
+/* Gradient separator lines — keep these */
+.about::after,
+.skills::after,
+.education::after,
+.projects::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 225, 65, 0.1) 30%,
+        rgba(20, 241, 217, 0.1) 70%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Section slide-in when scrolled into view */
+section[id] {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0.92;
+}
+
+section[id].section-visible {
+    opacity: 1;
 }
