@@ -286,84 +286,70 @@
     <section id="education" class="education">
         <div class="container">
             <div class="sec-label">// My Journey</div>
-            <h2 class="sec-title">Education Timeline</h2>
+            <h2 class="sec-title">Education</h2>
 
-            <!-- ── 3D Flipping Book ── -->
-            <div class="edu-book-scene">
-                <div class="edu-book">
-                    <div class="book-spine"></div>
-                    <div class="book-back"></div>
+            <div class="edu-cards-grid">
 
-                    <!-- ─ Page 4: Higher Education (bottom of stack, revealed last) ─ -->
-                    <div class="book-page bp-uni">
-                        <div class="bp-inner">
-                            <div class="bp-face bp-front bp-blank"></div>
-                            <div class="bp-face bp-back">
-                                <span class="bp-emoji">🏛️</span>
-                                <span class="bp-label">Higher Education</span>
-                                <span class="bp-school">Softwarica College</span>
-                                <span class="bp-detail">Coventry University</span>
-                                <span class="bp-badge bp-badge-purple">🤖 AI &amp; Machine Learning</span>
-                                <span class="bp-year">Current ✨</span>
-                            </div>
+                <!-- Card 1: Primary -->
+                <div class="edu-card edu-card-yellow">
+                    <div class="edu-card-glow"></div>
+                    <div class="edu-card-top">
+                        <div class="edu-card-icon" style="--eic: var(--yellow)">
+                            <i class="fas fa-school"></i>
                         </div>
+                        <span class="edu-card-status status-done">Completed</span>
                     </div>
-
-                    <!-- ─ Page 3: Secondary School (revealed after primary flips) ─ -->
-                    <div class="book-page bp-secondary">
-                        <div class="bp-inner">
-                            <div class="bp-face bp-front bp-blank"></div>
-                            <div class="bp-face bp-back">
-                                <span class="bp-emoji">🎓</span>
-                                <span class="bp-label">Secondary School</span>
-                                <span class="bp-school">Khwopa Secondary School</span>
-                                <span class="bp-detail">Bhaktapur, Nepal</span>
-                                <span class="bp-badge bp-badge-teal">💻 Computer Science</span>
-                                <span class="bp-year">2023 – 2025</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ─ Page 2: Primary School (revealed after journey page flips) ─ -->
-                    <div class="book-page bp-primary">
-                        <div class="bp-inner">
-                            <div class="bp-face bp-front bp-blank"></div>
-                            <div class="bp-face bp-back">
-                                <span class="bp-emoji">🏫</span>
-                                <span class="bp-label">Primary School</span>
-                                <span class="bp-school">North East English<br>Secondary School</span>
-                                <span class="bp-detail">Bhaktapur, Nepal</span>
-                                <span class="bp-badge bp-badge-yellow">📚 Strong Foundation</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ─ Page 1: Journey Overview (revealed when cover opens) ─ -->
-                    <div class="book-page bp-journey">
-                        <div class="bp-inner">
-                            <div class="bp-face bp-front bp-blank"></div>
-                            <div class="bp-face bp-back">
-                                <span class="bp-emoji">🗺️</span>
-                                <span class="bp-label">My Journey</span>
-                                <span class="bp-sub">From Bhaktapur&rsquo;s classrooms<br>to Coventry University&rsquo;s AI labs<br>— every chapter matters.</span>
-                                <span class="bp-badge bp-badge-pink">✨ 3 Chapters</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ─ Cover (first to flip, reveals journey page beneath) ─ -->
-                    <div class="book-page bp-cover">
-                        <div class="bp-inner">
-                            <div class="bp-face bp-front bp-cover-front">
-                                <i class="fas fa-graduation-cap book-icon"></i>
-                                <span class="book-title">My Journey</span>
-                                <span class="book-by">Alish Shrestha</span>
-                            </div>
-                            <div class="bp-face bp-back bp-cover-back"></div>
-                        </div>
+                    <h3 class="edu-card-title">Primary Education</h3>
+                    <h4 class="edu-card-school">North East English Secondary School</h4>
+                    <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
+                    <p class="edu-card-desc">Built a strong academic foundation across core subjects with excellent performance and discipline.</p>
+                    <div class="edu-card-tags">
+                        <span class="edu-tag">📚 Strong Foundation</span>
+                        <span class="edu-tag">🎯 Mathematics</span>
+                        <span class="edu-tag">🔬 Science</span>
                     </div>
                 </div>
-                <p class="book-hint">👆 Click the book to turn pages</p>
+
+                <!-- Card 2: Secondary -->
+                <div class="edu-card edu-card-teal">
+                    <div class="edu-card-glow"></div>
+                    <div class="edu-card-top">
+                        <div class="edu-card-icon" style="--eic: var(--teal)">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <span class="edu-card-status status-done">2023 – 2025</span>
+                    </div>
+                    <h3 class="edu-card-title">Secondary Education</h3>
+                    <h4 class="edu-card-school">Khwopa Secondary School</h4>
+                    <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
+                    <p class="edu-card-desc">Completed with Computer Science specialization — programming fundamentals and advanced mathematics.</p>
+                    <div class="edu-card-tags">
+                        <span class="edu-tag">💻 Computer Science</span>
+                        <span class="edu-tag">⚡ Programming</span>
+                        <span class="edu-tag">🔢 Advanced Math</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Higher (featured) -->
+                <div class="edu-card edu-card-purple edu-card-featured">
+                    <div class="edu-card-glow"></div>
+                    <div class="edu-card-top">
+                        <div class="edu-card-icon" style="--eic: var(--purple)">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <span class="edu-card-status status-current">Current ✨</span>
+                    </div>
+                    <h3 class="edu-card-title">Higher Education</h3>
+                    <h4 class="edu-card-school">Softwarica College<br><span class="edu-sub-school">(Coventry University)</span></h4>
+                    <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
+                    <p class="edu-card-desc">Pursuing Bachelor's in Artificial Intelligence — machine learning, neural networks, and data science.</p>
+                    <div class="edu-card-tags">
+                        <span class="edu-tag">🧠 Machine Learning</span>
+                        <span class="edu-tag">🤖 AI Development</span>
+                        <span class="edu-tag">🔢 Data Science</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -633,57 +619,6 @@
     })();
     </script>
 
-    <!-- ── Book Click-to-Flip ── -->
-    <script>
-    (function () {
-        'use strict';
-        var pageOrder = ['bp-cover', 'bp-journey', 'bp-primary', 'bp-secondary'];
-        var flippedCount = 0;
-
-        function getPages() {
-            return [
-                document.querySelector('.bp-cover'),
-                document.querySelector('.bp-journey'),
-                document.querySelector('.bp-primary'),
-                document.querySelector('.bp-secondary')
-            ];
-        }
-
-        function updateHint() {
-            var hint = document.querySelector('.book-hint');
-            if (!hint) return;
-            if (flippedCount === 0) {
-                hint.textContent = '👆 Click the book to turn pages';
-            } else if (flippedCount >= pageOrder.length) {
-                hint.textContent = '🔄 Click again to reset';
-            } else {
-                hint.textContent = '👆 Click to turn next page (' + flippedCount + '/' + pageOrder.length + ')';
-            }
-        }
-
-        function flipNext() {
-            var pages = getPages();
-            if (flippedCount < pageOrder.length) {
-                pages[flippedCount].classList.add('page-flipped');
-                flippedCount++;
-            } else {
-                // reset all
-                pages.forEach(function (p) { p.classList.remove('page-flipped'); });
-                flippedCount = 0;
-            }
-            updateHint();
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var scene = document.querySelector('.edu-book-scene');
-            if (scene) {
-                scene.style.cursor = 'pointer';
-                scene.addEventListener('click', flipNext);
-            }
-            updateHint();
-        });
-    })();
-    </script>
 </body>
 
 </html>

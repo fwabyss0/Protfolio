@@ -2123,336 +2123,105 @@ img {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   EDUCATION — 3D FLIPPING BOOK
+   EDUCATION — 3-COLUMN CARDS
    ══════════════════════════════════════════════════════════════ */
 
-.edu-book-scene {
-    perspective: 1800px;
-    perspective-origin: 45% 50%;
+.edu-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+    margin-top: 3rem;
+}
+
+.edu-card {
+    position: relative;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.6rem 1.6rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 4.5rem;
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-}
-
-.edu-book {
-    width: 320px;
-    height: 420px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: rotateX(8deg) rotateY(-28deg);
-    animation: bookSway 6s ease-in-out infinite;
-    cursor: pointer;
-}
-
-/* ── Spine (left face) ── */
-.book-spine {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 32px;
-    height: 100%;
-    background: linear-gradient(180deg, #6D28D9 0%, #C77DFF 50%, #6D28D9 100%);
-    transform-origin: right center;
-    transform: rotateY(-90deg) translateZ(16px);
-    border-radius: 5px 0 0 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 0.75rem;
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.book-spine::after {
-    content: 'ALISH SHRESTHA · PORTFOLIO';
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-    font-size: 0.42rem;
-    font-family: var(--mono);
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.8);
-    text-transform: uppercase;
-}
+.edu-card:hover { transform: translateY(-6px); }
+.edu-card-yellow:hover { border-color: rgba(255,225,65,0.5);  box-shadow: 0 16px 48px rgba(255,225,65,0.1); }
+.edu-card-teal:hover   { border-color: rgba(20,241,217,0.5);  box-shadow: 0 16px 48px rgba(20,241,217,0.1); }
+.edu-card-purple:hover { border-color: rgba(199,125,255,0.5); box-shadow: 0 16px 48px rgba(199,125,255,0.12); }
 
-/* ── Back cover ── */
-.book-back {
+.edu-card-glow {
     position: absolute;
-    inset: 0;
-    background: #06060E;
-    border-radius: 4px 10px 10px 4px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    transform: translateZ(-16px);
-}
-
-/* ── Pages ── */
-.book-page {
-    position: absolute;
-    top: 4%;
-    right: 2%;
-    width: 92%;
-    height: 92%;
-    transform-origin: left center;
-    transform-style: preserve-3d;
-}
-
-/* \u2500\u2500 Pages are flipped on click via JS \u2014 no auto animation \u2500\u2500 */
-.bp-cover, .bp-journey, .bp-primary, .bp-secondary {
-    transition: transform 0.75s cubic-bezier(0.645, 0.045, 0.355, 1.000);
-    transform: rotateY(0deg);
-}
-
-/* State class added by JS when a page is clicked open */
-.bp-cover.page-flipped,
-.bp-journey.page-flipped,
-.bp-primary.page-flipped,
-.bp-secondary.page-flipped {
-    transform: rotateY(-175deg);
-}
-/* bp-uni stays static \u2014 it's the final reveal at the bottom */
-
-.bp-inner {
-    position: absolute;
-    inset: 0;
-    transform-style: preserve-3d;
-    border-radius: 0 8px 8px 0;
-}
-
-.bp-face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    padding: 1.2rem 1rem;
-    border-radius: 0 9px 9px 0;
-    border: 1px solid;
-}
-
-.bp-back {
-    transform: rotateY(180deg);
-}
-
-/* Primary — yellow theme */
-.bp-primary .bp-front {
-    background: linear-gradient(135deg, rgba(255,225,65,0.13), rgba(255,225,65,0.04));
-    border-color: rgba(255, 225, 65, 0.3);
-}
-.bp-primary .bp-back {
-    background: linear-gradient(315deg, rgba(255,225,65,0.1), rgba(255,225,65,0.03));
-    border-color: rgba(255, 225, 65, 0.2);
-}
-
-/* Secondary — teal theme */
-.bp-secondary .bp-front {
-    background: linear-gradient(135deg, rgba(20,241,217,0.13), rgba(20,241,217,0.04));
-    border-color: rgba(20, 241, 217, 0.3);
-}
-.bp-secondary .bp-back {
-    background: linear-gradient(315deg, rgba(20,241,217,0.1), rgba(20,241,217,0.03));
-    border-color: rgba(20, 241, 217, 0.2);
-}
-
-/* University — purple theme */
-.bp-uni .bp-front, .bp-uni .bp-back {
-    background: linear-gradient(135deg, rgba(199,125,255,0.06), rgba(199,125,255,0.02));
-    border-color: rgba(199, 125, 255, 0.15);
-}
-
-.bp-emoji {
-    font-size: 2.8rem;
-    line-height: 1;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
-}
-
-.bp-label {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    text-align: center;
-}
-
-.bp-school {
-    font-size: 0.88rem;
-    color: var(--text);
-    font-weight: 600;
-    text-align: center;
-    line-height: 1.4;
-}
-
-.bp-detail {
-    font-size: 0.78rem;
-    color: var(--muted);
-    text-align: center;
-}
-
-.bp-year {
-    font-size: 0.78rem;
-    font-family: var(--mono);
-    color: var(--purple);
-    font-weight: 700;
-}
-
-.bp-sub {
-    font-size: 0.82rem;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.55;
-}
-
-/* Colour badge chips inside pages */
-.bp-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.28rem;
-    padding: 0.28rem 0.75rem;
-    border-radius: 100px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    margin-top: 0.3rem;
-}
-
-.bp-badge-yellow { background: rgba(255,225,65,0.15);  color: var(--yellow); border: 1px solid rgba(255,225,65,0.3); }
-.bp-badge-teal   { background: rgba(20,241,217,0.12);  color: var(--teal);   border: 1px solid rgba(20,241,217,0.3); }
-.bp-badge-purple { background: rgba(199,125,255,0.12); color: var(--purple); border: 1px solid rgba(199,125,255,0.3); }
-.bp-badge-pink   { background: rgba(255,107,157,0.12); color: var(--pink);   border: 1px solid rgba(255,107,157,0.3); }
-
-/* Blank front face — invisible placeholder (behind cover) */
-.bp-blank {
-    background: transparent;
-    border-color: transparent;
-}
-
-/* New page themes — journey (pink/orange) */
-.bp-journey .bp-back {
-    background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(255,159,67,0.05));
-    border-color: rgba(255, 107, 157, 0.28);
-}
-
-/* Cover page front face — mirrors old book-cover styling */
-.bp-cover-front {
-    background: linear-gradient(145deg, #16163E, #0C0C20) !important;
-    border: 1.5px solid rgba(199, 125, 255, 0.42) !important;
-    border-radius: 4px 11px 11px 4px !important;
-    position: relative;
-    overflow: hidden;
-}
-
-.bp-cover-front::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        -45deg,
-        transparent, transparent 12px,
-        rgba(199,125,255,0.027) 12px, rgba(199,125,255,0.027) 13px
-    );
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
     pointer-events: none;
+    opacity: 0.12;
+    transition: opacity 0.3s;
 }
+.edu-card:hover .edu-card-glow { opacity: 0.22; }
+.edu-card-yellow .edu-card-glow { background: radial-gradient(circle, var(--yellow) 0%, transparent 70%); }
+.edu-card-teal   .edu-card-glow { background: radial-gradient(circle, var(--teal)   0%, transparent 70%); }
+.edu-card-purple .edu-card-glow { background: radial-gradient(circle, var(--purple) 0%, transparent 70%); }
 
-.bp-cover-front::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--yellow), var(--teal), var(--purple));
-}
+.edu-card-featured { border-color: rgba(199,125,255,0.35); box-shadow: 0 8px 32px rgba(199,125,255,0.08); }
 
-.bp-cover-back {
-    background: #06060E !important;
-    border-color: rgba(255,255,255,0.04) !important;
-}
-
-/* ── Front cover (on top via translateZ) ── */
-.book-cover {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(145deg, #16163E, #0C0C20);
-    border: 1.5px solid rgba(199, 125, 255, 0.42);
-    border-radius: 4px 11px 11px 4px;
+.edu-card-top {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.65rem;
-    transform: translateZ(2px);          /* sits just in front of pages */
-    backface-visibility: hidden;
-    overflow: hidden;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
 }
 
-/* Hatching pattern */
-.book-cover::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 12px,
-        rgba(199, 125, 255, 0.028) 12px,
-        rgba(199, 125, 255, 0.028) 13px
-    );
+.edu-card-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    color: var(--eic, var(--text));
+    flex-shrink: 0;
 }
 
-/* Rainbow accent bar at bottom of cover */
-.book-cover::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--yellow), var(--teal), var(--purple));
-}
-
-.book-icon {
-    font-size: 3.4rem;
-    color: var(--yellow);
-    filter: drop-shadow(0 0 16px rgba(255, 225, 65, 0.6));
-    position: relative;
-    z-index: 1;
-}
-
-.book-title {
+.edu-card-status {
+    font-size: 0.7rem;
     font-family: var(--mono);
-    font-size: 1.2rem;
     font-weight: 700;
-    color: #fff;
-    text-align: center;
-    position: relative;
-    z-index: 1;
+    padding: 0.22rem 0.65rem;
+    border-radius: 100px;
 }
+.status-done    { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+.status-current { background: rgba(199,125,255,0.14); color: var(--purple); border: 1px solid rgba(199,125,255,0.35); }
 
-.book-by {
-    font-size: 0.82rem;
-    color: var(--muted);
-    font-style: italic;
-    position: relative;
-    z-index: 1;
-}
+.edu-card-title  { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0; }
+.edu-card-school { font-size: 0.82rem; font-weight: 600; color: var(--text); margin: 0; line-height: 1.4; }
+.edu-sub-school  { font-size: 0.74rem; color: var(--muted); font-weight: 400; }
 
-/* Book hint text */
-.book-hint {
-    margin-top: 1.8rem;
-    font-size: 0.82rem;
-    color: var(--muted);
-    font-family: var(--mono);
-    animation: floatBob 2.5s ease-in-out infinite;
-    cursor: pointer;
-    user-select: none;
+.edu-card-loc {
+    font-size: 0.72rem; color: var(--muted);
+    display: flex; align-items: center; gap: 0.35rem; margin: 0;
 }
+.edu-card-loc i { font-size: 0.65rem; }
 
-@keyframes bookSway {
-    0%, 100% { transform: rotateX(8deg)  rotateY(-28deg); }
-    50%       { transform: rotateX(6deg)  rotateY(-22deg); }
+.edu-card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0; flex: 1; }
+
+.edu-card-tags { display: flex; flex-wrap: wrap; gap: 0.38rem; margin-top: 0.2rem; }
+
+.edu-tag {
+    font-size: 0.67rem; font-weight: 600;
+    padding: 0.22rem 0.6rem; border-radius: 100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--muted); white-space: nowrap;
 }
+.edu-card-yellow .edu-tag { border-color: rgba(255,225,65,0.2);  color: rgba(255,225,65,0.85);  background: rgba(255,225,65,0.06); }
+.edu-card-teal   .edu-tag { border-color: rgba(20,241,217,0.2);  color: rgba(20,241,217,0.85);  background: rgba(20,241,217,0.06); }
+.edu-card-purple .edu-tag { border-color: rgba(199,125,255,0.2); color: rgba(199,125,255,0.9);  background: rgba(199,125,255,0.06); }
+
+@media (max-width: 900px) { .edu-cards-grid { grid-template-columns: 1fr; } }
+
 
 /* ══════════════════════════════════════════════════════════════
    SECTION VISUAL CONSISTENCY — ATMOSPHERE BLOBS & DIVIDERS
