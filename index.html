@@ -363,68 +363,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="book-hint">▶ Pages turn automatically ✨</p>
-            </div>
-
-            <div class="timeline">
-                <!-- Primary -->
-                <div class="tl-item">
-                    <div class="tl-dot dot-y"></div>
-                    <div class="education-card">
-                        <div class="ec-icon"><i class="fas fa-school"></i></div>
-                        <div class="ec-body">
-                            <span class="ec-year">Completed</span>
-                            <h3>Primary Education</h3>
-                            <h4>North East English Secondary School</h4>
-                            <p class="ec-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
-                            <p>Built a strong foundation in core subjects with excellent academic performance.</p>
-                            <div class="ec-tags">
-                                <span>📚 Strong Foundation</span>
-                                <span>🎯 Mathematics & Science</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Secondary -->
-                <div class="tl-item">
-                    <div class="tl-dot dot-t"></div>
-                    <div class="education-card">
-                        <div class="ec-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="ec-body">
-                            <span class="ec-year">2023 – 2025</span>
-                            <h3>Secondary Education</h3>
-                            <h4>Khwopa Secondary School</h4>
-                            <p class="ec-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
-                            <p>Completed with Computer Science specialization — programming fundamentals and advanced mathematics.</p>
-                            <div class="ec-tags">
-                                <span>💻 Computer Science</span>
-                                <span>⚡ Programming Basics</span>
-                                <span>🔬 Advanced Mathematics</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Higher -->
-                <div class="tl-item tl-featured">
-                    <div class="tl-dot dot-v pulse-dot"></div>
-                    <div class="education-card ec-featured">
-                        <div class="ec-icon"><i class="fas fa-university"></i></div>
-                        <div class="ec-body">
-                            <span class="ec-year ec-current">Current ✨</span>
-                            <h3>Higher Education</h3>
-                            <h4>Softwarica College (Coventry University)</h4>
-                            <p class="ec-loc"><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
-                            <p>Pursuing Bachelor's in Artificial Intelligence — machine learning, neural networks, and data science.</p>
-                            <div class="ec-tags">
-                                <span>🧠 Machine Learning</span>
-                                <span>🔢 Data Science</span>
-                                <span>🤖 AI Development</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <p class="book-hint">👆 Click the book to turn pages</p>
             </div>
         </div>
     </section>
@@ -691,6 +630,58 @@
         } else {
             setTimeout(initHighlightObserver, 4200);
         }
+    })();
+    </script>
+
+    <!-- ── Book Click-to-Flip ── -->
+    <script>
+    (function () {
+        'use strict';
+        var pageOrder = ['bp-cover', 'bp-journey', 'bp-primary', 'bp-secondary'];
+        var flippedCount = 0;
+
+        function getPages() {
+            return [
+                document.querySelector('.bp-cover'),
+                document.querySelector('.bp-journey'),
+                document.querySelector('.bp-primary'),
+                document.querySelector('.bp-secondary')
+            ];
+        }
+
+        function updateHint() {
+            var hint = document.querySelector('.book-hint');
+            if (!hint) return;
+            if (flippedCount === 0) {
+                hint.textContent = '👆 Click the book to turn pages';
+            } else if (flippedCount >= pageOrder.length) {
+                hint.textContent = '🔄 Click again to reset';
+            } else {
+                hint.textContent = '👆 Click to turn next page (' + flippedCount + '/' + pageOrder.length + ')';
+            }
+        }
+
+        function flipNext() {
+            var pages = getPages();
+            if (flippedCount < pageOrder.length) {
+                pages[flippedCount].classList.add('page-flipped');
+                flippedCount++;
+            } else {
+                // reset all
+                pages.forEach(function (p) { p.classList.remove('page-flipped'); });
+                flippedCount = 0;
+            }
+            updateHint();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var scene = document.querySelector('.edu-book-scene');
+            if (scene) {
+                scene.style.cursor = 'pointer';
+                scene.addEventListener('click', flipNext);
+            }
+            updateHint();
+        });
     })();
     </script>
 </body>

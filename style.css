@@ -1,4 +1,4 @@
-/* ================================================================
+﻿/* ================================================================
    ALISH SHRESTHA — PORTFOLIO v4.0
    Theme: Retro-Tech Interactive | Bold & Playful
    ================================================================ */
@@ -2127,7 +2127,7 @@ img {
    ══════════════════════════════════════════════════════════════ */
 
 .edu-book-scene {
-    perspective: 1400px;
+    perspective: 1800px;
     perspective-origin: 45% 50%;
     display: flex;
     flex-direction: column;
@@ -2135,16 +2135,17 @@ img {
     margin-bottom: 4.5rem;
     position: relative;
     z-index: 1;
+    cursor: pointer;
 }
 
 .edu-book {
-    width: 200px;
-    height: 265px;
+    width: 320px;
+    height: 420px;
     position: relative;
     transform-style: preserve-3d;
     transform: rotateX(8deg) rotateY(-28deg);
     animation: bookSway 6s ease-in-out infinite;
-    cursor: default;
+    cursor: pointer;
 }
 
 /* ── Spine (left face) ── */
@@ -2152,11 +2153,11 @@ img {
     position: absolute;
     top: 0;
     left: 0;
-    width: 22px;
+    width: 32px;
     height: 100%;
     background: linear-gradient(180deg, #6D28D9 0%, #C77DFF 50%, #6D28D9 100%);
     transform-origin: right center;
-    transform: rotateY(-90deg) translateZ(11px);
+    transform: rotateY(-90deg) translateZ(16px);
     border-radius: 5px 0 0 5px;
     display: flex;
     align-items: center;
@@ -2184,7 +2185,7 @@ img {
     background: #06060E;
     border-radius: 4px 10px 10px 4px;
     border: 1px solid rgba(255, 255, 255, 0.03);
-    transform: translateZ(-12px);
+    transform: translateZ(-16px);
 }
 
 /* ── Pages ── */
@@ -2198,14 +2199,20 @@ img {
     transform-style: preserve-3d;
 }
 
-/* ─ Animation stagger: 16s cycle, 4s phase offset each page ─
-   DOM order (back→front): uni → secondary → primary → journey → cover
-   Cover flips first, revealing journey; journey flips revealing primary; etc. */
-.bp-cover     { animation: bookFlip 16s ease-in-out infinite 0s;  }
-.bp-journey   { animation: bookFlip 16s ease-in-out infinite 4s;  }
-.bp-primary   { animation: bookFlip 16s ease-in-out infinite 8s;  }
-.bp-secondary { animation: bookFlip 16s ease-in-out infinite 12s; }
-/* bp-uni stays static — it’s the final reveal at the bottom */
+/* \u2500\u2500 Pages are flipped on click via JS \u2014 no auto animation \u2500\u2500 */
+.bp-cover, .bp-journey, .bp-primary, .bp-secondary {
+    transition: transform 0.75s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    transform: rotateY(0deg);
+}
+
+/* State class added by JS when a page is clicked open */
+.bp-cover.page-flipped,
+.bp-journey.page-flipped,
+.bp-primary.page-flipped,
+.bp-secondary.page-flipped {
+    transform: rotateY(-175deg);
+}
+/* bp-uni stays static \u2014 it's the final reveal at the bottom */
 
 .bp-inner {
     position: absolute;
@@ -2260,20 +2267,20 @@ img {
 }
 
 .bp-emoji {
-    font-size: 1.9rem;
+    font-size: 2.8rem;
     line-height: 1;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
 }
 
 .bp-label {
-    font-size: 0.82rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text);
     text-align: center;
 }
 
 .bp-school {
-    font-size: 0.68rem;
+    font-size: 0.88rem;
     color: var(--text);
     font-weight: 600;
     text-align: center;
@@ -2281,20 +2288,20 @@ img {
 }
 
 .bp-detail {
-    font-size: 0.6rem;
+    font-size: 0.78rem;
     color: var(--muted);
     text-align: center;
 }
 
 .bp-year {
-    font-size: 0.6rem;
+    font-size: 0.78rem;
     font-family: var(--mono);
     color: var(--purple);
     font-weight: 700;
 }
 
 .bp-sub {
-    font-size: 0.63rem;
+    font-size: 0.82rem;
     color: var(--muted);
     text-align: center;
     line-height: 1.55;
@@ -2305,11 +2312,11 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.28rem;
-    padding: 0.2rem 0.55rem;
+    padding: 0.28rem 0.75rem;
     border-radius: 100px;
-    font-size: 0.55rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    margin-top: 0.2rem;
+    margin-top: 0.3rem;
 }
 
 .bp-badge-yellow { background: rgba(255,225,65,0.15);  color: var(--yellow); border: 1px solid rgba(255,225,65,0.3); }
@@ -2406,16 +2413,16 @@ img {
 }
 
 .book-icon {
-    font-size: 2.4rem;
+    font-size: 3.4rem;
     color: var(--yellow);
-    filter: drop-shadow(0 0 12px rgba(255, 225, 65, 0.5));
+    filter: drop-shadow(0 0 16px rgba(255, 225, 65, 0.6));
     position: relative;
     z-index: 1;
 }
 
 .book-title {
     font-family: var(--mono);
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #fff;
     text-align: center;
@@ -2424,7 +2431,7 @@ img {
 }
 
 .book-by {
-    font-size: 0.63rem;
+    font-size: 0.82rem;
     color: var(--muted);
     font-style: italic;
     position: relative;
@@ -2433,20 +2440,13 @@ img {
 
 /* Book hint text */
 .book-hint {
-    margin-top: 1.6rem;
-    font-size: 0.74rem;
+    margin-top: 1.8rem;
+    font-size: 0.82rem;
     color: var(--muted);
     font-family: var(--mono);
     animation: floatBob 2.5s ease-in-out infinite;
-}
-
-/* ── Book keyframes ── */
-@keyframes bookFlip {
-    0%   { transform: rotateY(0deg);    }   /* closed — cover is in front */
-    16%  { transform: rotateY(-158deg); }   /* page flips out */
-    44%  { transform: rotateY(-158deg); }   /* stays open, showing page content */
-    60%  { transform: rotateY(0deg);    }   /* returns */
-    100% { transform: rotateY(0deg);    }   /* stays closed until next cycle */
+    cursor: pointer;
+    user-select: none;
 }
 
 @keyframes bookSway {
