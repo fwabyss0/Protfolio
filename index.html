@@ -726,96 +726,75 @@
     })();
     </script>
 
-    <!-- ── Skill Ring Click Handler ── -->
+    <!-- ── Skill Border Hover Handler ── -->
     <script>
     (function () {
         'use strict';
 
         function getColor(chip) {
-            // Read --cc CSS variable value from inline style
             const style = chip.getAttribute('style') || '';
             const m = style.match(/--cc:\s*([^;]+)/);
             return m ? m[1].trim() : '#14F1D9';
         }
 
-        function removeRing(wrap) {
-            wrap.querySelector('.sc-ring')?.remove();
+        function removeBorder(wrap) {
+            wrap.querySelector('.sc-border')?.remove();
             wrap.querySelector('.sc-pct-label')?.remove();
         }
 
-        function createRing(wrap, chip, pct) {
+        function createBorder(wrap, chip, pct) {
             const color = getColor(chip);
-            const w = chip.offsetWidth + 8;
-            const h = chip.offsetHeight + 8;
-            const rx = 10;
 
-            // Perimeter of rounded rectangle
-            const perim = 2 * (w - 2 * rx) + 2 * (h - 2 * rx) + 2 * Math.PI * rx;
-            const offset = perim * (1 - pct / 100);
+            const border = document.createElement('div');
+            border.className = 'sc-border';
 
-            const ns = 'http://www.w3.org/2000/svg';
-            const svg = document.createElementNS(ns, 'svg');
-            svg.classList.add('sc-ring');
-            svg.setAttribute('width', w);
-            svg.setAttribute('height', h);
-            svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+            const mask = document.createElement('div');
+            mask.className = 'sc-border-inner';
 
-            // Track (background circle)
-            const track = document.createElementNS(ns, 'rect');
-            track.setAttribute('x', 2); track.setAttribute('y', 2);
-            track.setAttribute('width', w - 4); track.setAttribute('height', h - 4);
-            track.setAttribute('rx', rx);
-            track.setAttribute('fill', 'none');
-            track.setAttribute('stroke', 'rgba(255,255,255,0.07)');
-            track.setAttribute('stroke-width', '2');
+            border.appendChild(mask);
+            wrap.appendChild(border);
 
-            // Progress stroke
-            const prog = document.createElementNS(ns, 'rect');
-            prog.setAttribute('x', 2); prog.setAttribute('y', 2);
-            prog.setAttribute('width', w - 4); prog.setAttribute('height', h - 4);
-            prog.setAttribute('rx', rx);
-            prog.setAttribute('fill', 'none');
-            prog.setAttribute('stroke', color);
-            prog.setAttribute('stroke-width', '2.5');
-            prog.setAttribute('stroke-linecap', 'round');
-            prog.setAttribute('stroke-dasharray', perim);
-            prog.setAttribute('stroke-dashoffset', perim);          // start hidden
-            prog.setAttribute('transform', `rotate(-90 ${w / 2} ${h / 2})`); // top-start
-            prog.style.transition = 'stroke-dashoffset 0.85s cubic-bezier(0.25,0.46,0.45,0.94)';
-
-            svg.appendChild(track);
-            svg.appendChild(prog);
-            wrap.appendChild(svg);
-
-            // Percentage label
             const label = document.createElement('div');
             label.className = 'sc-pct-label';
             label.textContent = `${pct}%`;
             label.style.color = color;
             wrap.appendChild(label);
 
-            // Trigger animation next frame
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                prog.setAttribute('stroke-dashoffset', offset);
-            }));
+            requestAnimationFrame(() => border.classList.add('visible'));
+
+            const start = performance.now();
+            const duration = 850;
+
+            function step(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                const currentPct = pct * eased;
+
+                border.style.background = `conic-gradient(from -90deg, ${color} 0%, ${color} ${currentPct}%, transparent ${currentPct}%)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+
+            requestAnimationFrame(step);
         }
 
         function init() {
             document.querySelectorAll('.sc[data-percent]').forEach(chip => {
-                chip.addEventListener('click', () => {
-                    const wrap = chip.parentElement;
-                    const isActive = chip.classList.contains('sc-active');
+                const wrap = chip.parentElement;
 
-                    // Deactivate all chips first
-                    document.querySelectorAll('.sc.sc-active').forEach(c => {
-                        c.classList.remove('sc-active');
-                        removeRing(c.parentElement);
-                    });
+                chip.addEventListener('mouseenter', () => {
+                    chip.classList.add('sc-active');
+                    createBorder(wrap, chip, parseInt(chip.dataset.percent));
+                });
 
-                    if (!isActive) {
-                        chip.classList.add('sc-active');
-                        createRing(wrap, chip, parseInt(chip.dataset.percent));
-                    }
+                chip.addEventListener('mouseleave', () => {
+                    chip.classList.remove('sc-active');
+                    removeBorder(wrap);
                 });
             });
         }
