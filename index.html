@@ -118,7 +118,6 @@
                     <!-- Photo -->
                     <div class="photo-card" id="photo-card">
                         <div class="photo-border-glow"></div>
-                        <div class="photo-cursor-glow"></div>
                         <div class="photo-shine"></div>
                         <img src="prof.jpg" alt="Alish Shrestha" id="profile-img" class="hero-photo">
                     </div>
@@ -734,15 +733,9 @@
                 // Border glow angle (degrees from centre)
                 const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI) + 90;
 
-                // Inner cursor glow position
-                const xPct = ((e.clientX - rect.left) / rect.width) * 100;
-                const yPct = ((e.clientY - rect.top) / rect.height) * 100;
-
                 card.style.setProperty('--rx', `${rx}deg`);
                 card.style.setProperty('--ry', `${ry}deg`);
                 card.style.setProperty('--angle', `${angle}deg`);
-                card.style.setProperty('--x', `${xPct}%`);
-                card.style.setProperty('--y', `${yPct}%`);
             });
 
             card.addEventListener('mouseleave', () => {

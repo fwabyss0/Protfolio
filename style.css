@@ -719,28 +719,6 @@ img {
     border-radius: 19px;
 }
 
-/* Cursor-following soft highlight inside the photo */
-.photo-cursor-glow {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    border-radius: 18px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    background: radial-gradient(
-        circle 140px at var(--x, 50%) var(--y, 50%),
-        rgba(255, 225, 65, 0.3) 0%,
-        rgba(20, 241, 217, 0.15) 50%,
-        transparent 75%
-    );
-    mix-blend-mode: screen;
-}
-
-.photo-card:hover .photo-cursor-glow {
-    opacity: 1;
-}
-
 /* Shine sweep kept as a secondary effect */
 .photo-shine {
     position: absolute;
