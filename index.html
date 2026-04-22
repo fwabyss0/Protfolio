@@ -116,7 +116,8 @@
                     <div class="pr-orb pr-orb-3"></div>
                     <div class="pr-orb pr-orb-4"></div>
                     <!-- Photo -->
-                    <div class="photo-card">
+                    <div class="photo-card" id="photo-card">
+                        <div class="photo-cursor-glow"></div>
                         <div class="photo-shine"></div>
                         <img src="prof.jpg" alt="Alish Shrestha" id="profile-img" class="hero-photo">
                     </div>
@@ -709,6 +710,22 @@
         }
 
         /* ─────────────────────────────────────────
+           5. PHOTO CURSOR GLOW
+              Colored radial glow follows mouse over photo card
+        ───────────────────────────────────────── */
+        function initPhotoCursorGlow() {
+            const card = document.getElementById('photo-card');
+            if (!card) return;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--x', `${x}%`);
+                card.style.setProperty('--y', `${y}%`);
+            });
+        }
+
+        /* ─────────────────────────────────────────
            INIT — after loading screen clears
         ───────────────────────────────────────── */
         const DELAY = 4200;
@@ -716,8 +733,9 @@
         function init() {
             startTyping();
             initHighlightObserver();
-            initParallax();
+            initHeroScroll();
             initSectionBlend();
+            initPhotoCursorGlow();
         }
 
         if (document.readyState === 'loading') {
