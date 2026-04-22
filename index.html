@@ -93,9 +93,9 @@
                     <a href="Alish_Shrestha_CV.pdf" target="_blank" class="btn btn-primary">
                         <i class="fas fa-file-alt"></i> View Resume
                     </a>
-                    <button type="button" class="btn btn-ghost" id="hire-me-btn">
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shresthaalish444@gmail.com" target="_blank" class="btn btn-ghost">
                         <i class="fas fa-briefcase"></i> Hire Me
-                    </button>
+                    </a>
                 </div>
                 <div class="avail-row">
                     <span class="avail-dot"></span>
@@ -804,86 +804,6 @@
         } else {
             init();
         }
-    })();
-    </script>
-
-    <!-- ══ HIRE ME MODAL ══ -->
-    <div id="hire-modal" class="modal-overlay" style="display:none">
-        <div class="modal-content">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <h3><i class="fas fa-paper-plane"></i> Get In Touch</h3>
-            <p class="modal-sub">Fill in the details and I'll receive your message via email.</p>
-            <form id="hire-form" class="hire-form">
-                <div class="form-group">
-                    <label for="hire-name">Name</label>
-                    <input type="text" id="hire-name" placeholder="Your name" required>
-                </div>
-                <div class="form-group">
-                    <label for="hire-email">Email</label>
-                    <input type="email" id="hire-email" placeholder="your@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="hire-contact">Contact / Phone</label>
-                    <input type="text" id="hire-contact" placeholder="Your phone or contact info">
-                </div>
-                <div class="form-group">
-                    <label for="hire-desc">Description</label>
-                    <textarea id="hire-desc" rows="4" placeholder="Tell me about the opportunity..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary modal-submit">
-                    <i class="fas fa-envelope"></i> Send Message
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-    (function(){
-        'use strict';
-        const btn = document.getElementById('hire-me-btn');
-        const modal = document.getElementById('hire-modal');
-        const closeBtn = document.getElementById('modal-close');
-        const form = document.getElementById('hire-form');
-
-        if(!btn || !modal) return;
-
-        btn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-
-        function closeModal(){
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
-        closeBtn?.addEventListener('click', closeModal);
-        modal.addEventListener('click', e => {
-            if(e.target === modal) closeModal();
-        });
-        document.addEventListener('keydown', e => {
-            if(e.key === 'Escape' && modal.style.display === 'flex') closeModal();
-        });
-
-        form?.addEventListener('submit', e => {
-            e.preventDefault();
-            const name = document.getElementById('hire-name').value.trim();
-            const email = document.getElementById('hire-email').value.trim();
-            const contact = document.getElementById('hire-contact').value.trim();
-            const desc = document.getElementById('hire-desc').value.trim();
-
-            const subject = encodeURIComponent('Hire Me - Message from ' + name);
-            const body = encodeURIComponent(
-                'Name: ' + name + '\n' +
-                'Email: ' + email + '\n' +
-                'Contact: ' + contact + '\n\n' +
-                'Description:\n' + desc
-            );
-
-            window.open('https://mail.google.com/mail/?view=cm&fs=1&to=shresthaalish444@gmail.com&su=' + subject + '&body=' + body, '_blank');
-            closeModal();
-            form.reset();
-        });
     })();
     </script>
 
