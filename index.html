@@ -745,6 +745,46 @@
         }
 
         /* ─────────────────────────────────────────
+           6. SCROLL MOTION BLUR
+              Detects scroll velocity and applies
+              blur + scale to sections for a smooth
+              motion effect during fast scrolling
+        ───────────────────────────────────────── */
+        function initScrollMotionBlur() {
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            let scrollTimeout = null;
+
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const currentScrollY = window.scrollY;
+                        const velocity = Math.abs(currentScrollY - lastScrollY);
+
+                        document.body.classList.remove('is-scrolling', 'is-scrolling-fast');
+
+                        if (velocity > 8) {
+                            document.body.classList.add('is-scrolling-fast');
+                        } else if (velocity > 2) {
+                            document.body.classList.add('is-scrolling');
+                        }
+
+                        lastScrollY = currentScrollY;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    document.body.classList.remove('is-scrolling', 'is-scrolling-fast');
+                }, 120);
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+        }
+
+        /* ─────────────────────────────────────────
            INIT — after loading screen clears
         ───────────────────────────────────────── */
         const DELAY = 4200;
@@ -755,6 +795,7 @@
             initHeroScroll();
             initSectionBlend();
             initPhotoCursorGlow();
+            initScrollMotionBlur();
         }
 
         if (document.readyState === 'loading') {

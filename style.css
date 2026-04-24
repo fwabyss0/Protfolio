@@ -35,6 +35,29 @@ html {
     scroll-behavior: smooth;
 }
 
+/* ── SMOOTH SCROLL MOTION BLUR ────────────────────────────────── */
+section {
+    transition: filter 0.35s ease, transform 0.35s ease;
+    will-change: filter, transform;
+}
+
+body.is-scrolling section {
+    filter: blur(2px);
+    transform: scale(0.985);
+}
+
+body.is-scrolling-fast section {
+    filter: blur(4px);
+    transform: scale(0.97);
+}
+
+/* Keep hero photo crisp during scroll */
+body.is-scrolling .photo-card,
+body.is-scrolling-fast .photo-card {
+    filter: none;
+    transform: none;
+}
+
 body {
     font-family: var(--font);
     background: var(--bg);
