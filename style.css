@@ -1830,18 +1830,16 @@ img {
     z-index: 20;
 }
 
-/* Explicit per-item positions (no CSS trig functions needed) */
-.social-orbital.active .oi-github    { transform: translate(-85px, -62px) scale(1); }
-.social-orbital.active .oi-linkedin  { transform: translate(-32px, -100px) scale(1); }
-.social-orbital.active .oi-instagram { transform: translate(32px, -100px) scale(1); }
-.social-orbital.active .oi-facebook  { transform: translate(85px, -62px) scale(1); }
-.social-orbital.active .oi-discord   { transform: translate(105px, 0px) scale(1); }
+/* Full circle — 4 items at cardinal directions */
+.social-orbital.active .oi-github    { transform: translate(-105px, 0px) scale(1); }
+.social-orbital.active .oi-linkedin  { transform: translate(0px, -105px) scale(1); }
+.social-orbital.active .oi-instagram { transform: translate(105px, 0px) scale(1); }
+.social-orbital.active .oi-facebook  { transform: translate(0px, 105px) scale(1); }
 
-.orbital-item.oi-github:hover    { transform: translate(-85px, -62px) scale(1.2); }
-.orbital-item.oi-linkedin:hover  { transform: translate(-32px, -100px) scale(1.2); }
-.orbital-item.oi-instagram:hover { transform: translate(32px, -100px) scale(1.2); }
-.orbital-item.oi-facebook:hover  { transform: translate(85px, -62px) scale(1.2); }
-.orbital-item.oi-discord:hover   { transform: translate(105px, 0px) scale(1.2); }
+.orbital-item.oi-github:hover    { transform: translate(-105px, 0px) scale(1.2); }
+.orbital-item.oi-linkedin:hover  { transform: translate(0px, -105px) scale(1.2); }
+.orbital-item.oi-instagram:hover { transform: translate(105px, 0px) scale(1.2); }
+.orbital-item.oi-facebook:hover  { transform: translate(0px, 105px) scale(1.2); }
 
 /* Individual brand colors */
 .oi-github    { color: #fff; }
@@ -1855,9 +1853,6 @@ img {
 
 .oi-facebook  { color: #1877f2; }
 .oi-facebook:hover  { background: #1877f2; color: #fff; border-color: #1877f2; }
-
-.oi-discord   { color: #7289da; }
-.oi-discord:hover   { background: #7289da; color: #fff; border-color: #7289da; }
 
 /* ── 12. FOOTER ───────────────────────────────────────────────── */
 .footer {
