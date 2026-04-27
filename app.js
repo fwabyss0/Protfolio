@@ -1012,11 +1012,11 @@ function initializeChatbot() {
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
 
-    // Send message to bot backend
+    // Send message to bot backend with real-time streaming
     async function sendToBot(message) {
         try {
             // Try to connect to backend first
-            const response = await fetch('/chat', {
+            const response = await fetch('http://localhost:5000/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1029,8 +1029,9 @@ function initializeChatbot() {
 
                 setTimeout(() => {
                     removeTypingIndicator();
-                    addMessage(data.response, 'bot');
-                }, 1000);
+                    // Use streaming typewriter effect for real-time feel
+                    addStreamingMessage(data.response, 'bot');
+                }, 500);
                 return;
             }
         } catch (error) {
@@ -1044,13 +1045,69 @@ function initializeChatbot() {
         if (response !== null) {
             setTimeout(() => {
                 removeTypingIndicator();
-                addMessage(response, 'bot');
-            }, 800 + Math.random() * 600); // Variable response time
+                addStreamingMessage(response, 'bot');
+            }, 800 + Math.random() * 600);
         } else {
-            // For clear chat, just remove typing indicator
             setTimeout(() => {
                 removeTypingIndicator();
             }, 100);
+        }
+    }
+
+    // Add streaming message with typewriter effect
+    function addStreamingMessage(text, type) {
+        // Play sound effect
+        playChatSound(type);
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+        if (type === 'user') {
+            messageDiv.classList.add('user');
+        }
+
+        // Create avatar
+        const avatar = document.createElement('div');
+        avatar.className = `message-avatar ${type}`;
+
+        const avatarImg = document.createElement('img');
+        avatarImg.className = 'avatar-image';
+        avatarImg.alt = type === 'user' ? 'User Avatar' : 'Abyss Avatar';
+        avatarImg.src = type === 'user' ? 'user.png' : 'a.png';
+        avatar.appendChild(avatarImg);
+
+        // Create message content
+        const messageP = document.createElement('p');
+        messageP.innerHTML = '';
+
+        // Append in correct order
+        if (type === 'user') {
+            messageDiv.appendChild(messageP);
+            messageDiv.appendChild(avatar);
+        } else {
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageP);
+        }
+
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+        // Typewriter effect for bot messages
+        if (type === 'bot') {
+            let i = 0;
+            const chars = text.split('');
+            const speed = 15; // ms per character for streaming effect
+
+            function typeChar() {
+                if (i < chars.length) {
+                    messageP.innerHTML += chars[i];
+                    i++;
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                    setTimeout(typeChar, speed);
+                }
+            }
+            typeChar();
+        } else {
+            messageP.innerHTML = text;
         }
     }
 }
