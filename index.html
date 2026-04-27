@@ -485,21 +485,25 @@
 
                 <div class="contact-right">
                     <h3 class="social-h">Connect With Me</h3>
-                    <div class="social-list">
-                        <a href="https://github.com/fwabyss0" target="_blank" class="social-link sl-github" aria-label="GitHub">
-                            <i class="fab fa-github"></i> <span>GitHub</span>
+                    <div class="social-orbital" id="social-orbital">
+                        <button class="orbital-btn" id="orbital-btn" aria-label="Toggle social links">
+                            <i class="fas fa-share-alt"></i>
+                            <span class="orbital-btn-text">Connect</span>
+                        </button>
+                        <a href="https://github.com/fwabyss0" target="_blank" class="orbital-item oi-github" aria-label="GitHub" style="--i:0">
+                            <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank" class="social-link sl-linkedin" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i> <span>LinkedIn</span>
+                        <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank" class="orbital-item oi-linkedin" aria-label="LinkedIn" style="--i:1">
+                            <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank" class="social-link sl-instagram" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i> <span>Instagram</span>
+                        <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank" class="orbital-item oi-instagram" aria-label="Instagram" style="--i:2">
+                            <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="https://www.facebook.com/alish.shrestha.138982" target="_blank" class="social-link sl-facebook" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i> <span>Facebook</span>
+                        <a href="https://www.facebook.com/alish.shrestha.138982" target="_blank" class="orbital-item oi-facebook" aria-label="Facebook" style="--i:3">
+                            <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="javascript:void(0)" class="social-link sl-discord" aria-label="Discord" onclick="openDiscord(event)">
-                            <i class="fab fa-discord"></i> <span>Discord</span>
+                        <a href="javascript:void(0)" class="orbital-item oi-discord" aria-label="Discord" onclick="openDiscord(event)" style="--i:4">
+                            <i class="fab fa-discord"></i>
                         </a>
                     </div>
                 </div>
@@ -779,6 +783,27 @@
         }
 
         /* ─────────────────────────────────────────
+           7. SOCIAL ORBITAL MENU
+              Toggle circular social icon fan-out
+        ───────────────────────────────────────── */
+        function initSocialOrbital() {
+            const btn = document.getElementById('orbital-btn');
+            const wrap = document.getElementById('social-orbital');
+            if (!btn || !wrap) return;
+
+            btn.addEventListener('click', () => {
+                wrap.classList.toggle('active');
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!wrap.contains(e.target)) {
+                    wrap.classList.remove('active');
+                }
+            });
+        }
+
+        /* ─────────────────────────────────────────
            INIT — after loading screen clears
         ───────────────────────────────────────── */
         const DELAY = 4200;
@@ -790,6 +815,7 @@
             initSectionBlend();
             initPhotoCursorGlow();
             initLenisSmoothScroll();
+            initSocialOrbital();
         }
 
         if (document.readyState === 'loading') {
