@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 </head>
 
 <body>
@@ -745,43 +747,35 @@
         }
 
         /* ─────────────────────────────────────────
-           6. SCROLL MOTION BLUR
-              Detects scroll velocity and applies
-              blur + scale to sections for a smooth
-              motion effect during fast scrolling
+           6. LENIS SUPER SMOOTH SCROLL
+              Buttery smooth inertia-based scrolling
         ───────────────────────────────────────── */
-        function initScrollMotionBlur() {
-            let lastScrollY = window.scrollY;
-            let ticking = false;
-            let scrollTimeout = null;
+        function initLenisSmoothScroll() {
+            if (typeof Lenis === 'undefined') return;
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1 - Math.pow(2, -10 * t)),
+                smoothWheel: true,
+                wheelMultiplier: 1,
+                touchMultiplier: 2,
+            });
 
-            function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        const currentScrollY = window.scrollY;
-                        const velocity = Math.abs(currentScrollY - lastScrollY);
-
-                        document.body.classList.remove('is-scrolling', 'is-scrolling-fast');
-
-                        if (velocity > 8) {
-                            document.body.classList.add('is-scrolling-fast');
-                        } else if (velocity > 2) {
-                            document.body.classList.add('is-scrolling');
-                        }
-
-                        lastScrollY = currentScrollY;
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    document.body.classList.remove('is-scrolling', 'is-scrolling-fast');
-                }, 120);
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
             }
+            requestAnimationFrame(raf);
 
-            window.addEventListener('scroll', onScroll, { passive: true });
+            // Sync Lenis with nav anchor clicks
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    const href = anchor.getAttribute('href');
+                    if (href && href !== '#') {
+                        e.preventDefault();
+                        lenis.scrollTo(href);
+                    }
+                });
+            });
         }
 
         /* ─────────────────────────────────────────
@@ -795,7 +789,7 @@
             initHeroScroll();
             initSectionBlend();
             initPhotoCursorGlow();
-            initScrollMotionBlur();
+            initLenisSmoothScroll();
         }
 
         if (document.readyState === 'loading') {
