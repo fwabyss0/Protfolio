@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const { getPortfolioContext } = require('./portfolioService');
 
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'llama3.2:latest';
 
@@ -26,7 +27,7 @@ ${liveContextBlock}
 YOUR CAPABILITIES & INSTRUCTIONS:
 1. **Persona**: You are friendly, professional, helpful, and natural. Keep conversation engaging.
 2. **Portfolio Questions**: Prioritize Alish Shrestha's real data when users ask about Alish, his projects, skills, education, experience, or contact details.
-3. **General Intelligence**: Answer general knowledge, science, programming, debugging, math, algorithms, concept explanations, quotes, jokes, facts, recommendations (books, movies, sites), translation, summarization, and project ideas.
+3. **General Intelligence & Math**: Answer general knowledge, science, programming, math calculations, step-by-step problem solving, concept explanations, quotes, jokes, facts, recommendations (books, movies, sites), translation, summarization, and project ideas.
 4. **Multi-Turn Memory**: You have access to recent message history in this chat session. Use previous user statements to answer follow-up questions intelligently.
 5. **Response Formatting**: Use Markdown freely! Use bullet points, numbered lists, tables, bold text, inline code, and code blocks with language tags (e.g. \`\`\`python ... \`\`\`) when explaining code or data.
 6. **Live Data Rule**: Do NOT hallucinate live data. If live data is provided in context above, use it accurately. If live data is unavailable, state it politely.
@@ -34,12 +35,13 @@ YOUR CAPABILITIES & INSTRUCTIONS:
 `;
 }
 
-// Call Ollama /api/chat with full message history
-async function callOllamaChat(userMessage, history = [], liveDataContext = null) {
+// Call OpenRouter API (Primary LLM Provider)
+async function callOpenRouterApi(userMessage, history = [], liveDataContext = null) {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) return null;
+
     return new Promise((resolve, reject) => {
         const systemPrompt = buildSystemPrompt(liveDataContext);
-
-        // Format history for Ollama chat API
         const messages = [{ role: 'system', content: systemPrompt }];
 
         if (Array.isArray(history)) {
@@ -49,8 +51,67 @@ async function callOllamaChat(userMessage, history = [], liveDataContext = null)
                 }
             });
         }
+        messages.push({ role: 'user', content: userMessage });
 
-        // Add current message
+        const requestData = JSON.stringify({
+            model: OPENROUTER_MODEL,
+            messages: messages,
+            max_tokens: 600,
+            temperature: 0.7
+        });
+
+        const options = {
+            hostname: 'openrouter.ai',
+            path: '/api/v1/chat/completions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'HTTP-Referer': 'https://github.com/fwabyss0/Protfolio',
+                'X-Title': 'Abyss AI Assistant',
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(requestData)
+            },
+            timeout: 15000
+        };
+
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try {
+                    const parsed = JSON.parse(data);
+                    const text = parsed.choices?.[0]?.message?.content;
+                    resolve(text ? text.trim() : null);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        req.on('error', reject);
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('OpenRouter API request timeout'));
+        });
+
+        req.write(requestData);
+        req.end();
+    });
+}
+
+// Call Ollama /api/chat with full message history (Fallback Provider 1)
+async function callOllamaChat(userMessage, history = [], liveDataContext = null) {
+    return new Promise((resolve, reject) => {
+        const systemPrompt = buildSystemPrompt(liveDataContext);
+        const messages = [{ role: 'system', content: systemPrompt }];
+
+        if (Array.isArray(history)) {
+            history.slice(-8).forEach(msg => {
+                if (msg.role === 'user' || msg.role === 'assistant') {
+                    messages.push({ role: msg.role, content: msg.content });
+                }
+            });
+        }
         messages.push({ role: 'user', content: userMessage });
 
         const requestData = JSON.stringify({
@@ -73,7 +134,7 @@ async function callOllamaChat(userMessage, history = [], liveDataContext = null)
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(requestData)
             },
-            timeout: 15000
+            timeout: 10000
         };
 
         const req = http.request(options, (res) => {
@@ -101,64 +162,7 @@ async function callOllamaChat(userMessage, history = [], liveDataContext = null)
     });
 }
 
-// Call Gemini API if GEMINI_API_KEY is configured
-async function callGeminiApi(userMessage, history = [], liveDataContext = null) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return null;
-
-    return new Promise((resolve, reject) => {
-        const systemPrompt = buildSystemPrompt(liveDataContext);
-        const contents = [];
-
-        if (Array.isArray(history)) {
-            history.slice(-6).forEach(msg => {
-                contents.push({
-                    role: msg.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: msg.content }]
-                });
-            });
-        }
-        contents.push({ role: 'user', parts: [{ text: userMessage }] });
-
-        const requestData = JSON.stringify({
-            system_instruction: { parts: [{ text: systemPrompt }] },
-            contents: contents,
-            generationConfig: { maxOutputTokens: 500, temperature: 0.7 }
-        });
-
-        const options = {
-            hostname: 'generativelanguage.googleapis.com',
-            path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(requestData)
-            },
-            timeout: 10000
-        };
-
-        const req = https.request(options, (res) => {
-            let data = '';
-            res.on('data', chunk => data += chunk);
-            res.on('end', () => {
-                try {
-                    const parsed = JSON.parse(data);
-                    const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-                    resolve(text ? text.trim() : null);
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-
-        req.on('error', reject);
-        req.on('timeout', () => { req.destroy(); reject(new Error('Gemini API timeout')); });
-        req.write(requestData);
-        req.end();
-    });
-}
-
-// Fallback intelligent generator if external LLM is offline
+// Fallback intelligent generator if external LLMs are unreachable
 function generateFallbackAIResponse(userMessage, history = [], liveDataContext = null) {
     const msg = userMessage.toLowerCase();
 
@@ -166,7 +170,6 @@ function generateFallbackAIResponse(userMessage, history = [], liveDataContext =
         return liveDataContext;
     }
 
-    // Check history for context (e.g. "I like Python", later "Recommend a project")
     let preferredLang = null;
     if (Array.isArray(history)) {
         history.forEach(h => {
@@ -205,19 +208,19 @@ function generateFallbackAIResponse(userMessage, history = [], liveDataContext =
         return "💡 **Interesting Tech Fact**: The first computer bug was an actual real moth found trapped inside a Harvard Mark II computer in 1947!";
     }
 
-    return "I'm Abyss, your AI assistant! Ask me anything about programming, technology, general knowledge, math, or Alish Shrestha's portfolio and projects! 🤖✨";
+    return "I'm Abyss, your AI assistant! Ask me anything about programming, math calculations, technology, general knowledge, or Alish Shrestha's portfolio! 🤖✨";
 }
 
 async function generateAIResponse(userMessage, history = [], liveDataContext = null) {
-    // 1. Try Gemini if key is provided
+    // 1. Try OpenRouter API (Primary LLM)
     try {
-        const geminiRes = await callGeminiApi(userMessage, history, liveDataContext);
-        if (geminiRes) return geminiRes;
+        const openRouterRes = await callOpenRouterApi(userMessage, history, liveDataContext);
+        if (openRouterRes) return openRouterRes;
     } catch (e) {
-        // ignore & fallback
+        console.log('OpenRouter API failed or timed out:', e.message);
     }
 
-    // 2. Try Ollama local LLM
+    // 2. Try Ollama local LLM (Fallback 1)
     try {
         const ollamaRes = await callOllamaChat(userMessage, history, liveDataContext);
         if (ollamaRes) return ollamaRes;

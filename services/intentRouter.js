@@ -4,6 +4,7 @@ const { isNewsQuery, getNewsData } = require('./newsService');
 const { isCryptoQuery, getCryptoData } = require('./cryptoService');
 const { isCurrencyQuery, getCurrencyData } = require('./currencyService');
 const { isGithubQuery, getGithubData } = require('./githubService');
+const { isMathQuery, getMathResponse } = require('./mathService');
 const { generateAIResponse } = require('./aiService');
 
 function getCurrentTimeDateResponse(message) {
@@ -51,37 +52,45 @@ async function handleChatRequest(message, history = []) {
         return directPortfolioRes;
     }
 
-    // 3. Weather Routing
+    // 3. Basic Math Calculation Routing
+    if (isMathQuery(message)) {
+        const mathRes = getMathResponse(message);
+        if (mathRes) {
+            return mathRes;
+        }
+    }
+
+    // 4. Weather Routing (Using OpenWeatherMap + Open-Meteo)
     if (isWeatherQuery(message)) {
         const liveWeather = await getWeatherData(message);
         return generateAIResponse(message, history, liveWeather);
     }
 
-    // 4. Tech News Routing
+    // 5. Tech News Routing
     if (isNewsQuery(message)) {
         const liveNews = await getNewsData();
         return generateAIResponse(message, history, liveNews);
     }
 
-    // 5. Crypto Routing
+    // 6. Crypto Routing
     if (isCryptoQuery(message)) {
         const liveCrypto = await getCryptoData(message);
         return generateAIResponse(message, history, liveCrypto);
     }
 
-    // 6. Currency Exchange Routing
+    // 7. Currency Exchange Routing
     if (isCurrencyQuery(message)) {
         const liveCurrency = await getCurrencyData();
         return generateAIResponse(message, history, liveCurrency);
     }
 
-    // 7. GitHub Stats Routing
+    // 8. GitHub Stats Routing
     if (isGithubQuery(message)) {
         const liveGithub = await getGithubData();
         return generateAIResponse(message, history, liveGithub);
     }
 
-    // 8. General AI / Portfolio / Memory / Multi-turn Response
+    // 9. General AI / Portfolio / Complex Math / OpenRouter Response
     return generateAIResponse(message, history);
 }
 

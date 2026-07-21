@@ -8,7 +8,7 @@ function isWeatherQuery(message) {
 
 function fetchJson(url) {
     return new Promise((resolve, reject) => {
-        const req = https.get(url, { headers: { 'User-Agent': 'PortfolioChatbot/1.0' }, timeout: 5000 }, (res) => {
+        const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 6000 }, (res) => {
             if (res.statusCode < 200 || res.statusCode >= 300) {
                 return reject(new Error(`HTTP status ${res.statusCode}`));
             }
@@ -34,73 +34,100 @@ function extractLocation(message) {
     const msg = message.trim();
     const match = msg.match(/(?:weather|temperature|forecast|temp|climate)\s+(?:in|at|for|of)?\s*([a-zA-Z\s,]+)/i) ||
                   msg.match(/([a-zA-Z\s,]+)\s+(?:weather|temperature|forecast|climate)/i);
-    
+
     if (match && match[1]) {
         const cleaned = match[1].replace(/\b(today|now|tomorrow|current|the|in|at|for|please|tell me|what is|whats|how is|is it)\b/gi, '').trim();
         if (cleaned.length > 1) return cleaned;
     }
-    return 'Bhaktapur'; // Default location
+    return 'Bhaktapur';
 }
 
-const WEATHER_CODES = {
-    0: 'Clear sky ☀️',
-    1: 'Mainly clear 🌤️',
-    2: 'Partly cloudy ⛅',
-    3: 'Overcast ☁️',
-    45: 'Foggy 🌫️',
-    48: 'Depositing rime fog 🌫️',
-    51: 'Light drizzle 🌧️',
-    53: 'Moderate drizzle 🌧️',
-    55: 'Dense drizzle 🌧️',
-    61: 'Slight rain 🌧️',
-    63: 'Moderate rain 🌧️',
-    65: 'Heavy rain 🌧️',
-    71: 'Slight snow ❄️',
-    73: 'Moderate snow ❄️',
-    75: 'Heavy snow ❄️',
-    80: 'Rain showers 🌦️',
-    81: 'Moderate rain showers 🌦️',
-    82: 'Violent rain showers ⛈️',
-    95: 'Thunderstorm 🌩️'
+const WEATHER_EMOJIS = {
+    'clear': '☀️',
+    'clouds': '☁️',
+    'rain': '🌧️',
+    'drizzle': '🌦️',
+    'thunderstorm': '🌩️',
+    'snow': '❄️',
+    'mist': '🌫️',
+    'fog': '🌫️',
+    'haze': '🌫️'
 };
 
+async function getWeatherFromOpenWeatherMap(city, apiKey) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+    const data = await fetchJson(url);
+
+    if (!data || data.cod != 200) return null;
+
+    const placeName = `${data.name}, ${data.sys?.country || ''}`;
+    const mainCondition = data.weather?.[0]?.main || 'Clear';
+    const description = data.weather?.[0]?.description || mainCondition;
+    const emoji = WEATHER_EMOJIS[mainCondition.toLowerCase()] || '🌤️';
+
+    const tempC = data.main.temp.toFixed(1);
+    const tempF = ((data.main.temp * 9/5) + 32).toFixed(1);
+    const feelsC = data.main.feels_like.toFixed(1);
+    const humidity = data.main.humidity;
+    const windKmH = (data.wind.speed * 3.6).toFixed(1);
+
+    return `### ${emoji} Weather for **${placeName}**\n` +
+           `- **Condition:** ${description.charAt(0).toUpperCase() + description.slice(1)} ${emoji}\n` +
+           `- **Temperature:** ${tempC}°C (${tempF}°F) | Feels like: ${feelsC}°C\n` +
+           `- **Humidity:** ${humidity}%\n` +
+           `- **Wind Speed:** ${windKmH} km/h\n` +
+           `*Data provided in real-time by OpenWeatherMap.*`;
+}
+
+async function getWeatherFromOpenMeteo(city) {
+    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+    const geoData = await fetchJson(geoUrl);
+
+    if (!geoData.results || geoData.results.length === 0) return null;
+
+    const location = geoData.results[0];
+    const lat = location.latitude;
+    const lon = location.longitude;
+    const placeName = `${location.name}${location.country ? ', ' + location.country : ''}`;
+
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    const weatherData = await fetchJson(weatherUrl);
+
+    if (!weatherData.current_weather) return null;
+
+    const curr = weatherData.current_weather;
+    const tempC = curr.temperature;
+    const tempF = ((tempC * 9/5) + 32).toFixed(1);
+
+    return `### 🌤️ Weather for **${placeName}**\n` +
+           `- **Temperature:** ${tempC}°C (${tempF}°F)\n` +
+           `- **Wind Speed:** ${curr.windspeed} km/h\n` +
+           `*Data provided in real-time by Open-Meteo.*`;
+}
+
 async function getWeatherData(message) {
-    try {
-        const city = extractLocation(message);
-        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-        const geoData = await fetchJson(geoUrl);
+    const city = extractLocation(message);
+    const apiKey = process.env.WEATHER_API_KEY;
 
-        if (!geoData.results || geoData.results.length === 0) {
-            return `I couldn't locate "${city}" for weather information. Try asking "Weather in Kathmandu" or "Weather in Tokyo".`;
+    // 1. Try OpenWeatherMap API
+    if (apiKey) {
+        try {
+            const owmResult = await getWeatherFromOpenWeatherMap(city, apiKey);
+            if (owmResult) return owmResult;
+        } catch (e) {
+            console.error('OpenWeatherMap API error:', e.message);
         }
-
-        const location = geoData.results[0];
-        const lat = location.latitude;
-        const lon = location.longitude;
-        const placeName = `${location.name}${location.country ? ', ' + location.country : ''}`;
-
-        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-        const weatherData = await fetchJson(weatherUrl);
-
-        if (!weatherData.current_weather) {
-            return "Live weather data is currently unavailable right now.";
-        }
-
-        const curr = weatherData.current_weather;
-        const tempC = curr.temperature;
-        const tempF = ((tempC * 9/5) + 32).toFixed(1);
-        const condition = WEATHER_CODES[curr.weathercode] || 'Clear';
-        const wind = curr.windspeed;
-
-        return `### 🌤️ Weather for **${placeName}**\n` +
-               `- **Condition:** ${condition}\n` +
-               `- **Temperature:** ${tempC}°C (${tempF}°F)\n` +
-               `- **Wind Speed:** ${wind} km/h\n` +
-               `*Data provided in real-time by Open-Meteo.*`;
-    } catch (error) {
-        console.error('Weather API error:', error.message);
-        return "Live weather information is currently unavailable right now. Please try again later.";
     }
+
+    // 2. Fallback to Open-Meteo API
+    try {
+        const omResult = await getWeatherFromOpenMeteo(city);
+        if (omResult) return omResult;
+    } catch (e) {
+        console.error('Open-Meteo API error:', e.message);
+    }
+
+    return `Live weather information for "${city}" is currently unavailable right now. Please try again later.`;
 }
 
 module.exports = {
