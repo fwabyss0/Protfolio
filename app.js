@@ -453,6 +453,7 @@ function initializeChatbot() {
 
     // Clear all chat messages with loading state
     function clearChatMessages() {
+        chatSessionHistory = [];
         if (chatbotMessages) {
             // Show clearing message with loading
             chatbotMessages.innerHTML = '';
@@ -1012,41 +1013,139 @@ function initializeChatbot() {
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
     }
 
-    // Send message to bot backend with real-time streaming
+    // Session Memory History Array
+    let chatSessionHistory = [];
+
+    // Markdown Parser for Chatbot Responses
+    function parseMarkdownToHtml(markdownText) {
+        if (!markdownText) return '';
+        let text = markdownText;
+
+        // Code blocks ```lang\ncode\n```
+        text = text.replace(/```(?:[a-z0-9]+)?\n([\s\S]*?)```/gi, (match, code) => {
+            const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<pre style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.85em; overflow-x: auto; margin: 8px 0; border: 1px solid rgba(255,255,255,0.1);"><code>${escaped.trim()}</code></pre>`;
+        });
+
+        // Inline code `code`
+        text = text.replace(/`([^`]+)`/g, (match, code) => {
+            const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #38bdf8;">${escaped}</code>`;
+        });
+
+        // Markdown Links [text](url)
+        text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline; font-weight: 600;">$1</a>');
+
+        // Bold **text** or __text__
+        text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        text = text.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+
+        // Italic *text* or _text_
+        text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        text = text.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+        // Headers ### Title
+        text = text.replace(/^###\s+(.*$)/gim, '<strong style="display:block; font-size: 1.1em; margin: 6px 0 3px;">$1</strong>');
+        text = text.replace(/^##\s+(.*$)/gim, '<strong style="display:block; font-size: 1.15em; margin: 6px 0 3px;">$1</strong>');
+        text = text.replace(/^#\s+(.*$)/gim, '<strong style="display:block; font-size: 1.2em; margin: 6px 0 3px;">$1</strong>');
+
+        // Tables & Lists line by line
+        const lines = text.split('\n');
+        let inTable = false;
+        let tableHtml = '';
+        const resultLines = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+
+            if (line.startsWith('|') && line.endsWith('|')) {
+                if (line.includes('---')) continue;
+                const cells = line.split('|').slice(1, -1).map(c => c.trim());
+                if (!inTable) {
+                    inTable = true;
+                    tableHtml = '<table style="width:100%; border-collapse: collapse; margin: 8px 0; font-size: 0.85em; background: rgba(0,0,0,0.2); border-radius: 6px; overflow: hidden;"><tbody><tr style="background: rgba(255,255,255,0.1); text-align: left;">' +
+                        cells.map(c => `<th style="padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">${c}</th>`).join('') + '</tr>';
+                } else {
+                    tableHtml += '<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">' +
+                        cells.map(c => `<td style="padding: 5px 10px;">${c}</td>`).join('') + '</tr>';
+                }
+            } else {
+                if (inTable) {
+                    inTable = false;
+                    tableHtml += '</tbody></table>';
+                    resultLines.push(tableHtml);
+                    tableHtml = '';
+                }
+
+                if (/^[-*]\s+/.test(line)) {
+                    line = '<span style="display:inline-block; margin-left: 4px;">• ' + line.replace(/^[-*]\s+/, '') + '</span>';
+                } else if (/^\d+\.\s+/.test(line)) {
+                    line = '<span style="display:inline-block; margin-left: 4px;">' + line + '</span>';
+                }
+
+                resultLines.push(line);
+            }
+        }
+
+        if (inTable) {
+            tableHtml += '</tbody></table>';
+            resultLines.push(tableHtml);
+        }
+
+        let finalHtml = resultLines.join('<br>');
+        finalHtml = finalHtml.replace(/<br>\s*<pre/gi, '<pre').replace(/<\/pre>\s*<br>/gi, '</pre>');
+        finalHtml = finalHtml.replace(/<br>\s*<table/gi, '<table').replace(/<\/table>\s*<br>/gi, '</table>');
+
+        return finalHtml;
+    }
+
+    // Send message to bot backend with real-time streaming & conversation memory
     async function sendToBot(message) {
+        // Record user message in history (max 16 messages)
+        chatSessionHistory.push({ role: 'user', content: message });
+        if (chatSessionHistory.length > 16) {
+            chatSessionHistory = chatSessionHistory.slice(-16);
+        }
+
         try {
-            // Try to connect to backend first
+            // Send message and conversation history to backend
             const response = await fetch('http://localhost:5000/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({
+                    message: message,
+                    history: chatSessionHistory
+                })
             });
 
             if (response.ok) {
                 const data = await response.json();
+                const botResponse = data.response;
+
+                // Record assistant response in history
+                chatSessionHistory.push({ role: 'assistant', content: botResponse });
 
                 setTimeout(() => {
                     removeTypingIndicator();
-                    // Use streaming typewriter effect for real-time feel
-                    addStreamingMessage(data.response, 'bot');
-                }, 500);
+                    addStreamingMessage(botResponse, 'bot');
+                }, 400);
                 return;
             }
         } catch (error) {
-            console.log('Backend unavailable, using built-in AI responses');
+            console.log('Backend server offline, falling back to intelligent client-side engine');
         }
 
-        // Use built-in intelligent responses
-        const response = generateResponse(message);
+        // Fallback intelligent response
+        const fallbackResponse = generateResponse(message);
 
-        // Only add message if response is not null (for clear chat command)
-        if (response !== null) {
+        if (fallbackResponse !== null) {
+            chatSessionHistory.push({ role: 'assistant', content: fallbackResponse });
             setTimeout(() => {
                 removeTypingIndicator();
-                addStreamingMessage(response, 'bot');
-            }, 800 + Math.random() * 600);
+                addStreamingMessage(fallbackResponse, 'bot');
+            }, 600);
         } else {
             setTimeout(() => {
                 removeTypingIndicator();
@@ -1054,9 +1153,8 @@ function initializeChatbot() {
         }
     }
 
-    // Add streaming message with typewriter effect
+    // Add streaming message with typewriter effect & markdown support
     function addStreamingMessage(text, type) {
-        // Play sound effect
         playChatSound(type);
 
         const messageDiv = document.createElement('div');
@@ -1065,7 +1163,6 @@ function initializeChatbot() {
             messageDiv.classList.add('user');
         }
 
-        // Create avatar
         const avatar = document.createElement('div');
         avatar.className = `message-avatar ${type}`;
 
@@ -1075,11 +1172,9 @@ function initializeChatbot() {
         avatarImg.src = type === 'user' ? 'user.png' : 'a.png';
         avatar.appendChild(avatarImg);
 
-        // Create message content
         const messageP = document.createElement('p');
         messageP.innerHTML = '';
 
-        // Append in correct order
         if (type === 'user') {
             messageDiv.appendChild(messageP);
             messageDiv.appendChild(avatar);
@@ -1091,23 +1186,34 @@ function initializeChatbot() {
         chatbotMessages.appendChild(messageDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
-        // Typewriter effect for bot messages
         if (type === 'bot') {
-            let i = 0;
-            const chars = text.split('');
-            const speed = 15; // ms per character for streaming effect
+            const renderedHtml = parseMarkdownToHtml(text);
 
-            function typeChar() {
-                if (i < chars.length) {
-                    messageP.innerHTML += chars[i];
-                    i++;
-                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                    setTimeout(typeChar, speed);
+            // If text contains HTML elements, code blocks or tables, render directly for visual perfection
+            if (text.includes('```') || text.includes('|') || text.includes('<a href')) {
+                messageP.innerHTML = renderedHtml;
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            } else {
+                // Word-by-word streaming effect
+                const words = text.split(' ');
+                let currentText = '';
+                let wIdx = 0;
+
+                function typeWord() {
+                    if (wIdx < words.length) {
+                        currentText += (wIdx === 0 ? '' : ' ') + words[wIdx];
+                        messageP.innerHTML = parseMarkdownToHtml(currentText);
+                        wIdx++;
+                        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                        setTimeout(typeWord, 20);
+                    } else {
+                        messageP.innerHTML = renderedHtml;
+                    }
                 }
+                typeWord();
             }
-            typeChar();
         } else {
-            messageP.innerHTML = text;
+            messageP.innerHTML = parseMarkdownToHtml(text);
         }
     }
 }
