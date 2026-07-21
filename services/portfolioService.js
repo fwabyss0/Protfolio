@@ -59,7 +59,7 @@ function getPortfolioContext() {
     return `
 ABOUT ALISH SHRESTHA (Portfolio Owner):
 - Name: Alish Shrestha
-- Age: 18 years old
+- Age: 19 years old
 - Location: Changu Narayan-01, Bhaktapur, Nepal 🇳🇵
 - Email: shresthaalish444@gmail.com
 - Status: Passionate AI student, developer, and creative designer
