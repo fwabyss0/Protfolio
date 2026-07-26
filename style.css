@@ -376,18 +376,17 @@ img {
     will-change: transform;
 }
 
-/* Interactive animated background */
+/* Grid background */
 .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(circle 600px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(20, 241, 217, 0.08), transparent 60%),
-        radial-gradient(circle 500px at calc(var(--mouse-x, 50%) + 30%) calc(var(--mouse-y, 50%) - 20%), rgba(255, 225, 65, 0.06), transparent 60%),
-        radial-gradient(circle 400px at calc(var(--mouse-x, 50%) - 20%) calc(var(--mouse-y, 50%) + 30%), rgba(199, 125, 255, 0.05), transparent 60%);
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 55px 55px;
     pointer-events: none;
     z-index: 0;
-    transition: background 0.15s ease-out;
 }
 
 /* Floating animated blobs */
