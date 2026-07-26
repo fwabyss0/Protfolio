@@ -80,7 +80,7 @@ function showLoadingScreen() {
 
         // Scramble animation for loading name
         if (loadingName) {
-            scrambleText(loadingName, 'Alish Shrestha', 2500);
+            scrambleText(loadingName, 'Alish Shrestha', 1200);
         }
 
         // Update loading messages
