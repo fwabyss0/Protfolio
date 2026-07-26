@@ -376,30 +376,84 @@ img {
     will-change: transform;
 }
 
-/* Grid background */
+/* Interactive animated background */
 .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-    background-size: 55px 55px;
+    background:
+        radial-gradient(circle 600px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(20, 241, 217, 0.08), transparent 60%),
+        radial-gradient(circle 500px at calc(var(--mouse-x, 50%) + 30%) calc(var(--mouse-y, 50%) - 20%), rgba(255, 225, 65, 0.06), transparent 60%),
+        radial-gradient(circle 400px at calc(var(--mouse-x, 50%) - 20%) calc(var(--mouse-y, 50%) + 30%), rgba(199, 125, 255, 0.05), transparent 60%);
     pointer-events: none;
-    opacity: 0.6;
+    z-index: 0;
+    transition: background 0.15s ease-out;
 }
 
-/* Yellow glow blob */
+/* Floating animated blobs */
 .hero::after {
     content: '';
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 225, 65, 0.055) 0%, transparent 70%);
-    top: -80px;
-    right: -60px;
+    background: radial-gradient(circle, rgba(255, 225, 65, 0.07) 0%, transparent 70%);
+    top: -200px;
+    right: -150px;
     pointer-events: none;
+    z-index: 0;
+    animation: floatBlob 8s ease-in-out infinite;
+}
+
+@keyframes floatBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(40px, -30px) scale(1.05); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(30px, 10px) scale(1.02); }
+}
+
+/* Additional floating orbs for interactivity */
+.hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(40px);
+    opacity: 0.4;
+    animation: orbFloat 10s ease-in-out infinite;
+}
+
+.hero-orb-1 {
+    width: 300px;
+    height: 300px;
+    background: rgba(20, 241, 217, 0.15);
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.hero-orb-2 {
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 107, 157, 0.12);
+    bottom: 20%;
+    right: 15%;
+    animation-delay: -3s;
+}
+
+.hero-orb-3 {
+    width: 200px;
+    height: 200px;
+    background: rgba(199, 125, 255, 0.1);
+    top: 50%;
+    left: 50%;
+    animation-delay: -6s;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(30px, -30px); }
+    66% { transform: translate(-20px, 20px); }
 }
 
 /* Floating sticker badges */

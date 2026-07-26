@@ -74,6 +74,11 @@
         <div class="sticker s-star">✦</div>
         <div class="sticker s-ai"><i class="fas fa-robot"></i></div>
 
+        <!-- Interactive animated orbs -->
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+
         <div class="hero-wrap">
             <div class="hero-left">
                 <div class="hero-badge">Hi there! 👋 Welcome to my portfolio</div>
@@ -779,6 +784,28 @@
         }
 
         /* ─────────────────────────────────────────
+           7. HERO MOUSE SPOTLIGHT
+              Interactive radial gradient follows mouse
+        ───────────────────────────────────────── */
+        function initHeroMouseEffect() {
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+
+            hero.addEventListener('mousemove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                hero.style.setProperty('--mouse-x', `${x}%`);
+                hero.style.setProperty('--mouse-y', `${y}%`);
+            });
+
+            hero.addEventListener('mouseleave', () => {
+                hero.style.setProperty('--mouse-x', '50%');
+                hero.style.setProperty('--mouse-y', '50%');
+            });
+        }
+
+        /* ─────────────────────────────────────────
            INIT — after loading screen clears
         ───────────────────────────────────────── */
         const DELAY = 4200;
@@ -790,6 +817,7 @@
             initSectionBlend();
             initPhotoCursorGlow();
             initLenisSmoothScroll();
+            initHeroMouseEffect();
         }
 
         if (document.readyState === 'loading') {
