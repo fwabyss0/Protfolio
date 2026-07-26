@@ -2,6 +2,10 @@
  * spotify-widget.js
  * Spotify Now Playing widget controller.
  * Auto-refreshes every 30 seconds and updates the UI.
+ *
+ * CONFIGURATION:
+ * Set window.SPOTIFY_API_URL before this script loads to override the API endpoint.
+ * Example: <script>window.SPOTIFY_API_URL = "https://your-backend.com/api/spotify";</script>
  */
 
 class SpotifyWidget {
@@ -17,6 +21,7 @@ class SpotifyWidget {
         this.retryDelay = 5000; // 5 seconds on error
         this.timer = null;
         this.isLoading = false;
+        this.fetchTimeout = 10000; // 10 second timeout
 
         this.init();
     }
@@ -44,23 +49,45 @@ class SpotifyWidget {
         this.isLoading = true;
 
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.fetchTimeout);
+
             const response = await fetch(this.apiUrl, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
                 },
                 cache: "no-store",
+                signal: controller.signal,
             });
 
+            clearTimeout(timeoutId);
+
+            console.log(`[SpotifyWidget] API response status: ${response.status}`);
+
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                console.error(`[SpotifyWidget] API error body:`, text);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
+            console.log(`[SpotifyWidget] API data:`, data);
             this.render(data);
         } catch (error) {
             console.error("[SpotifyWidget] Fetch error:", error);
-            this.renderOffline();
+
+            if (error.name === "AbortError") {
+                this.renderError("Request timed out. Please try again.");
+            } else if (error.message.includes("404")) {
+                this.renderError("Spotify API endpoint not found. Check backend deployment.");
+            } else if (error.message.includes("500")) {
+                this.renderError("Spotify API server error. Check backend logs.");
+            } else if (error.message.includes("401") || error.message.includes("403")) {
+                this.renderError("Spotify authentication failed. Check credentials.");
+            } else {
+                this.renderError("Cannot connect to Spotify. Check your connection.");
+            }
         } finally {
             this.isLoading = false;
         }
@@ -179,17 +206,11 @@ class SpotifyWidget {
             let html = "";
 
             if (data.error && !data.is_configured) {
-                html = this.renderOffline();
-            } else if (data.error || data.is_playing === false && data.no_recent) {
-                if (data.error && data.error !== "Spotify Offline") {
-                    html = this.renderOffline();
-                } else if (data.no_recent) {
-                    html = this.renderNothing();
-                } else if (data.error === "Spotify Offline") {
-                    html = this.renderOffline();
-                } else {
-                    html = this.renderNothing();
-                }
+                html = this.renderError("Spotify credentials not configured.");
+            } else if (data.error === "Spotify Offline") {
+                html = this.renderError("Spotify Offline");
+            } else if (data.no_recent) {
+                html = this.renderNothing();
             } else if (data.track) {
                 if (data.is_playing) {
                     html = this.renderNowPlaying(data.track);
@@ -210,11 +231,11 @@ class SpotifyWidget {
         }, 300);
     }
 
-    renderOffline() {
+    renderError(message) {
         return `
             <div class="spotify-offline">
                 <div class="spotify-offline-icon">🔇</div>
-                <div>Spotify Offline</div>
+                <div>${this.escapeHtml(message)}</div>
             </div>
         `;
     }
@@ -254,7 +275,10 @@ class SpotifyWidget {
 // Initialize widget when DOM is ready
 let spotifyWidget;
 document.addEventListener("DOMContentLoaded", function () {
-    // Update this path if your Flask backend runs on a different port
-    const API_URL = "/api/spotify";
+    // Priority: window.SPOTIFY_API_URL > <meta name="spotify-api-url"> > "/api/spotify"
+    const metaTag = document.querySelector('meta[name="spotify-api-url"]');
+    const API_URL = window.SPOTIFY_API_URL || (metaTag ? metaTag.getAttribute("content") : "/api/spotify");
+
+    console.log("[SpotifyWidget] Initializing with API URL:", API_URL);
     spotifyWidget = new SpotifyWidget("spotify-widget", API_URL);
 });

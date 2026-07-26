@@ -28,11 +28,14 @@ class SpotifyService:
         Automatically refreshes if expired or about to expire.
         """
         if self._access_token and time.time() < self._token_expires_at - 60:
+            print("[Spotify] Using cached access token")
             return self._access_token
 
         if not self.refresh_token or not self.client_id or not self.client_secret:
+            print("[Spotify] ERROR: Missing credentials")
             raise ValueError("Missing Spotify credentials. Check environment variables.")
 
+        print("[Spotify] Refreshing access token...")
         auth = (self.client_id, self.client_secret)
         data = {
             "grant_type": "refresh_token",
@@ -41,8 +44,10 @@ class SpotifyService:
 
         try:
             response = requests.post(self.token_url, auth=auth, data=data, timeout=10)
+            print(f"[Spotify] Token refresh response: {response.status_code}")
             response.raise_for_status()
             token_data = response.json()
+            print(f"[Spotify] Token refresh data: {token_data}")
 
             self._access_token = token_data.get("access_token")
             expires_in = token_data.get("expires_in", 3600)
@@ -50,6 +55,7 @@ class SpotifyService:
 
             return self._access_token
         except requests.exceptions.RequestException as e:
+            print(f"[Spotify] Token refresh failed: {e}")
             raise RuntimeError(f"Failed to refresh Spotify token: {e}")
 
     def _make_request(self, endpoint: str, params: dict = None) -> dict:
@@ -63,7 +69,9 @@ class SpotifyService:
         }
 
         url = f"{self.api_base}/{endpoint.lstrip('/')}"
+        print(f"[Spotify] API request: {url}")
         response = requests.get(url, headers=headers, params=params, timeout=10)
+        print(f"[Spotify] API response: {response.status_code}")
         response.raise_for_status()
         return response.json()
 
@@ -74,12 +82,15 @@ class SpotifyService:
         """
         try:
             data = self._make_request("/me/player/currently-playing")
+            print(f"[Spotify] Currently playing data: {data}")
 
             if not data or data.get("currently_playing_type") != "track":
+                print("[Spotify] Nothing currently playing")
                 return None
 
             item = data.get("item", {})
             if not item:
+                print("[Spotify] No track item in response")
                 return None
 
             return {
@@ -92,7 +103,8 @@ class SpotifyService:
                 "spotify_url": item.get("external_urls", {}).get("spotify", "#"),
                 "is_playing": data.get("is_playing", False),
             }
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
+            print(f"[Spotify] Currently playing request failed: {e}")
             return None
 
     def get_recently_played(self, limit: int = 1) -> dict:
@@ -102,8 +114,10 @@ class SpotifyService:
         """
         try:
             data = self._make_request("/me/player/recently-played", params={"limit": limit})
+            print(f"[Spotify] Recently played data items: {len(data.get('items', []))}")
 
             if not data.get("items"):
+                print("[Spotify] No recently played tracks")
                 return None
 
             track = data["items"][0].get("track", {})
@@ -118,7 +132,8 @@ class SpotifyService:
                 "played_at": self._format_played_at(played_at),
                 "is_playing": False,
             }
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
+            print(f"[Spotify] Recently played request failed: {e}")
             return None
 
     @staticmethod

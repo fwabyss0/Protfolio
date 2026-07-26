@@ -1,3 +1,10 @@
+"""
+chatbot.py (legacy standalone chatbot)
+NOTE: For the full portfolio with Spotify, chatbot, and static file serving,
+use the modular Flask app: python run.py
+This file is kept for backward compatibility but does NOT include Spotify routes.
+"""
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests

@@ -6,6 +6,7 @@ Provides /api/spotify for the frontend widget.
 
 import os
 import time
+from datetime import datetime
 from flask import Blueprint, jsonify, current_app
 from ..services.spotify_service import SpotifyService
 
@@ -32,9 +33,11 @@ def get_spotify_data():
     Cached for 15-30 seconds to reduce rate limits.
     """
     now = time.time()
+    print(f"[Spotify] Endpoint called at {datetime.now().isoformat()}")
 
     # Serve cached response if still valid
     if _cache["data"] is not None and now < _cache["expires_at"]:
+        print("[Spotify] Returning cached response")
         return jsonify(_cache["data"])
 
     service = _get_service()
@@ -48,6 +51,7 @@ def get_spotify_data():
         ])
 
         if not has_credentials:
+            print("[Spotify] ERROR: Missing credentials")
             _cache["data"] = {
                 "error": "Spotify credentials not configured.",
                 "is_configured": False,
@@ -56,9 +60,11 @@ def get_spotify_data():
             return jsonify(_cache["data"])
 
         # Fetch now playing data
+        print("[Spotify] Fetching now playing data...")
         track = service.get_now_playing()
 
         if track is None:
+            print("[Spotify] No track found (nothing playing, no recent history)")
             result = {
                 "is_playing": False,
                 "error": None,
@@ -67,6 +73,7 @@ def get_spotify_data():
                 "message": "Nothing recently played.",
             }
         else:
+            print(f"[Spotify] Track found: {track.get('title')} by {track.get('artist')}")
             result = {
                 "is_playing": track.get("is_playing", False),
                 "error": None,
@@ -89,6 +96,7 @@ def get_spotify_data():
         return jsonify(result)
 
     except Exception as e:
+        print(f"[Spotify] ERROR: {type(e).__name__}: {e}")
         result = {
             "error": "Spotify Offline",
             "is_configured": True,
