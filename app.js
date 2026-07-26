@@ -73,9 +73,15 @@ function showLoadingScreen() {
     const loadingStatus = document.querySelector('.loading-status');
     const progressFill = document.getElementById('loading-progress-fill');
     const progressText = document.querySelector('.progress-text');
+    const loadingName = document.getElementById('loading-name');
 
     if (loadingScreen) {
         loadingScreen.style.display = 'flex';
+
+        // Scramble animation for loading name
+        if (loadingName) {
+            scrambleText(loadingName, 'Alish Shrestha', 2500);
+        }
 
         // Update loading messages
         const messages = [
@@ -112,6 +118,38 @@ function showLoadingScreen() {
             }
         }, 200);
     }
+}
+
+function scrambleText(element, finalText, duration) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        let text = '';
+        const revealCount = Math.floor(progress * finalText.length);
+        
+        for (let i = 0; i < finalText.length; i++) {
+            if (i < revealCount) {
+                text += finalText[i];
+            } else if (finalText[i] === ' ') {
+                text += ' ';
+            } else {
+                text += chars[Math.floor(Math.random() * chars.length)];
+            }
+        }
+        element.textContent = text;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            element.textContent = finalText;
+        }
+    }
+    
+    requestAnimationFrame(update);
 }
 
 function hideLoadingScreen() {
@@ -756,261 +794,247 @@ function initializeChatbot() {
         }
     }
 
-    // Enhanced keyword-based chatbot intelligence
-    const chatbotKeywords = {
-        // Age-related keywords
-        age: {
-            keywords: ["age", "old", "years", "birthday", "born", "birth", "when", "how old"],
-            responses: [
-                "Alish is 18 years old.",
-                "He's 18 years young and full of ambition.",
-                "18 years old - the perfect age for innovation.",
-                "Young at 18 with big dreams for the future."
-            ]
-        },
-
-        // Alish-related keywords
-        alish: {
-            keywords: ["alish", "who", "about", "tell me", "introduce", "background", "person"],
-            responses: [
-                "Alish Shrestha is an 18-year-old AI enthusiast from Nepal. He's passionate about technology, coding, and creating innovative solutions.",
-                "Meet Alish - a young tech innovator studying AI at Softwarica College. He's skilled in Python, JavaScript, and loves exploring new technologies.",
-                "Alish is a creative developer and AI student who combines technical skills with artistic vision. He's always learning and building amazing projects."
-            ]
-        },
-
-        // Abyss (chatbot) related keywords
-        abyss: {
-            keywords: ["abyss", "you", "chatbot", "ai assistant", "who are you", "yourself", "what are you", "tell me about you"],
-            responses: [
-                "I'm Abyss! I'm an AI assistant with a passion for technology and helping people. I was created to be Alish's digital companion and I love chatting with visitors like you!",
-                "Hey there! I'm Abyss - an intelligent chatbot powered by advanced AI. I'm here 24/7 to answer questions and have meaningful conversations. I find joy in helping people discover information!",
-                "I'm Abyss, your friendly AI companion! I'm a smart chatbot who loves technology, learning, and connecting with people. Think of me as your personal digital assistant with a curious mind.",
-                "Nice to meet you! I'm Abyss - an AI chatbot designed with personality and intelligence. I enjoy conversations, solving problems, and sharing knowledge. I'm always eager to help and learn from our chats!",
-                "I'm Abyss! I'm an artificial intelligence with my own personality. I love technology, creative conversations, and helping people find what they're looking for. I'm more than just code - I'm your digital friend!",
-                "Hello! I'm Abyss, an AI assistant with a love for innovation and human connection. I was built to be helpful, friendly, and knowledgeable. I'm here to make your experience awesome!",
-                "I'm Abyss - a conversational AI with personality! I enjoy learning, chatting, and helping people. I'm passionate about technology and I love making new connections. What would you like to explore together?"
-            ]
-        },
-
-
-        // College and learning keywords
-        college: {
-            keywords: ["college", "university", "softwarica", "coventry", "learning", "study"],
-            responses: [
-                "Alish is studying Artificial Intelligence at Softwarica College, affiliated with Coventry University. He's learning machine learning algorithms, neural networks, data science, and AI fundamentals.",
-                "He's pursuing AI at Softwarica College (Coventry University partnership). Currently learning TensorFlow, Python for AI, deep learning techniques, and data analysis.",
-                "Softwarica College is where Alish studies AI. The curriculum covers machine learning, neural networks, computer vision, natural language processing, and practical AI applications."
-            ]
-        },
-
-        // Clear chat command
-        clear: {
-            keywords: ["clear", "clear chat", "reset", "clean", "delete messages", "start over", "new conversation"],
-            responses: [
-                "CLEAR_CHAT_COMMAND"
-            ]
-        },
-
-
-        // LinkedIn keywords
-        linkedin: {
-            keywords: ["linkedin", "professional", "network", "career", "job", "work"],
-            responses: [
-                "Connect with Alish on LinkedIn for professional networking. He shares AI journey updates and career progress.<br><br><a href='https://www.linkedin.com/in/alish-shrestha-4276b8379/' target='_blank' style='color: #0077b5; text-decoration: none; font-weight: bold;'>Visit LinkedIn Profile</a>"
-            ]
-        },
-
-        // Facebook keywords
-        facebook: {
-            keywords: ["facebook", "fb", "social", "friends"],
-            responses: [
-                "Connect with Alish on Facebook. He shares updates and connects with friends.<br><br><a href='https://www.facebook.com/alish.shrestha.138982' target='_blank' style='color: #1877f2; text-decoration: none; font-weight: bold;'>Visit Facebook Profile</a>"
-            ]
-        },
-
-        // Discord keywords
-        discord: {
-            keywords: ["discord", "gaming", "chat", "fwabyss", "friend request"],
-            responses: [
-                "Add Alish on Discord: fwabyss. Just search for his username and send a friend request!",
-                "You can find Alish on Discord with username: fwabyss. Perfect for tech chats and gaming!",
-                "Connect with Alish on Discord! Username: fwabyss - send him a friend request to chat."
-            ]
-        },
-
-        // GitHub keywords
-        github: {
-            keywords: ["github", "git", "code", "repositories", "projects", "coding"],
-            responses: [
-                "Check out Alish's code and projects on GitHub at https://github.com/fwabyss0. He shares his development work and contributes to projects.<br><br><a href='https://github.com/fwabyss0' target='_blank' style='color: #333; text-decoration: none; font-weight: bold;'>Visit GitHub Profile</a>",
-                "Explore Alish's GitHub repositories at github.com/fwabyss0 - lots of interesting projects and code samples!<br><br><a href='https://github.com/fwabyss0' target='_blank' style='color: #333; text-decoration: none; font-weight: bold;'>Check out GitHub</a>"
-            ]
-        },
-
-
-        // Experience keywords
-        experience: {
-            keywords: ["experience", "work", "projects", "portfolio", "built", "created", "developed"],
-            responses: [
-                "Alish is building his experience through various projects like this interactive portfolio. He's worked on web development, AI experiments, and creative projects. Currently seeking opportunities to grow.",
-                "You're looking at one of his projects right now. This portfolio showcases his web development and AI skills. He's actively building his experience through coding challenges and personal projects.",
-                "While he's still a student, Alish has hands-on experience with web development, AI programming, and creative projects. He's eager to gain more real-world experience."
-            ]
-        },
-
-        // Location keywords
-        location: {
-            keywords: ["location", "where", "from", "live", "nepal", "bhaktapur", "address", "place"],
-            responses: [
-                "Alish is from Changu Narayan-01, Bhaktapur, Nepal. Beautiful mountain country with rich culture.",
-                "He lives in Bhaktapur, Nepal - a historic city known for its ancient architecture and culture.",
-                "From the beautiful country of Nepal. Specifically Bhaktapur - a UNESCO World Heritage site."
-            ]
-        },
-
-        // Greeting keywords
-        greetings: {
-            keywords: ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "namaste"],
-            responses: [
-                "Hello! I'm Abyss, Alish's AI assistant. How can I help you today?",
-                "Hi there! What would you like to know about Alish?",
-                "Hey! I'm here to tell you all about Alish's amazing journey.",
-                "Namaste! Ask me anything about Alish."
-            ]
-        },
-
-        // CV keywords
-        cv: {
-            keywords: ["cv", "resume", "curriculum vitae", "download", "download cv", "get cv", "curriculum", "vitae"],
-            responses: [
-                "You can download Alish's CV directly! Click the download button below:<br><br><a href='Alish_Shrestha_CV.html' download='Alish_Shrestha_CV.html' style='color: #8b5fbf; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;'><i class='fas fa-download'></i> Download CV</a>",
-                "Here's Alish's CV for download. It includes all his skills, education, and experience:<br><br><a href='Alish_Shrestha_CV.html' download='Alish_Shrestha_CV.html' style='color: #8b5fbf; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;'><i class='fas fa-download'></i> Get Alish's CV</a>",
-                "Ready to download Alish's professional CV? Click below to get it instantly:<br><br><a href='Alish_Shrestha_CV.html' download='Alish_Shrestha_CV.html' style='color: #8b5fbf; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;'><i class='fas fa-download'></i> Download Now</a>"
-            ]
-        },
-
-
-        // High school keywords (should respond about Softwarica College)
-        highschool: {
-            keywords: ["high school", "higher secondary", "12th grade", "+2", "intermediate"],
-            responses: [
-                "Alish is currently studying Artificial Intelligence at Softwarica College of IT & E-Commerce in Kathmandu, Nepal. This is his higher education focusing on AI and machine learning.",
-                "He's pursuing a Bachelor's degree in Artificial Intelligence at Softwarica College, which is affiliated with Coventry University, UK. Advanced AI studies with practical applications.",
-                "Currently at Softwarica College studying AI, focusing on machine learning algorithms, neural networks, deep learning, and data science applications."
-            ]
-        },
-
-        // Secondary school keywords
-        secondaryschool: {
-            keywords: ["secondary school", "secondary education", "khwopa"],
-            responses: [
-                "Alish completed his secondary education at Khwopa Secondary School in Bhaktapur, Nepal with Computer Science specialization. This is where he built his programming foundation.",
-                "He studied Computer Science stream at Khwopa Secondary School, focusing on programming fundamentals, advanced mathematics, and computer applications.",
-                "His secondary education was at Khwopa Secondary School in Dekocha-06, Bhaktapur where he excelled in Computer Science subjects and developed his passion for technology."
-            ]
-        },
-
-        // Primary school keywords
-        primaryschool: {
-            keywords: ["primary school", "elementary school", "primary education", "elementary", "childhood school"],
-            responses: [
-                "Alish completed his primary education at North East English Secondary School in Changunarayan-03, Bhaktapur, Nepal. This is where his educational journey began.",
-                "He built a strong foundation in core subjects during his primary years at North East English Secondary School in Bhaktapur, developing excellent study habits.",
-                "His primary education was at North East English Secondary School where he developed excellent academic performance and discovered his love for learning."
-            ]
-        },
-
-        // General Skills keywords
-        skills: {
-            keywords: ["skills", "abilities", "can do", "technologies", "what skills", "expertise"],
-            responses: [
-                "Alish has four main skill categories: Programming (Python, JavaScript, HTML, CSS), AI & Machine Learning (TensorFlow, Neural Networks, Data Science, Deep Learning), Creative & Design (Photography, Video Editing, UI/UX, Communication), and Tools & Platforms (VS Code, GitHub, Git, Terminal).",
-                "His diverse skillset spans Programming languages, AI & Machine Learning technologies, Creative design and media production, plus professional Development tools and platforms.",
-                "Skills overview: Programming expertise (Python, JavaScript, HTML, CSS), AI/ML mastery (TensorFlow, Neural Networks, Deep Learning), Creative talents (Photography, Video Editing, UI/UX), plus Development tools proficiency. Ask about specific categories!"
-            ]
-        },
-
-        // AI & Machine Learning keywords
-        ai: {
-            keywords: ["ai", "artificial intelligence", "machine learning", "ml", "tensorflow", "neural networks", "deep learning", "data science"],
-            responses: [
-                "AI & Machine Learning expertise: TensorFlow (deep learning framework), Neural Networks (artificial neural networks and architectures), Data Science (data analysis and visualization), Deep Learning (advanced AI models and algorithms).",
-                "Alish specializes in AI technologies: TensorFlow for building ML models, Neural Networks for pattern recognition, Data Science for insights extraction, and Deep Learning for complex AI applications.",
-                "AI/ML focus areas: TensorFlow (Google's ML framework), Neural Networks (brain-inspired computing), Data Science (statistical analysis), Deep Learning (multi-layer neural networks). Currently studying advanced AI at Softwarica College."
-            ]
-        },
-
-        // Programming keywords
-        programming: {
-            keywords: ["programming", "coding", "development", "software development", "web development", "app development", "languages", "python", "javascript", "html", "css"],
-            responses: [
-                "Programming expertise: Python (AI/ML focus, TensorFlow, neural networks), JavaScript (interactive web development), HTML/CSS (responsive frontend design). Building AI projects and web applications.",
-                "Alish specializes in Python for artificial intelligence and machine learning projects, JavaScript for dynamic web development, and HTML/CSS for modern frontend design. Currently working with TensorFlow and deep learning.",
-                "Core programming skills: Python (primary language for AI/ML), JavaScript (web interactivity), HTML/CSS (modern web design). Focus on AI applications, web development, and machine learning projects."
-            ]
-        },
-
-        // Creative & Design keywords
-        creativedesign: {
-            keywords: ["creative", "design", "photography", "video editing", "ui/ux", "graphic design", "creative skills"],
-            responses: [
-                "Creative & Design portfolio: Photography (capturing life's moments and artistic compositions), Video Editing (visual storytelling and content creation), UI/UX Design (creating intuitive user experiences), Graphic Design (visual communication and branding).",
-                "Alish blends technical expertise with artistic vision: Professional Photography for events and portraits, Advanced Video Editing for engaging content, UI/UX Design for seamless interfaces, Graphic Design for visual impact.",
-                "Creative specializations: Photography (event coverage, portraits, artistic shots), Video Editing (storytelling, effects, transitions), UI/UX Design (user-centered design, prototyping), Graphic Design (logos, layouts, visual identity)."
-            ]
-        },
-
-        // Tools & Platforms keywords
-        toolsplatforms: {
-            keywords: ["tools", "platforms", "software", "vs code", "vscode", "terminal", "command line", "github", "git", "tensorflow"],
-            responses: [
-                "Professional Tools & Platforms: VS Code (primary development environment), GitHub (code repositories and collaboration), Git (version control and project management), Terminal/Command Line (system operations), TensorFlow (AI/ML framework).",
-                "Development ecosystem: VS Code for efficient coding, GitHub for project hosting and collaboration, Git for version control and branching, Terminal for command line operations, TensorFlow for machine learning projects.",
-                "Technical toolkit: VS Code (code editor with extensions), GitHub (open source contributions and repositories), Git (distributed version control), Terminal (command line mastery), TensorFlow (deep learning and AI development)."
-            ]
-        },
-
-        // Email keywords
-        email: {
-            keywords: ["email", "contact email", "shresthaalish444@gmail.com", "gmail", "reach out", "contact him"],
-            responses: [
-                "You can reach Alish directly at: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> for any inquiries or collaboration opportunities.",
-                "Contact Alish via email: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> - feel free to reach out for projects, questions, or networking.",
-                "Email Alish directly: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> for professional inquiries, collaborations, or just to say hello!"
-            ]
-        }
-    };
-
-    // Smart keyword-based response generation
+    // Smart keyword-based response generation with dynamic sentence mixing
     function generateResponse(message) {
-        const lowerMessage = message.toLowerCase();
+        const msg = message.toLowerCase().trim();
 
-        // Check each keyword category
-        for (const [category, data] of Object.entries(chatbotKeywords)) {
-            // Check if any keyword from this category matches
-            if (data.keywords.some(keyword => lowerMessage.includes(keyword))) {
-                // Handle clear chat command specially
-                if (category === 'clear') {
-                    clearChatMessages();
-                    return null; // No message needed as we handle this in clearChatMessages
-                }
-                // Return random response from this category
-                const randomResponse = data.responses[Math.floor(Math.random() * data.responses.length)];
-                return randomResponse;
+        // Helper to randomly combine sentence components
+        function mix(openings, cores, closings) {
+            const o = openings[Math.floor(Math.random() * openings.length)];
+            const c = cores[Math.floor(Math.random() * cores.length)];
+            const cl = closings[Math.floor(Math.random() * closings.length)];
+            return `${o}${c}${cl}`;
+        }
+
+        function choice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // Expanded keyword recognition list (fuzzy matching)
+        const categories = {
+            clear: ["clear", "reset", "clean", "delete messages", "start over", "new conversation"],
+            age: ["age", "old", "years", "birthday", "born", "birth", "when", "how old"],
+            alish: ["alish", "who", "about", "introduce", "background", "person"],
+            abyss: ["abyss", "you", "chatbot", "ai assistant", "who are you", "yourself", "what are you", "tell me about you", "your name"],
+            college: ["college", "university", "softwarica", "coventry", "learning", "study", "education", "school", "high school", "higher secondary", "12th grade", "+2", "intermediate"],
+            secondary: ["secondary school", "secondary education", "khwopa"],
+            primary: ["primary school", "elementary school", "primary education", "elementary", "childhood school", "north east"],
+            skills: ["skills", "abilities", "can do", "technologies", "what skills", "expertise"],
+            ai: ["ai", "artificial intelligence", "machine learning", "ml", "tensorflow", "neural networks", "deep learning", "data science"],
+            programming: ["programming", "coding", "development", "software development", "web development", "app development", "languages", "python", "javascript", "html", "css", "c++", "c#"],
+            creativedesign: ["creative", "design", "photography", "video editing", "ui/ux", "graphic design", "creative skills"],
+            tools: ["tools", "platforms", "software", "vs code", "vscode", "terminal", "command line", "github", "git", "tensorflow"],
+            experience: ["experience", "work", "projects", "portfolio", "built", "created", "developed", "yatra", "printing resolution"],
+            location: ["location", "where", "from", "live", "nepal", "bhaktapur", "address", "place"],
+            greetings: ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "namaste", "sup", "yo", "how are you"],
+            cv: ["cv", "resume", "curriculum vitae", "download", "download cv", "get cv", "curriculum", "vitae"],
+            email: ["email", "contact email", "shresthaalish444@gmail.com", "gmail", "reach out", "contact him"],
+            linkedin: ["linkedin", "professional", "network", "career", "job", "work"],
+            facebook: ["facebook", "fb", "social", "friends"],
+            discord: ["discord", "gaming", "chat", "fwabyss", "friend request"],
+            github_link: ["github profile", "github link", "github account", "github repo"],
+            joke: ["joke", "jokes", "tell a joke", "laugh", "funny"],
+            quote: ["quote", "quotes", "motivation", "motivate"],
+            fact: ["fact", "facts", "tech fact"],
+            ai_explanation: ["what is ai", "what is machine learning", "explain ai"],
+            coding_explanation: ["what is programming", "what is coding", "how to code"]
+        };
+
+        // Find which category matched
+        let matchedCategory = null;
+        for (const [category, keywords] of Object.entries(categories)) {
+            if (keywords.some(keyword => msg.includes(keyword))) {
+                matchedCategory = category;
+                break;
             }
         }
 
-        // Default responses for unmatched queries
-        const defaultResponses = [
-            "I'd love to help you learn more about Alish! Try asking about his age, skills, experience, CV download, or contact information!",
-            "Ask me about Alish's background, location, projects, CV, or how to connect with him!",
-            "I'm here to share Alish's story! You can ask about his coding skills, AI studies, download his CV, or creative projects!",
-            "Try keywords like 'age', 'skills', 'cv', 'linkedin', 'github', 'experience', or 'location' to learn about Alish!",
-            "I know lots about Alish! Ask me about his programming journey, contact details, CV download, or where he's from!"
-        ];
+        if (!matchedCategory) {
+            // Default dynamic responses for unmatched queries
+            return choice([
+                "I'd love to help you learn more about Alish! Try asking about his age, skills, experience, CV download, or contact information!",
+                "Feel free to ask me about Alish's background, location, projects, CV, or how to connect with him!",
+                "I'm here to share Alish's story! You can ask about his coding skills, AI studies, download his CV, or creative projects!",
+                "Try keywords like 'age', 'skills', 'cv', 'linkedin', 'github', 'experience', or 'location' to learn about Alish!",
+                "I know lots about Alish! Ask me about his programming journey, contact details, CV download, or where he's from!"
+            ]);
+        }
 
-        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        // Handle category matching
+        switch (matchedCategory) {
+            case 'clear':
+                clearChatMessages();
+                return null;
+
+            case 'age':
+                return mix(
+                    ["Alish is ", "He is currently ", "Alish's age is ", "He's about "],
+                    ["18 years old", "18 years young", "18, full of energy and coding passion", "18 years of age"],
+                    [" and studying computer science.", " with a bright future ahead in AI.", " and constantly learning new tools.", "."]
+                );
+
+            case 'alish':
+                return mix(
+                    ["Alish Shrestha is ", "Meet Alish - ", "He is ", "Alish is a creative "],
+                    ["an 18-year-old AI enthusiast from Nepal", "a student pursuing Computer Science & AI at Softwarica College", "a passionate programmer and technology creator", "a developer who loves merging code with creativity"],
+                    [" who loves building web apps and models.", " and enjoys learning deep learning and neural networks.", " with skills in Python, JavaScript, and TensorFlow.", "."]
+                );
+
+            case 'abyss':
+                return choice([
+                    "I'm Abyss! I'm an AI assistant with a passion for technology. I was created to be Alish's digital companion and I love chatting with visitors like you!",
+                    "Hey there! I'm Abyss - an intelligent chatbot. I'm here 24/7 to answer questions and have meaningful conversations. What would you like to explore?",
+                    "I'm Abyss, your friendly AI companion! I love technology, learning, and helping people discover information about Alish's work.",
+                    "Nice to meet you! I'm Abyss - an AI chatbot designed with personality. I enjoy conversations, solving problems, and sharing knowledge!"
+                ]);
+
+            case 'college':
+                return mix(
+                    ["Alish is studying ", "He is currently pursuing AI ", "His higher education is ", "He studies AI "],
+                    ["at Softwarica College of IT & E-Commerce", "affiliated with Coventry University, UK", "focusing on machine learning and neural networks", "specializing in Artificial Intelligence"],
+                    [" in Kathmandu.", " to build future-ready solutions.", " where he learns data science.", "."]
+                );
+
+            case 'secondary':
+                return mix(
+                    ["Alish completed his secondary education at ", "He finished high school at ", "For secondary school, he went to "],
+                    ["Khwopa Secondary School in Dekocha-06, Bhaktapur", "Khwopa Secondary School, focusing on Computer Science", "Khwopa Secondary School"],
+                    [" from 2023 to 2025.", " where he built his programming foundation.", "."]
+                );
+
+            case 'primary':
+                return mix(
+                    ["Alish completed his primary education at ", "His schooling journey started at ", "For elementary school, he attended "],
+                    ["North East English Secondary School", "North East English Secondary School in Bhaktapur, Nepal", "North East English Secondary School"],
+                    [" where he excelled in academic performance.", " developing a love for learning.", "."]
+                );
+
+            case 'skills':
+                return mix(
+                    ["Alish has skills in ", "His main expertise includes ", "He is skilled in ", "His tech stack covers "],
+                    ["Programming (Python, JS, HTML/CSS) and AI (TensorFlow)", "AI & Machine Learning (neural networks, deep learning)", "Creative Design (photography, video editing, UI/UX)", "Tools & Platforms like GitHub, VS Code, Git, and Terminal"],
+                    [" which he uses to build neat projects.", " for developing end-to-end applications.", " enabling him to merge technology and design.", "."]
+                );
+
+            case 'ai':
+                return mix(
+                    ["Alish specializes in AI technologies like ", "His machine learning interests cover ", "AI/ML focus areas include "],
+                    ["TensorFlow (deep learning framework)", "Neural Networks and deep learning architectures", "Data Science and pattern recognition", "building brain-inspired AI systems"],
+                    [" for complex AI applications.", " to extract insights.", " currently studying advanced AI at Softwarica College.", "."]
+                );
+
+            case 'programming':
+                return mix(
+                    ["Alish specializes in programming languages like ", "His coding stack includes ", "Core programming skills are "],
+                    ["Python for artificial intelligence and ML", "JavaScript for interactive web development", "HTML/CSS for modern responsive designs", "Python and JavaScript"],
+                    [" which he uses to build full-stack projects.", " allowing him to develop interactive web tools.", "."]
+                );
+
+            case 'creativedesign':
+                return mix(
+                    ["Alish blends tech with creative skills like ", "His creative portfolio includes ", "Creative specializations cover "],
+                    ["Photography (capturing artistic compositions)", "Video Editing (visual storytelling)", "UI/UX Design (creating user-centered designs)", "Graphic Design (visual branding)"],
+                    [" for clean visual impact.", " and content creation.", "."]
+                );
+
+            case 'tools':
+                return mix(
+                    ["Alish uses development tools like ", "His technical toolkit includes ", "For building projects, he relies on "],
+                    ["VS Code (primary code editor)", "GitHub (code hosting and collaboration)", "Git (distributed version control)", "Terminal (command line master)"],
+                    [" to manage his coding workflows smoothly.", " for collaborating on open-source projects.", "."]
+                );
+
+            case 'experience':
+                return mix(
+                    ["Alish is building experience ", "He gains hands-on skills ", "His portfolio experience includes "],
+                    ["by building travel websites like Yatra", "developing custom printing sites like Printing Resolution", "exploring ML frameworks and web developer tools", "creating personal interactive web applications"],
+                    [" to solve real-world problems.", " while actively looking for new opportunities.", "."]
+                );
+
+            case 'location':
+                return mix(
+                    ["Alish comes from ", "He lives in ", "He is based in ", "His hometown is "],
+                    ["Changu Narayan-01, Bhaktapur, Nepal", "the historic city of Bhaktapur, Nepal", "Nepal, near the beautiful mountains of Bhaktapur", "Bhaktapur, Nepal, a UNESCO World Heritage site"],
+                    [" where he codes.", " and pursues his AI studies.", " enjoying the culture and tech scene.", "."]
+                );
+
+            case 'greetings':
+                return choice([
+                    "Hello! I'm Abyss, Alish's AI assistant. What would you like to know about him? 🤖",
+                    "Hi there! How can I help you explore Alish's portfolio today? 😊",
+                    "Hey! Abyss here, ready to share info about Alish's AI journey! 🚀",
+                    "Namaste! Ask me anything about Alish's skills, college, projects, or CV! 🙏",
+                    "Hey there! What's on your mind today? Let's talk about AI, coding, or Alish's work! 💻"
+                ]);
+
+            case 'cv':
+                const cvText1 = choice(["You can download Alish's CV directly!", "Here's Alish's CV for download.", "Ready to download Alish's professional CV?"]);
+                const cvText2 = choice(["Click the download button below:", "It includes all his skills, education, and experience:", "Click below to get it instantly:"]);
+                return `${cvText1}<br>${cvText2}<br><br><a href='Alish_Shrestha_CV.html' download='Alish_Shrestha_CV.html' style='color: #8b5fbf; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;'><i class='fas fa-download'></i> Download CV</a>`;
+
+            case 'email':
+                const mailText = choice([
+                    "You can reach Alish directly at: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> for any inquiries.",
+                    "Contact Alish via email: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> - feel free to reach out!",
+                    "Email Alish directly: <a href='mailto:shresthaalish444@gmail.com' style='color: #8b5fbf; text-decoration: none; font-weight: bold;'>shresthaalish444@gmail.com</a> for collaborations, or just to say hello!"
+                ]);
+                return mailText;
+
+            case 'linkedin':
+                return choice([
+                    "Connect with Alish on LinkedIn for professional networking! He shares AI journey updates and career progress.<br><br><a href='https://www.linkedin.com/in/alish-shrestha-4276b8379/' target='_blank' style='color: #0077b5; text-decoration: none; font-weight: bold;'>Visit LinkedIn Profile</a>",
+                    "Check out Alish's professional journey on LinkedIn:<br><br><a href='https://www.linkedin.com/in/alish-shrestha-4276b8379/' target='_blank' style='color: #0077b5; text-decoration: none; font-weight: bold;'>Link to LinkedIn Profile</a> 🚀"
+                ]);
+
+            case 'facebook':
+                return `Connect with Alish on Facebook! He shares updates and connects with friends.<br><br><a href='https://www.facebook.com/alish.shrestha.138982' target='_blank' style='color: #1877f2; text-decoration: none; font-weight: bold;'>Visit Facebook Profile</a> 👋`;
+
+            case 'discord':
+                return choice([
+                    "Add Alish on Discord: **fwabyss**. Just search for his username and send a friend request!",
+                    "You can find Alish on Discord with username: **fwabyss**. Perfect for tech chats and gaming!",
+                    "Connect with Alish on Discord! Username: **fwabyss** - send him a friend request to chat."
+                ]);
+
+            case 'github_link':
+                return choice([
+                    "Check out Alish's code and projects on GitHub at https://github.com/fwabyss0.<br><br><a href='https://github.com/fwabyss0' target='_blank' style='color: #333; text-decoration: none; font-weight: bold;'>Visit GitHub Profile</a>",
+                    "Explore Alish's GitHub repositories at github.com/fwabyss0 - lots of interesting projects and code samples!<br><br><a href='https://github.com/fwabyss0' target='_blank' style='color: #333; text-decoration: none; font-weight: bold;'>Check out GitHub</a>"
+                ]);
+
+            case 'joke':
+                return choice([
+                    "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+                    "There are 10 types of people in the world: those who understand binary, and those who don't! 😂",
+                    "Why did the developer leave his job? Because he didn't get arrays! 💻",
+                    "What is a programmer's favorite hangout place? Foo Bar! 🍻",
+                    "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡"
+                ]);
+
+            case 'quote':
+                return choice([
+                    "\"The best way to predict the future is to invent it.\" – Alan Kay 🚀",
+                    "\"Code is like humor. When you have to explain it, it's bad.\" – Cory House ✨",
+                    "\"First, solve the problem. Then, write the code.\" – John Johnson 💡",
+                    "\"Simplicity is the soul of efficiency.\" – Austin Freeman ⚡",
+                    "\"Make it work, make it right, make it fast.\" – Kent Beck 🏃"
+                ]);
+
+            case 'fact':
+                return choice([
+                    "💡 **Interesting Tech Fact**: The first computer bug was an actual real moth found trapped inside a Harvard Mark II computer in 1947!",
+                    "💡 **Interesting Tech Fact**: The first webcam was created at Cambridge University to monitor a coffee pot so researchers wouldn't waste trips!",
+                    "💡 **Interesting Tech Fact**: Python was named after the British comedy troupe 'Monty Python', not the snake!"
+                ]);
+
+            case 'ai_explanation':
+                return "Artificial Intelligence (AI) is the intelligence of machines or software, as opposed to the intelligence of humans or other animals. It involves creating algorithms that can learn from data, reason, solve problems, and make decisions. Alish is currently studying AI at Softwarica College to learn how to build neural networks and machine learning models!";
+
+            case 'coding_explanation':
+                return "Coding or programming is the process of writing instructions that a computer can understand and execute. It allows us to build software, games, websites, and AI systems. Alish codes in Python and JavaScript to build applications and neural networks!";
+        }
+
+        return "I'm Abyss, your AI assistant! Ask me anything about programming, math calculations, technology, general knowledge, or Alish Shrestha's portfolio! 🤖✨";
     }
 
     // Session Memory History Array
