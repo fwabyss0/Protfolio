@@ -1626,3 +1626,271 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
+/* ══════════════════════════════════════════════════════════════
+   PARTICLE CANVAS — INTERACTIVE HERO BACKGROUND
+   ══════════════════════════════════════════════════════════════ */
+(function initParticles() {
+    const canvas = document.getElementById('hero-particles');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null };
+    let animationId;
+
+    function resize() {
+        const hero = canvas.parentElement;
+        canvas.width = hero.offsetWidth;
+        canvas.height = hero.offsetHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.opacity = Math.random() * 0.5 + 0.1;
+            this.color = ['#FFE141', '#14F1D9', '#FF6B9D', '#C77DFF'][Math.floor(Math.random() * 4)];
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (mouse.x != null) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    const force = (120 - dist) / 120;
+                    this.x -= dx * force * 0.03;
+                    this.y -= dy * force * 0.03;
+                }
+            }
+
+            if (this.x < 0) this.x = canvas.width;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.y < 0) this.y = canvas.height;
+            if (this.y > canvas.height) this.y = 0;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.opacity;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function init() {
+        resize();
+        particles = [];
+        const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.06 * (1 - dist / 100)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        animationId = requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    window.addEventListener('resize', () => {
+        resize();
+        init();
+    });
+
+    init();
+    animate();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   3D TILT EFFECT — CARDS & PROJECTS
+   ══════════════════════════════════════════════════════════════ */
+(function initTilt() {
+    const cards = document.querySelectorAll('.project-card, .acard, .skill-cat, .edu-card');
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -8;
+            const rotateY = ((x - centerX) / centerX) * 8;
+
+            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+        });
+    });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL-TRIGGERED REVEAL ANIMATIONS
+   ══════════════════════════════════════════════════════════════ */
+(function initScrollReveal() {
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll(
+        '.project-card, .acard, .skill-cat, .edu-card, .cc, .social-link, .btn, .chip, .hero-btns, .hero-chips'
+    );
+
+    revealElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
+    // Add revealed styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .revealed {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   SMOOTH SCROLL ACTIVE NAV HIGHLIGHT
+   ══════════════════════════════════════════════════════════════ */
+(function initActiveNav() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => observer.observe(section));
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   MAGNETIC BUTTON EFFECT
+   ══════════════════════════════════════════════════════════════ */
+(function initMagneticButtons() {
+    const buttons = document.querySelectorAll('.btn, .chatbot-toggle, .nav-pill');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+            btn.style.transition = 'transform 0.3s ease';
+        });
+
+        btn.addEventListener('mouseenter', () => {
+            btn.style.transition = 'none';
+        });
+    });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   PARALLAX STICKERS ON MOUSE MOVE
+   ══════════════════════════════════════════════════════════════ */
+(function initStickerParallax() {
+    const hero = document.querySelector('.hero');
+    const stickers = document.querySelectorAll('.sticker');
+    if (!hero || !stickers.length) return;
+
+    hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+        stickers.forEach((sticker, index) => {
+            const speed = (index + 1) * 8;
+            const dir = index % 2 === 0 ? 1 : -1;
+            sticker.style.transform = `translate(${x * speed}px, ${y * speed}px) rotate(${dir * x * 5}deg)`;
+        });
+    });
+
+    hero.addEventListener('mouseleave', () => {
+        stickers.forEach(sticker => {
+            sticker.style.transform = 'translate(0, 0) rotate(0deg)';
+            sticker.style.transition = 'transform 0.5s ease';
+        });
+    });
+
+    hero.addEventListener('mouseenter', () => {
+        stickers.forEach(sticker => {
+            sticker.style.transition = 'none';
+        });
+    });
+})();
