@@ -6,9 +6,10 @@ import random
 
 PORTFOLIO_DATA = {
     "name": "Alish Shrestha",
-    "age": 18,
+    "age": 19,
     "location": "Changu Narayan-01, Bhaktapur, Nepal",
     "email": "shresthaalish444@gmail.com",
+    "role": "Manager at Print Village",
     "college": "Softwarica College of IT & E-Commerce (Coventry University, UK)",
     "degree": "BSc (Hons) Computer Science with Artificial Intelligence",
     "secondary_school": "Khwopa Secondary School, Bhaktapur (Computer Science, 2023-2025)",
@@ -184,7 +185,7 @@ def get_portfolio_response(message: str) -> str | None:
         return (
             f"👤 **About Alish Shrestha:**\n\n"
             f"Alish is an **{d['age']}-year-old** AI student and creative developer from **{d['location']}** 🇳🇵. "
-            f"He is currently pursuing a **{d['degree']}** at **{d['college']}**. "
+            f"He works as **{d['role']}** and is currently pursuing a **{d['degree']}** at **{d['college']}**. "
             f"Passionate about Python, Machine Learning, and building innovative web projects!"
         )
 
@@ -200,6 +201,7 @@ ABOUT ALISH SHRESTHA (Portfolio Owner):
 - Age: {d['age']} years old
 - Location: {d['location']}
 - Email: {d['email']}
+- Role: {d['role']}
 
 EDUCATION:
 - Currently: {d['college']} — {d['degree']}
@@ -221,4 +223,4 @@ SOCIAL:
 - Instagram: @aliisshhhhhh ({d['social']['instagram']})
 - Facebook: {d['social']['facebook']}
 - Discord: {d['social']['discord']}
-"""
+ """

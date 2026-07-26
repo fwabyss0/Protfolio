@@ -1,8 +1,9 @@
 const PORTFOLIO_DATA = {
     name: "Alish Shrestha",
-    age: 18,
+    age: 19,
     location: "Changu Narayan-01, Bhaktapur, Nepal",
     email: "shresthaalish444@gmail.com",
+    role: "Manager at Print Village",
     college: "Softwarica College of IT & E-Commerce (Coventry University, UK)",
     degree: "BSc (Hons) Computer Science with Artificial Intelligence",
     secondarySchool: "Khwopa Secondary School, Bhaktapur (Computer Science Specialization, 2023-2025)",
@@ -62,6 +63,7 @@ ABOUT ALISH SHRESTHA (Portfolio Owner):
 - Age: 19 years old
 - Location: Changu Narayan-01, Bhaktapur, Nepal 🇳🇵
 - Email: shresthaalish444@gmail.com
+- Role: Manager at Print Village
 - Status: Passionate AI student, developer, and creative designer
 
 EDUCATION:
