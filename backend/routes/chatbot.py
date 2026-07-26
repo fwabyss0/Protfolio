@@ -133,12 +133,8 @@ def chat():
                 response_text = generate_response(user_message, history)
 
         elif intent == "portfolio":
-            portfolio_resp = get_portfolio_response(user_message)
-            if portfolio_resp:
-                response_text = portfolio_resp
-            else:
-                # Fall through to AI with portfolio context
-                response_text = generate_response(user_message, history)
+            # Let AI handle the query dynamically (using system prompt context)
+            response_text = generate_response(user_message, history)
 
         else:
             # General AI response

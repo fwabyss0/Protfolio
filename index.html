@@ -11,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
+    <link rel="stylesheet" href="static/css/spotify-widget.css">
     <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 </head>
 
@@ -105,6 +106,15 @@
                         <i class="fas fa-envelope"></i> Hire Me
                     </a>
                 </div>
+
+                <!-- Spotify Now Playing Widget -->
+                <div id="spotify-widget" class="spotify-widget">
+                    <div class="spotify-loading">
+                        <div class="spotify-spinner"></div>
+                        <div>Loading Spotify...</div>
+                    </div>
+                </div>
+
                 <div class="avail-row">
                     <span class="avail-dot"></span>
                     <span>Currently Available for opportunities</span>
@@ -590,6 +600,9 @@
     </button>
 
     <script src="app.js"></script>
+
+    <!-- Spotify Widget -->
+    <script src="static/js/spotify-widget.js"></script>
 
     <!-- ── Portfolio Enhancement Scripts ── -->
     <script>

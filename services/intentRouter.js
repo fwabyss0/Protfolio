@@ -46,11 +46,11 @@ async function handleChatRequest(message, history = []) {
         return getCurrentTimeDateResponse(message);
     }
 
-    // 2. Direct Link / Quick Portfolio Matches
-    const directPortfolioRes = getPortfolioDirectResponse(message);
-    if (directPortfolioRes) {
-        return directPortfolioRes;
-    }
+    // 2. Direct Link / Quick Portfolio Matches (Handled by AI primarily, fallback locally in aiService)
+    // const directPortfolioRes = getPortfolioDirectResponse(message);
+    // if (directPortfolioRes) {
+    //     return directPortfolioRes;
+    // }
 
     // 3. Basic Math Calculation Routing
     if (isMathQuery(message)) {
