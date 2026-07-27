@@ -16,6 +16,14 @@ spotify_bp = Blueprint("spotify", __name__)
 _cache = {"data": None, "expires_at": 0}
 CACHE_TTL = int(os.getenv("SPOTIFY_CACHE_TTL", "15"))  # seconds
 
+FAVORITE_SONG = {
+    "title": "Gantabya",
+    "artist": "Rockheads",
+    "album": "Gantabya",
+    "album_cover": "https://i.scdn.co/image/ab67616d0000b2737f033b9dcf0f676a73eeb92f",
+    "spotify_url": "https://open.spotify.com/embed/playlist/62pCtrE3EcFtNaTlvQfNWN?utm_source=generator&theme=0&si=0f925d674e864c77",
+}
+
 
 def _get_service() -> SpotifyService:
     """Lazy-load the Spotify service."""
@@ -52,27 +60,29 @@ def get_spotify_data():
 
         if not has_credentials:
             print("[Spotify] ERROR: Missing credentials")
-            _cache["data"] = {
-                "error": "Spotify credentials not configured.",
-                "is_configured": False,
+            result = {
+                "is_playing": False,
+                "fallback": FAVORITE_SONG,
             }
+            _cache["data"] = result
             _cache["expires_at"] = now + CACHE_TTL
-            return jsonify(_cache["data"])
+            return jsonify(result)
 
         # Fetch now playing data
         print("[Spotify] Fetching now playing data...")
         track = service.get_now_playing()
 
         if track is None:
-            print("[Spotify] No track found (nothing playing, no recent history)")
+            print("[Spotify] No track found, returning favorite song fallback")
             result = {
                 "is_playing": False,
-                "track": None,
+                "fallback": FAVORITE_SONG,
             }
         else:
             print(f"[Spotify] Track found: {track.get('title')} by {track.get('artist')}")
             result = {
                 "is_playing": track.get("is_playing", False),
+                "fallback": None,
                 "track": {
                     "title": track.get("title", "Unknown"),
                     "artist": track.get("artist", "Unknown Artist"),
@@ -92,10 +102,8 @@ def get_spotify_data():
     except Exception as e:
         print(f"[Spotify] ERROR: {type(e).__name__}: {e}")
         result = {
-            "error": "Spotify Offline",
-            "is_configured": True,
             "is_playing": False,
-            "no_recent": False,
+            "fallback": FAVORITE_SONG,
         }
         _cache["data"] = result
         _cache["expires_at"] = now + CACHE_TTL

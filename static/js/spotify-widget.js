@@ -23,11 +23,19 @@ class SpotifyWidget {
         this.isLoading = false;
         this.fetchTimeout = 10000; // 10 second timeout
 
+        this.FALLBACK_SONG = {
+            title: "Gantabya",
+            artist: "Rockheads",
+            album: "Gantabya",
+            cover: "https://i.scdn.co/image/ab67616d0000b2737f033b9dcf0f676a73eeb92f",
+            spotify_url: "https://open.spotify.com/embed/playlist/62pCtrE3EcFtNaTlvQfNWN?utm_source=generator&theme=0&si=0f925d674e864c77",
+        };
+
         this.init();
     }
 
     init() {
-        this.fetchData();
+        this.render({ fallback: this.FALLBACK_SONG });
         this.startAutoRefresh();
     }
 
@@ -76,7 +84,7 @@ class SpotifyWidget {
             this.render(data);
         } catch (error) {
             console.error("[SpotifyWidget] Fetch error:", error);
-            this.hideWidget();
+            this.render({ fallback: this.FALLBACK_SONG });
         } finally {
             this.isLoading = false;
         }
@@ -126,7 +134,7 @@ class SpotifyWidget {
                     <div class="spotify-album" title="${this.escapeHtml(track.album)}">${this.escapeHtml(track.album)}</div>
                     <div class="spotify-status">
                         <span class="spotify-status-dot"></span>
-                        Now Playing
+                        Listening now
                     </div>
                 </div>
             </div>
@@ -151,42 +159,66 @@ class SpotifyWidget {
         `;
     }
 
+    renderFavorite(fallback) {
+        return `
+            <div class="spotify-content">
+                <div class="spotify-artwork-wrapper">
+                    <img
+                        src="${fallback.album_cover || fallback.cover || ''}"
+                        alt="${this.escapeHtml(fallback.album || fallback.title)}"
+                        class="spotify-artwork"
+                        loading="lazy"
+                        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2290%22 height=%2290%22><rect fill=%22%23131323%22 width=%2290%22 height=%2290%22/><text x=%2245%22 y=%2250%22 text-anchor=%22middle%22 fill=%22%238888AA%22 font-size=%2212%22>❤️</text></svg>'"
+                    >
+                    ${this.createEqualizer(false)}
+                </div>
+                <div class="spotify-info">
+                    <div class="spotify-title" title="${this.escapeHtml(fallback.title)}">${this.escapeHtml(fallback.title)}</div>
+                    <div class="spotify-artist" title="${this.escapeHtml(fallback.artist)}">${this.escapeHtml(fallback.artist)}</div>
+                    <div class="spotify-album" title="${this.escapeHtml(fallback.album || '')}">${this.escapeHtml(fallback.album || '')}</div>
+                    <div class="spotify-status">
+                        ❤️ Favorite Song
+                    </div>
+                </div>
+            </div>
+            <div class="spotify-progress-section">
+                <div class="spotify-progress-bar-wrapper">
+                    <div class="spotify-progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="spotify-time">
+                    <span>🎵 My All-Time Favorite</span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="spotify-actions">
+                <a href="${fallback.spotify_url}" target="_blank" rel="noopener noreferrer" class="spotify-open-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.18c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    Open in Spotify
+                </a>
+                <button class="spotify-refresh" onclick="spotifyWidget.manualRefresh()" title="Refresh">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                </button>
+            </div>
+        `;
+    }
+
     render(data) {
-        const shouldShow = data && data.is_playing && data.track;
+        let html = "";
 
-        if (!shouldShow) {
-            this.hideWidget();
-            return;
-        }
-
-        const html = this.renderNowPlaying(data.track);
-        this.showWidget(html);
-    }
-
-    showWidget(html) {
-        if (this.widget.style.display === "none") {
-            this.widget.innerHTML = html;
-            this.widget.style.display = "";
-            // Force reflow
-            this.widget.offsetHeight;
-            this.widget.classList.add("fade-in");
-            setTimeout(() => this.widget.classList.remove("fade-in"), 500);
+        if (data && data.is_playing && data.track) {
+            html = this.renderNowPlaying(data.track);
+        } else if (data && data.fallback) {
+            html = this.renderFavorite(data.fallback);
         } else {
-            this.widget.classList.add("fade-out");
-            setTimeout(() => {
-                this.widget.innerHTML = html;
-                this.widget.classList.remove("fade-out");
-                this.widget.classList.add("fade-in");
-                setTimeout(() => this.widget.classList.remove("fade-in"), 500);
-            }, 300);
+            html = this.renderFavorite(this.FALLBACK_SONG);
         }
-    }
 
-    hideWidget() {
         this.widget.classList.add("fade-out");
         setTimeout(() => {
+            this.widget.innerHTML = html;
             this.widget.classList.remove("fade-out");
-            this.widget.style.display = "none";
+            this.widget.classList.add("fade-in");
+            setTimeout(() => this.widget.classList.remove("fade-in"), 500);
         }, 300);
     }
 
