@@ -93,6 +93,11 @@ class SpotifyWidget {
             this.render(data);
         } catch (error) {
             console.error("[SpotifyWidget] Fetch error:", error);
+            console.error("[SpotifyWidget] ACTION REQUIRED: The Spotify widget cannot reach the backend API.");
+            console.error("[SpotifyWidget] Current API URL:", this.apiUrl);
+            console.error("[SpotifyWidget] Fix: Set window.SPOTIFY_API_URL to your Flask backend URL BEFORE this script loads.");
+            console.error("[SpotifyWidget] Example: <script>window.SPOTIFY_API_URL = 'https://your-backend.onrender.com/api/spotify';</script>");
+            console.error("[SpotifyWidget] Or update the <meta name='spotify-api-url'> tag in index.html to your backend URL.");
             this.render({ fallback: this.FALLBACK_SONG });
         } finally {
             this.isLoading = false;
