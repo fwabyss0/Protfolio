@@ -1,6 +1,6 @@
 /**
  * music-player.js
- * Custom HTML5 Audio Player with localStorage persistence.
+ * Premium horizontal HTML5 Audio Player with localStorage persistence.
  */
 
 class MusicPlayer {
@@ -8,7 +8,8 @@ class MusicPlayer {
         this.audio = document.getElementById('music-audio');
         this.player = document.getElementById('music-player');
         this.playBtn = document.getElementById('music-play');
-        this.replayBtn = document.getElementById('music-replay');
+        this.prevBtn = document.getElementById('music-prev');
+        this.nextBtn = document.getElementById('music-next');
         this.loopBtn = document.getElementById('music-loop');
         this.muteBtn = document.getElementById('music-mute');
         this.volumeSlider = document.getElementById('music-volume');
@@ -44,7 +45,6 @@ class MusicPlayer {
         this.updateVolumeIcon();
         this.updateLoopIcon();
 
-        // Restore position after metadata loads
         this.audio.addEventListener('loadedmetadata', () => {
             const savedPosition = localStorage.getItem(this.storageKeys.position);
             if (savedPosition && !isNaN(parseFloat(savedPosition))) {
@@ -53,7 +53,6 @@ class MusicPlayer {
             this.updateDuration();
         });
 
-        // Save position periodically
         this.audio.addEventListener('timeupdate', () => {
             if (!this.isDragging) {
                 this.updateProgress();
@@ -61,7 +60,6 @@ class MusicPlayer {
             }
         });
 
-        // Handle playback end
         this.audio.addEventListener('ended', () => {
             if (this.isLooping) {
                 this.audio.currentTime = 0;
@@ -76,7 +74,6 @@ class MusicPlayer {
             }
         });
 
-        // Handle loading states
         this.audio.addEventListener('waiting', () => {
             this.player.classList.add('loading');
         });
@@ -85,7 +82,6 @@ class MusicPlayer {
             this.player.classList.remove('loading');
         });
 
-        // Handle errors
         this.audio.addEventListener('error', () => {
             console.error('[MusicPlayer] Audio error:', this.audio.error);
             this.player.classList.add('error');
@@ -94,7 +90,6 @@ class MusicPlayer {
             this.player.classList.remove('playing');
         });
 
-        // Auto-play if was playing
         if (this.isPlaying) {
             this.audio.play().catch(() => {
                 this.isPlaying = false;
@@ -104,27 +99,22 @@ class MusicPlayer {
     }
 
     bindEvents() {
-        // Play/Pause
         this.playBtn.addEventListener('click', () => this.togglePlay());
 
-        // Replay
-        this.replayBtn.addEventListener('click', () => {
+        this.prevBtn.addEventListener('click', () => {
             this.audio.currentTime = 0;
-            this.progressFill.style.width = '0%';
-            this.progressHandle.style.left = '0%';
-            this.currentTimeEl.textContent = '00:00';
-            if (!this.isPlaying) {
-                this.togglePlay();
-            }
+            this.updateProgress();
         });
 
-        // Loop toggle
+        this.nextBtn.addEventListener('click', () => {
+            this.audio.currentTime = 0;
+            this.updateProgress();
+        });
+
         this.loopBtn.addEventListener('click', () => this.toggleLoop());
 
-        // Mute toggle
         this.muteBtn.addEventListener('click', () => this.toggleMute());
 
-        // Volume change
         this.volumeSlider.addEventListener('input', () => {
             this.audio.volume = parseFloat(this.volumeSlider.value);
             this.audio.muted = false;
@@ -133,7 +123,6 @@ class MusicPlayer {
             this.updateVolumeIcon();
         });
 
-        // Progress bar seek - click
         this.progressWrapper.addEventListener('click', (e) => {
             if (!this.audio.duration) return;
             const rect = this.progressWrapper.getBoundingClientRect();
@@ -142,7 +131,6 @@ class MusicPlayer {
             this.updateProgress();
         });
 
-        // Progress bar seek - drag
         this.progressWrapper.addEventListener('mousedown', (e) => {
             if (!this.audio.duration) return;
             this.isDragging = true;
@@ -150,18 +138,13 @@ class MusicPlayer {
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (this.isDragging) {
-                this.handleDrag(e);
-            }
+            if (this.isDragging) this.handleDrag(e);
         });
 
         document.addEventListener('mouseup', () => {
-            if (this.isDragging) {
-                this.isDragging = false;
-            }
+            if (this.isDragging) this.isDragging = false;
         });
 
-        // Touch events for mobile
         this.progressWrapper.addEventListener('touchstart', (e) => {
             if (!this.audio.duration) return;
             this.isDragging = true;
@@ -169,14 +152,48 @@ class MusicPlayer {
         });
 
         document.addEventListener('touchmove', (e) => {
-            if (this.isDragging) {
-                this.handleDrag(e.touches[0]);
-            }
+            if (this.isDragging) this.handleDrag(e.touches[0]);
         });
 
         document.addEventListener('touchend', () => {
-            if (this.isDragging) {
-                this.isDragging = false;
+            if (this.isDragging) this.isDragging = false;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            switch (e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    this.togglePlay();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.audio.currentTime = Math.max(0, this.audio.currentTime - 5);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.audio.currentTime = Math.min(this.audio.duration || 0, this.audio.currentTime + 5);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    this.audio.volume = Math.min(1, this.audio.volume + 0.05);
+                    this.volumeSlider.value = this.audio.volume;
+                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    this.audio.volume = Math.max(0, this.audio.volume - 0.05);
+                    this.volumeSlider.value = this.audio.volume;
+                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
+                    break;
+                case 'KeyM':
+                    this.toggleMute();
+                    break;
+                case 'KeyL':
+                    this.toggleLoop();
+                    break;
             }
         });
     }
@@ -222,7 +239,6 @@ class MusicPlayer {
     updatePlayIcon() {
         const iconPlay = this.playBtn.querySelector('.icon-play');
         const iconPause = this.playBtn.querySelector('.icon-pause');
-
         if (this.isPlaying) {
             iconPlay.style.display = 'none';
             iconPause.style.display = 'block';
@@ -235,7 +251,6 @@ class MusicPlayer {
     updateVolumeIcon() {
         const iconVolume = this.muteBtn.querySelector('.icon-volume');
         const iconMuted = this.muteBtn.querySelector('.icon-muted');
-
         if (this.audio.muted || this.audio.volume === 0) {
             iconVolume.style.display = 'none';
             iconMuted.style.display = 'block';
@@ -255,7 +270,6 @@ class MusicPlayer {
 
     updateProgress() {
         if (!this.audio.duration) return;
-
         const percent = (this.audio.currentTime / this.audio.duration) * 100;
         this.progressFill.style.width = `${percent}%`;
         this.progressHandle.style.left = `${percent}%`;
@@ -274,14 +288,12 @@ class MusicPlayer {
     }
 
     loadState() {
-        // Volume
         const savedVolume = localStorage.getItem(this.storageKeys.volume);
         if (savedVolume !== null) {
             this.audio.volume = parseFloat(savedVolume);
             this.volumeSlider.value = this.audio.volume;
         }
 
-        // Mute
         const savedMuted = localStorage.getItem(this.storageKeys.muted);
         if (savedMuted === 'true') {
             this.audio.muted = true;

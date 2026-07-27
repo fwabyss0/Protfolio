@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alish Shrestha</title>
-    <meta name="description" content="Alish Shrestha — AI Student, Web Developer, and Creative Technologist from Nepal. Building the future one line of code at a time.">
+    <meta name="description"
+        content="Alish Shrestha — AI Student, Web Developer, and Creative Technologist from Nepal. Building the future one line of code at a time.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
     <link rel="stylesheet" href="static/css/music-player.css">
     <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
@@ -107,56 +110,72 @@
                     </a>
                 </div>
 
-                <!-- Music Player -->
+                <!-- Premium Horizontal Music Player -->
                 <div id="music-player" class="music-player">
                     <div class="music-player-glow"></div>
                     <div class="music-player-inner">
+                        <!-- Left: Circular Album Art -->
                         <div class="music-artwork-wrapper">
-                            <img src="static/images/album-cover.jpg" alt="Album Cover" class="music-artwork" id="music-artwork">
                             <div class="music-artwork-ring"></div>
+                            <img src="static/images/album-cover.jpg" alt="Album Cover" class="music-artwork" id="music-artwork">
                         </div>
-                        <div class="music-info">
-                            <div class="music-title" id="music-title">Song Title</div>
-                            <div class="music-artist" id="music-artist">Artist Name</div>
-                        </div>
-                        <div class="music-equalizer" id="music-equalizer">
-                            <span class="eq-bar"></span>
-                            <span class="eq-bar"></span>
-                            <span class="eq-bar"></span>
-                            <span class="eq-bar"></span>
-                            <span class="eq-bar"></span>
-                        </div>
-                        <div class="music-progress-section">
-                            <div class="music-progress-bar-wrapper" id="music-progress-wrapper">
-                                <div class="music-progress-fill" id="music-progress-fill"></div>
-                                <div class="music-progress-handle" id="music-progress-handle"></div>
+
+                        <!-- Center: Track Info + Equalizer -->
+                        <div class="music-center">
+                            <div class="music-info">
+                                <div class="music-title" id="music-title">Yellow</div>
+                                <div class="music-artist" id="music-artist">Coldplay</div>
                             </div>
-                            <div class="music-time">
-                                <span id="music-current">00:00</span>
-                                <span id="music-duration">00:00</span>
+                            <div class="music-equalizer" id="music-equalizer">
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
+                                <span class="eq-bar"></span>
                             </div>
                         </div>
-                        <div class="music-controls">
-                            <button class="music-btn" id="music-replay" title="Replay">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-                            </button>
-                            <button class="music-btn music-btn-play" id="music-play" title="Play">
-                                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                            </button>
-                            <button class="music-btn" id="music-loop" title="Loop">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
-                            </button>
-                            <div class="music-volume-wrapper">
-                                <button class="music-btn" id="music-mute" title="Mute">
-                                    <svg class="icon-volume" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                                    <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+
+                        <!-- Right: Controls + Progress -->
+                        <div class="music-right">
+                            <div class="music-controls">
+                                <button class="music-btn" id="music-loop" title="Loop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
                                 </button>
-                                <div class="music-volume-slider-wrapper">
-                                    <input type="range" class="music-volume-slider" id="music-volume" min="0" max="1" step="0.01" value="1">
+                                <button class="music-btn" id="music-prev" title="Previous">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                                </button>
+                                <button class="music-btn music-btn-play" id="music-play" title="Play">
+                                    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                </button>
+                                <button class="music-btn" id="music-next" title="Next">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                                </button>
+                                <div class="music-volume-wrapper">
+                                    <button class="music-btn" id="music-mute" title="Mute">
+                                        <svg class="icon-volume" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                        <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                                    </button>
+                                    <div class="music-volume-slider-wrapper">
+                                        <input type="range" class="music-volume-slider" id="music-volume" min="0" max="1" step="0.01" value="1">
+                                    </div>
+                                </div>
+                                <button class="music-btn" id="music-more" title="More">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                                </button>
+                            </div>
+                            <div class="music-progress-section">
+                                <div class="music-progress-bar-wrapper" id="music-progress-wrapper">
+                                    <div class="music-progress-fill" id="music-progress-fill"></div>
+                                    <div class="music-progress-handle" id="music-progress-handle"></div>
+                                </div>
+                                <div class="music-time">
+                                    <span id="music-current">00:00</span>
+                                    <span id="music-duration">00:00</span>
                                 </div>
                             </div>
                         </div>
+
                         <audio id="music-audio" preload="metadata" src="static/music/song.mp3"></audio>
                     </div>
                 </div>
@@ -313,10 +332,14 @@
                         <h3 class="skill-cat-title">Programming</h3>
                     </div>
                     <div class="sc-row">
-                        <div class="sc-wrap"><span class="sc" style="--cc: #3776ab" data-percent="70"><i class="fab fa-python"></i> Python</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #f7df1e" data-percent="65"><i class="fab fa-js-square"></i> JavaScript</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #e34f26" data-percent="85"><i class="fab fa-html5"></i> HTML</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #1572b6" data-percent="80"><i class="fab fa-css3-alt"></i> CSS</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #3776ab" data-percent="70"><i
+                                    class="fab fa-python"></i> Python</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f7df1e" data-percent="65"><i
+                                    class="fab fa-js-square"></i> JavaScript</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #e34f26" data-percent="85"><i
+                                    class="fab fa-html5"></i> HTML</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #1572b6" data-percent="80"><i
+                                    class="fab fa-css3-alt"></i> CSS</span></div>
                     </div>
                 </div>
 
@@ -327,10 +350,14 @@
                         <h3 class="skill-cat-title">AI &amp; Machine Learning</h3>
                     </div>
                     <div class="sc-row">
-                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6f00" data-percent="55"><i class="fas fa-project-diagram"></i> TensorFlow</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #c77dff" data-percent="50"><i class="fas fa-network-wired"></i> Neural Networks</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #14f1d9" data-percent="60"><i class="fas fa-chart-line"></i> Data Science</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #b5ff6d" data-percent="50"><i class="fas fa-robot"></i> Deep Learning</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6f00" data-percent="55"><i
+                                    class="fas fa-project-diagram"></i> TensorFlow</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #c77dff" data-percent="50"><i
+                                    class="fas fa-network-wired"></i> Neural Networks</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #14f1d9" data-percent="60"><i
+                                    class="fas fa-chart-line"></i> Data Science</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #b5ff6d" data-percent="50"><i
+                                    class="fas fa-robot"></i> Deep Learning</span></div>
                     </div>
                 </div>
 
@@ -341,10 +368,14 @@
                         <h3 class="skill-cat-title">Tools &amp; Platforms</h3>
                     </div>
                     <div class="sc-row">
-                        <div class="sc-wrap"><span class="sc" style="--cc: #007acc" data-percent="90"><i class="fas fa-code"></i> VS Code</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #f0f0f0" data-percent="75"><i class="fab fa-github"></i> GitHub</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #f05032" data-percent="70"><i class="fab fa-git-alt"></i> Git</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #4caf50" data-percent="65"><i class="fas fa-laptop-code"></i> DevTools</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #007acc" data-percent="90"><i
+                                    class="fas fa-code"></i> VS Code</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f0f0f0" data-percent="75"><i
+                                    class="fab fa-github"></i> GitHub</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #f05032" data-percent="70"><i
+                                    class="fab fa-git-alt"></i> Git</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #4caf50" data-percent="65"><i
+                                    class="fas fa-laptop-code"></i> DevTools</span></div>
                     </div>
                 </div>
 
@@ -355,15 +386,20 @@
                         <h3 class="skill-cat-title">Creative &amp; Design</h3>
                     </div>
                     <div class="sc-row">
-                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6b9d" data-percent="75"><i class="fas fa-video"></i> Video Editing</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #ff9f43" data-percent="60"><i class="fas fa-palette"></i> UI/UX Design</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #4ecdc4" data-percent="70"><i class="fas fa-camera"></i> Photography</span></div>
-                        <div class="sc-wrap"><span class="sc" style="--cc: #a29bfe" data-percent="80"><i class="fas fa-comments"></i> Communication</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff6b9d" data-percent="75"><i
+                                    class="fas fa-video"></i> Video Editing</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #ff9f43" data-percent="60"><i
+                                    class="fas fa-palette"></i> UI/UX Design</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #4ecdc4" data-percent="70"><i
+                                    class="fas fa-camera"></i> Photography</span></div>
+                        <div class="sc-wrap"><span class="sc" style="--cc: #a29bfe" data-percent="80"><i
+                                    class="fas fa-comments"></i> Communication</span></div>
                     </div>
                 </div>
 
             </div>
-        </div></section>
+        </div>
+    </section>
 
     <!-- ══ EDUCATION ══ -->
     <section id="education" class="education">
@@ -385,7 +421,8 @@
                     <h3 class="edu-card-title">Primary Education</h3>
                     <h4 class="edu-card-school">North East English Secondary School</h4>
                     <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
-                    <p class="edu-card-desc">Built a strong academic foundation across core subjects with excellent performance and discipline.</p>
+                    <p class="edu-card-desc">Built a strong academic foundation across core subjects with excellent
+                        performance and discipline.</p>
                     <div class="edu-card-tags">
                         <span class="edu-tag">📚 Strong Foundation</span>
                         <span class="edu-tag">🎯 Mathematics</span>
@@ -405,7 +442,8 @@
                     <h3 class="edu-card-title">Secondary Education</h3>
                     <h4 class="edu-card-school">Khwopa Secondary School</h4>
                     <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
-                    <p class="edu-card-desc">Completed with Computer Science specialization — programming fundamentals and advanced mathematics.</p>
+                    <p class="edu-card-desc">Completed with Computer Science specialization — programming fundamentals
+                        and advanced mathematics.</p>
                     <div class="edu-card-tags">
                         <span class="edu-tag">💻 Computer Science</span>
                         <span class="edu-tag">⚡ Programming</span>
@@ -423,9 +461,11 @@
                         <span class="edu-card-status status-current">Current ✨</span>
                     </div>
                     <h3 class="edu-card-title">Higher Education</h3>
-                    <h4 class="edu-card-school">Softwarica College<br><span class="edu-sub-school">(Coventry University)</span></h4>
+                    <h4 class="edu-card-school">Softwarica College<br><span class="edu-sub-school">(Coventry
+                            University)</span></h4>
                     <p class="edu-card-loc"><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
-                    <p class="edu-card-desc">Pursuing Bachelor's in Artificial Intelligence — machine learning, neural networks, and data science.</p>
+                    <p class="edu-card-desc">Pursuing Bachelor's in Artificial Intelligence — machine learning, neural
+                        networks, and data science.</p>
                     <div class="edu-card-tags">
                         <span class="edu-tag">🧠 Machine Learning</span>
                         <span class="edu-tag">🤖 AI Development</span>
@@ -465,7 +505,8 @@
                     </div>
                     <div class="pc-body">
                         <h3>Yatra Travel Agency</h3>
-                        <p>A complete travel agency website featuring destination bookings, tour packages, and an immersive user interface.</p>
+                        <p>A complete travel agency website featuring destination bookings, tour packages, and an
+                            immersive user interface.</p>
                         <div class="pc-tags">
                             <span class="pt pt-orange">HTML/CSS</span>
                             <span class="pt pt-yellow">JavaScript</span>
@@ -502,7 +543,8 @@
                     </div>
                     <div class="pc-body">
                         <h3>Printing Resolution</h3>
-                        <p>An online printing service platform offering high-quality printing solutions and custom designs for all needs.</p>
+                        <p>An online printing service platform offering high-quality printing solutions and custom
+                            designs for all needs.</p>
                         <div class="pc-tags">
                             <span class="pt pt-orange">HTML/CSS</span>
                             <span class="pt pt-yellow">JavaScript</span>
@@ -530,17 +572,20 @@
 
             <div class="contact-grid">
                 <div class="contact-left">
-                    <p class="contact-desc">Let's connect and build something amazing together! I'm always open to new opportunities and collaborations.</p>
+                    <p class="contact-desc">Let's connect and build something amazing together! I'm always open to new
+                        opportunities and collaborations.</p>
                     <div class="contact-cards">
                         <div class="cc">
-                            <div class="cc-icon" style="background: var(--yellow); color:#000"><i class="fas fa-envelope"></i></div>
+                            <div class="cc-icon" style="background: var(--yellow); color:#000"><i
+                                    class="fas fa-envelope"></i></div>
                             <div class="cc-text">
                                 <strong>Email</strong>
                                 <a href="mailto:shresthaalish444@gmail.com">shresthaalish444@gmail.com</a>
                             </div>
                         </div>
                         <div class="cc">
-                            <div class="cc-icon" style="background: var(--teal); color:#000"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="cc-icon" style="background: var(--teal); color:#000"><i
+                                    class="fas fa-map-marker-alt"></i></div>
                             <div class="cc-text">
                                 <strong>Location</strong>
                                 <span>Changu Narayan-01, Bhaktapur, Nepal</span>
@@ -552,19 +597,24 @@
                 <div class="contact-right">
                     <h3 class="social-h">Connect With Me</h3>
                     <div class="social-list">
-                        <a href="https://github.com/fwabyss0" target="_blank" class="social-link sl-github" aria-label="GitHub">
+                        <a href="https://github.com/fwabyss0" target="_blank" class="social-link sl-github"
+                            aria-label="GitHub">
                             <i class="fab fa-github"></i> <span>GitHub</span>
                         </a>
-                        <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank" class="social-link sl-linkedin" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank"
+                            class="social-link sl-linkedin" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i> <span>LinkedIn</span>
                         </a>
-                        <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank" class="social-link sl-instagram" aria-label="Instagram">
+                        <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank"
+                            class="social-link sl-instagram" aria-label="Instagram">
                             <i class="fab fa-instagram"></i> <span>Instagram</span>
                         </a>
-                        <a href="https://www.facebook.com/alish.shrestha.138982" target="_blank" class="social-link sl-facebook" aria-label="Facebook">
+                        <a href="https://www.facebook.com/alish.shrestha.138982" target="_blank"
+                            class="social-link sl-facebook" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i> <span>Facebook</span>
                         </a>
-                        <a href="javascript:void(0)" class="social-link sl-discord" aria-label="Discord" onclick="openDiscord(event)">
+                        <a href="javascript:void(0)" class="social-link sl-discord" aria-label="Discord"
+                            onclick="openDiscord(event)">
                             <i class="fab fa-discord"></i> <span>Discord</span>
                         </a>
                     </div>
@@ -588,9 +638,12 @@
                     <a href="#contact">Contact</a>
                 </div>
                 <div class="footer-social">
-                    <a href="https://github.com/fwabyss0" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/fwabyss0" target="_blank" aria-label="GitHub"><i
+                            class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/alish-shrestha-4276b8379/" target="_blank"
+                        aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.instagram.com/aliisshhhhhh/" target="_blank" aria-label="Instagram"><i
+                            class="fab fa-instagram"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -652,326 +705,326 @@
 
     <!-- ── Portfolio Enhancement Scripts ── -->
     <script>
-    (function () {
-        'use strict';
+        (function () {
+            'use strict';
 
-        /* ─────────────────────────────────────────
-           1. TYPING EFFECT — "Alish Shrestha."
-           Runs once after loading screen clears (~4.2s)
-        ───────────────────────────────────────── */
-        function startTyping() {
-            const el     = document.getElementById('typed-name');
-            const cursor = document.querySelector('.typed-cursor');
-            if (!el) return;
+            /* ─────────────────────────────────────────
+               1. TYPING EFFECT — "Alish Shrestha."
+               Runs once after loading screen clears (~4.2s)
+            ───────────────────────────────────────── */
+            function startTyping() {
+                const el = document.getElementById('typed-name');
+                const cursor = document.querySelector('.typed-cursor');
+                if (!el) return;
 
-            const text  = 'Alish Shrestha.';
-            let   i     = 0;
-            el.textContent = '';
+                const text = 'Alish Shrestha.';
+                let i = 0;
+                el.textContent = '';
 
-            const type = () => {
-                if (i < text.length) {
-                    el.textContent += text[i++];
-                    setTimeout(type, 80 + Math.random() * 60);
-                } else {
-                    // After typing finishes, blink cursor then fade it out
-                    setTimeout(() => {
-                        if (cursor) cursor.style.animation = 'cursorFade 0.6s ease forwards';
-                    }, 1200);
-                }
-            };
-            type();
-        }
-
-        /* ─────────────────────────────────────────
-           2. REPEATING HIGHLIGHT OBSERVER
-           Reveals .hl when paragraph scrolls IN,
-           resets when it scrolls OUT again.
-        ───────────────────────────────────────── */
-        function revealHighlights(paragraph) {
-            const spans = paragraph.querySelectorAll('.hl');
-            spans.forEach((span, i) => {
-                span.classList.remove('revealed');          // reset first
-                // force reflow so transition re-fires
-                void span.offsetWidth;
-                setTimeout(() => span.classList.add('revealed'), i * 160);
-            });
-        }
-
-        function hideHighlights(paragraph) {
-            paragraph.querySelectorAll('.hl').forEach(span => {
-                span.classList.remove('revealed');
-            });
-        }
-
-        function initHighlightObserver() {
-            const paragraphs = document.querySelectorAll('.bio-p');
-            if (!paragraphs.length) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        revealHighlights(entry.target);
+                const type = () => {
+                    if (i < text.length) {
+                        el.textContent += text[i++];
+                        setTimeout(type, 80 + Math.random() * 60);
                     } else {
-                        hideHighlights(entry.target);       // reset when out of view
+                        // After typing finishes, blink cursor then fade it out
+                        setTimeout(() => {
+                            if (cursor) cursor.style.animation = 'cursorFade 0.6s ease forwards';
+                        }, 1200);
                     }
-                });
-            }, {
-                threshold: 0.25,
-                rootMargin: '0px 0px -30px 0px'
-            });
-
-            paragraphs.forEach(p => observer.observe(p));
-        }
-
-        /* ─────────────────────────────────────────
-           3. HERO SCROLL RESPONSIVE
-              Hero fades & scales as user scrolls,
-              creates a smooth parallax dissolve
-        ───────────────────────────────────────── */
-        function initHeroScroll() {
-            const hero      = document.querySelector('.hero');
-            const heroLeft  = document.querySelector('.hero-left');
-            const heroRight = document.querySelector('.hero-right');
-            const stickers  = document.querySelectorAll('.sticker');
-            if (!hero) return;
-
-            const heroH = hero.offsetHeight;
-
-            window.addEventListener('scroll', () => {
-                const y       = window.scrollY;
-                const prog    = Math.min(y / (heroH * 0.6), 1); // 0→1 as you scroll
-
-                // Fade + shrink the hero wrap
-                if (heroLeft) {
-                    heroLeft.style.opacity   = 1 - prog * 0.85;
-                    heroLeft.style.transform = `translateY(${y * 0.25}px)`;
-                }
-                if (heroRight) {
-                    heroRight.style.opacity   = 1 - prog * 0.7;
-                    heroRight.style.transform = `translateY(${y * 0.15}px)`;
-                }
-
-                // Stickers drift upward at different speeds
-                stickers.forEach((s, idx) => {
-                    const dir = idx % 2 === 0 ? 1 : -1;
-                    s.style.opacity   = Math.max(0, 1 - prog * 1.5);
-                    s.style.transform = `translateY(${dir * y * 0.12}px)`;
-                });
-            }, { passive: true });
-        }
-
-        /* ─────────────────────────────────────────
-           4. SECTION BACKGROUND BLEND
-              Adds a subtle gradient that transitions
-              colours as you scroll between sections
-        ───────────────────────────────────────── */
-        function initSectionBlend() {
-            const sections = document.querySelectorAll('section[id]');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('section-visible');
-                    } else {
-                        entry.target.classList.remove('section-visible');
-                    }
-                });
-            }, { threshold: 0.15 });
-
-            sections.forEach(s => observer.observe(s));
-        }
-
-        /* ─────────────────────────────────────────
-           5. PHOTO CURSOR GLOW
-              Colored radial glow follows mouse over photo card
-        ───────────────────────────────────────── */
-        function initPhotoCursorGlow() {
-            const card = document.getElementById('photo-card');
-            if (!card) return;
-
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-
-                // Normalised -1 to 1 from centre
-                const nx = (e.clientX - cx) / (rect.width / 2);
-                const ny = (e.clientY - cy) / (rect.height / 2);
-
-                // 3D tilt (max 12deg)
-                const rx = -ny * 12; // rotateX inverted so top tilts back
-                const ry = nx * 12;  // rotateY
-
-                // Border glow angle (degrees from centre)
-                const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI) + 90;
-
-                card.style.setProperty('--rx', `${rx}deg`);
-                card.style.setProperty('--ry', `${ry}deg`);
-                card.style.setProperty('--angle', `${angle}deg`);
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.setProperty('--rx', '0deg');
-                card.style.setProperty('--ry', '0deg');
-            });
-        }
-
-        /* ─────────────────────────────────────────
-           6. LENIS SUPER SMOOTH SCROLL
-              Buttery smooth inertia-based scrolling
-        ───────────────────────────────────────── */
-        function initLenisSmoothScroll() {
-            if (typeof Lenis === 'undefined') return;
-            const lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1 - Math.pow(2, -10 * t)),
-                smoothWheel: true,
-                wheelMultiplier: 1,
-                touchMultiplier: 2,
-            });
-
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
+                };
+                type();
             }
-            requestAnimationFrame(raf);
 
-            // Sync Lenis with nav anchor clicks
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', (e) => {
-                    const href = anchor.getAttribute('href');
-                    if (href && href !== '#') {
-                        e.preventDefault();
-                        lenis.scrollTo(href);
-                    }
+            /* ─────────────────────────────────────────
+               2. REPEATING HIGHLIGHT OBSERVER
+               Reveals .hl when paragraph scrolls IN,
+               resets when it scrolls OUT again.
+            ───────────────────────────────────────── */
+            function revealHighlights(paragraph) {
+                const spans = paragraph.querySelectorAll('.hl');
+                spans.forEach((span, i) => {
+                    span.classList.remove('revealed');          // reset first
+                    // force reflow so transition re-fires
+                    void span.offsetWidth;
+                    setTimeout(() => span.classList.add('revealed'), i * 160);
                 });
-            });
-        }
+            }
 
-        /* ─────────────────────────────────────────
-           7. HERO MOUSE SPOTLIGHT
-              Interactive radial gradient follows mouse
-        ───────────────────────────────────────── */
-        function initHeroMouseEffect() {
-            const hero = document.querySelector('.hero');
-            if (!hero) return;
+            function hideHighlights(paragraph) {
+                paragraph.querySelectorAll('.hl').forEach(span => {
+                    span.classList.remove('revealed');
+                });
+            }
 
-            hero.addEventListener('mousemove', (e) => {
-                const rect = hero.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                hero.style.setProperty('--mouse-x', `${x}%`);
-                hero.style.setProperty('--mouse-y', `${y}%`);
-            });
+            function initHighlightObserver() {
+                const paragraphs = document.querySelectorAll('.bio-p');
+                if (!paragraphs.length) return;
 
-            hero.addEventListener('mouseleave', () => {
-                hero.style.setProperty('--mouse-x', '50%');
-                hero.style.setProperty('--mouse-y', '50%');
-            });
-        }
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            revealHighlights(entry.target);
+                        } else {
+                            hideHighlights(entry.target);       // reset when out of view
+                        }
+                    });
+                }, {
+                    threshold: 0.25,
+                    rootMargin: '0px 0px -30px 0px'
+                });
 
-        /* ─────────────────────────────────────────
-           INIT — after loading screen clears
-        ───────────────────────────────────────── */
-        const DELAY = 4200;
+                paragraphs.forEach(p => observer.observe(p));
+            }
 
-        function init() {
-            startTyping();
-            initHighlightObserver();
-            initHeroScroll();
-            initSectionBlend();
-            initPhotoCursorGlow();
-            initLenisSmoothScroll();
-            initHeroMouseEffect();
-        }
+            /* ─────────────────────────────────────────
+               3. HERO SCROLL RESPONSIVE
+                  Hero fades & scales as user scrolls,
+                  creates a smooth parallax dissolve
+            ───────────────────────────────────────── */
+            function initHeroScroll() {
+                const hero = document.querySelector('.hero');
+                const heroLeft = document.querySelector('.hero-left');
+                const heroRight = document.querySelector('.hero-right');
+                const stickers = document.querySelectorAll('.sticker');
+                if (!hero) return;
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => setTimeout(init, DELAY));
-        } else {
-            setTimeout(init, DELAY);
-        }
+                const heroH = hero.offsetHeight;
 
-    })();
+                window.addEventListener('scroll', () => {
+                    const y = window.scrollY;
+                    const prog = Math.min(y / (heroH * 0.6), 1); // 0→1 as you scroll
+
+                    // Fade + shrink the hero wrap
+                    if (heroLeft) {
+                        heroLeft.style.opacity = 1 - prog * 0.85;
+                        heroLeft.style.transform = `translateY(${y * 0.25}px)`;
+                    }
+                    if (heroRight) {
+                        heroRight.style.opacity = 1 - prog * 0.7;
+                        heroRight.style.transform = `translateY(${y * 0.15}px)`;
+                    }
+
+                    // Stickers drift upward at different speeds
+                    stickers.forEach((s, idx) => {
+                        const dir = idx % 2 === 0 ? 1 : -1;
+                        s.style.opacity = Math.max(0, 1 - prog * 1.5);
+                        s.style.transform = `translateY(${dir * y * 0.12}px)`;
+                    });
+                }, { passive: true });
+            }
+
+            /* ─────────────────────────────────────────
+               4. SECTION BACKGROUND BLEND
+                  Adds a subtle gradient that transitions
+                  colours as you scroll between sections
+            ───────────────────────────────────────── */
+            function initSectionBlend() {
+                const sections = document.querySelectorAll('section[id]');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('section-visible');
+                        } else {
+                            entry.target.classList.remove('section-visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                sections.forEach(s => observer.observe(s));
+            }
+
+            /* ─────────────────────────────────────────
+               5. PHOTO CURSOR GLOW
+                  Colored radial glow follows mouse over photo card
+            ───────────────────────────────────────── */
+            function initPhotoCursorGlow() {
+                const card = document.getElementById('photo-card');
+                if (!card) return;
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+
+                    // Normalised -1 to 1 from centre
+                    const nx = (e.clientX - cx) / (rect.width / 2);
+                    const ny = (e.clientY - cy) / (rect.height / 2);
+
+                    // 3D tilt (max 12deg)
+                    const rx = -ny * 12; // rotateX inverted so top tilts back
+                    const ry = nx * 12;  // rotateY
+
+                    // Border glow angle (degrees from centre)
+                    const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI) + 90;
+
+                    card.style.setProperty('--rx', `${rx}deg`);
+                    card.style.setProperty('--ry', `${ry}deg`);
+                    card.style.setProperty('--angle', `${angle}deg`);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.setProperty('--rx', '0deg');
+                    card.style.setProperty('--ry', '0deg');
+                });
+            }
+
+            /* ─────────────────────────────────────────
+               6. LENIS SUPER SMOOTH SCROLL
+                  Buttery smooth inertia-based scrolling
+            ───────────────────────────────────────── */
+            function initLenisSmoothScroll() {
+                if (typeof Lenis === 'undefined') return;
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1 - Math.pow(2, -10 * t)),
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                    touchMultiplier: 2,
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+
+                // Sync Lenis with nav anchor clicks
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        const href = anchor.getAttribute('href');
+                        if (href && href !== '#') {
+                            e.preventDefault();
+                            lenis.scrollTo(href);
+                        }
+                    });
+                });
+            }
+
+            /* ─────────────────────────────────────────
+               7. HERO MOUSE SPOTLIGHT
+                  Interactive radial gradient follows mouse
+            ───────────────────────────────────────── */
+            function initHeroMouseEffect() {
+                const hero = document.querySelector('.hero');
+                if (!hero) return;
+
+                hero.addEventListener('mousemove', (e) => {
+                    const rect = hero.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    hero.style.setProperty('--mouse-x', `${x}%`);
+                    hero.style.setProperty('--mouse-y', `${y}%`);
+                });
+
+                hero.addEventListener('mouseleave', () => {
+                    hero.style.setProperty('--mouse-x', '50%');
+                    hero.style.setProperty('--mouse-y', '50%');
+                });
+            }
+
+            /* ─────────────────────────────────────────
+               INIT — after loading screen clears
+            ───────────────────────────────────────── */
+            const DELAY = 4200;
+
+            function init() {
+                startTyping();
+                initHighlightObserver();
+                initHeroScroll();
+                initSectionBlend();
+                initPhotoCursorGlow();
+                initLenisSmoothScroll();
+                initHeroMouseEffect();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => setTimeout(init, DELAY));
+            } else {
+                setTimeout(init, DELAY);
+            }
+
+        })();
     </script>
 
     <!-- ── Skill Border Hover Handler ── -->
     <script>
-    (function () {
-        'use strict';
+        (function () {
+            'use strict';
 
-        function getColor(chip) {
-            const style = chip.getAttribute('style') || '';
-            const m = style.match(/--cc:\s*([^;]+)/);
-            return m ? m[1].trim() : '#14F1D9';
-        }
-
-        function removeBorder(wrap) {
-            wrap.querySelector('.sc-border')?.remove();
-            wrap.querySelector('.sc-pct-label')?.remove();
-        }
-
-        function createBorder(wrap, chip, pct) {
-            const color = getColor(chip);
-
-            const border = document.createElement('div');
-            border.className = 'sc-border';
-
-            const mask = document.createElement('div');
-            mask.className = 'sc-border-inner';
-
-            border.appendChild(mask);
-            wrap.appendChild(border);
-
-            const label = document.createElement('div');
-            label.className = 'sc-pct-label';
-            label.textContent = `${pct}%`;
-            label.style.color = color;
-            wrap.appendChild(label);
-
-            requestAnimationFrame(() => border.classList.add('visible'));
-
-            const start = performance.now();
-            const duration = 850;
-
-            function step(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = progress < 0.5
-                    ? 4 * progress * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                const currentPct = pct * eased;
-
-                border.style.background = `conic-gradient(from -90deg, ${color} 0%, ${color} ${currentPct}%, transparent ${currentPct}%)`;
-
-                if (progress < 1) {
-                    requestAnimationFrame(step);
-                }
+            function getColor(chip) {
+                const style = chip.getAttribute('style') || '';
+                const m = style.match(/--cc:\s*([^;]+)/);
+                return m ? m[1].trim() : '#14F1D9';
             }
 
-            requestAnimationFrame(step);
-        }
+            function removeBorder(wrap) {
+                wrap.querySelector('.sc-border')?.remove();
+                wrap.querySelector('.sc-pct-label')?.remove();
+            }
 
-        function init() {
-            document.querySelectorAll('.sc[data-percent]').forEach(chip => {
-                const wrap = chip.parentElement;
+            function createBorder(wrap, chip, pct) {
+                const color = getColor(chip);
 
-                chip.addEventListener('mouseenter', () => {
-                    chip.classList.add('sc-active');
-                    createBorder(wrap, chip, parseInt(chip.dataset.percent));
+                const border = document.createElement('div');
+                border.className = 'sc-border';
+
+                const mask = document.createElement('div');
+                mask.className = 'sc-border-inner';
+
+                border.appendChild(mask);
+                wrap.appendChild(border);
+
+                const label = document.createElement('div');
+                label.className = 'sc-pct-label';
+                label.textContent = `${pct}%`;
+                label.style.color = color;
+                wrap.appendChild(label);
+
+                requestAnimationFrame(() => border.classList.add('visible'));
+
+                const start = performance.now();
+                const duration = 850;
+
+                function step(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = progress < 0.5
+                        ? 4 * progress * progress * progress
+                        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                    const currentPct = pct * eased;
+
+                    border.style.background = `conic-gradient(from -90deg, ${color} 0%, ${color} ${currentPct}%, transparent ${currentPct}%)`;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }
+
+            function init() {
+                document.querySelectorAll('.sc[data-percent]').forEach(chip => {
+                    const wrap = chip.parentElement;
+
+                    chip.addEventListener('mouseenter', () => {
+                        chip.classList.add('sc-active');
+                        createBorder(wrap, chip, parseInt(chip.dataset.percent));
+                    });
+
+                    chip.addEventListener('mouseleave', () => {
+                        chip.classList.remove('sc-active');
+                        removeBorder(wrap);
+                    });
                 });
+            }
 
-                chip.addEventListener('mouseleave', () => {
-                    chip.classList.remove('sc-active');
-                    removeBorder(wrap);
-                });
-            });
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    })();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
     </script>
 
 </body>
