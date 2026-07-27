@@ -33,24 +33,19 @@ _load_env()
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from .routes.chatbot import chatbot_bp
-from .routes.spotify import spotify_bp
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="../static", static_url_path="/static")
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    # Register blueprints
     app.register_blueprint(chatbot_bp)
-    app.register_blueprint(spotify_bp)
 
-    # Serve portfolio files from project root
     @app.route("/")
     def serve_index():
         return send_from_directory("..", "index.html")
 
     @app.route("/<path:filename>")
     def serve_static_files(filename):
-        # Serve CSS, JS, images, etc. from project root
         return send_from_directory("..", filename)
 
     return app
@@ -66,6 +61,5 @@ if __name__ == "__main__":
     print(f"  🧠 OpenRouter: {'✅ configured' if os.getenv('OPENROUTER_API_KEY') else '⚠️  not configured'}")
     print(f"  🌤️  Weather API: {'✅ configured' if os.getenv('OPENWEATHER_API_KEY') else '⚠️  not configured'}")
     print(f"  🦙 Ollama Host: {os.getenv('OLLAMA_HOST', 'http://localhost:11434')}")
-    print(f"  🎵 Spotify: {'✅ configured' if os.getenv('SPOTIFY_CLIENT_ID') else '⚠️  not configured'}")
     print("=" * 55)
     app.run(debug=False, host="0.0.0.0", port=port)
