@@ -140,45 +140,74 @@ If you already have a `package.json` or startup script, make sure it starts the 
 
 ## 7. How to Deploy
 
-### Option A: Render / Railway / Fly.io
+### Option A: Render.com (Recommended - Free Tier)
 
 1. Push your code to GitHub
-2. Connect your repository to the hosting platform
-3. Set environment variables in the platform dashboard:
+2. Go to [Render Dashboard](https://dashboard.render.com/)
+3. Click **"New +"** → **"Web Service"**
+4. Connect your GitHub repository
+5. Configure:
+   - **Name**: `alish-portfolio-backend`
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python backend/app.py`
+   - **Plan**: `Free`
+6. Add environment variables in the Render dashboard:
    - `SPOTIFY_CLIENT_ID`
    - `SPOTIFY_CLIENT_SECRET`
    - `SPOTIFY_REFRESH_TOKEN`
    - `OPENROUTER_API_KEY` (if using chatbot)
-   - `PORT` (usually set automatically)
-4. Deploy
+   - `OPENWEATHER_API_KEY` (if using weather)
+7. Click **"Create Web Service"**
+8. Wait for deployment to complete
+9. Your backend will be available at: `https://alish-portfolio-backend.onrender.com`
 
-### Option B: Vercel / Netlify (Frontend only)
+10. Update `index.html` line 11:
+    ```html
+    <meta name="spotify-api-url" content="https://alish-portfolio-backend.onrender.com/api/spotify">
+    ```
 
-If deploying only the frontend to Vercel/Netlify:
-1. Deploy the Flask backend separately (Render/Railway)
-2. Update `static/js/spotify-widget.js` line 12 to point to your backend URL:
+### Option B: Railway
 
-```javascript
-const API_URL = "https://your-backend.onrender.com/api/spotify";
-```
+1. Push your code to GitHub
+2. Go to [Railway.app](https://railway.app/)
+3. Click **"New Project"** → **"Deploy from GitHub"**
+4. Select your repository
+5. Railway will auto-detect the `Procfile` and deploy
+6. Add environment variables in Railway dashboard
+7. Your backend will be available at: `https://alish-portfolio-backend.up.railway.app`
+
+### Option C: Fly.io
+
+1. Install Fly CLI: `curl -L https://fly.io/install.sh | sh`
+2. Run `fly launch` in the `backend/` directory
+3. Follow the prompts
+4. Set secrets: `fly secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=... SPOTIFY_REFRESH_TOKEN=...`
+5. Deploy: `fly deploy`
 
 ## 8. Frontend Configuration
 
-### API URL
+### Update API URL
 
-If your Flask backend runs on a different port or domain, update the `API_URL` in `static/js/spotify-widget.js`:
+After deploying your backend, update the Spotify API URL in `index.html`:
 
-```javascript
-const API_URL = "http://localhost:5000/api/spotify";  // Local
-const API_URL = "https://your-backend.com/api/spotify";  // Production
+**Option A: Meta tag (recommended)**
+```html
+<meta name="spotify-api-url" content="https://your-backend.onrender.com/api/spotify">
+```
+
+**Option B: JavaScript variable**
+Add this BEFORE the Spotify widget script loads:
+```html
+<script>window.SPOTIFY_API_URL = "https://your-backend.onrender.com/api/spotify";</script>
 ```
 
 ### CORS
 
-The Flask app has CORS enabled for all origins (`*`). For production, restrict this in `backend/app.py`:
+The Flask app has CORS enabled for all origins. For production, restrict this in `backend/app.py`:
 
 ```python
-CORS(app, resources={r"/*": {"origins": "https://your-portfolio.com"}})
+CORS(app, resources={r"/*": {"origins": "https://www.sthaalish.com.np"}})
 ```
 
 ## 9. Security Notes
