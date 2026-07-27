@@ -15,6 +15,7 @@ class SpotifyWidget {
             console.warn(`[SpotifyWidget] Element #${widgetId} not found.`);
             return;
         }
+        console.log('[SpotifyWidget] Widget element found:', this.widget);
 
         this.apiUrl = apiUrl;
         this.refreshInterval = 30000; // 30 seconds
@@ -35,8 +36,11 @@ class SpotifyWidget {
     }
 
     init() {
+        console.log('[SpotifyWidget] init() called');
         this.render({ fallback: this.FALLBACK_SONG });
+        console.log('[SpotifyWidget] Starting auto-refresh every', this.refreshInterval, 'ms');
         this.startAutoRefresh();
+        console.log('[SpotifyWidget] First fetchData() will happen in', this.refreshInterval, 'ms');
     }
 
     startAutoRefresh() {
@@ -60,6 +64,7 @@ class SpotifyWidget {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), this.fetchTimeout);
 
+            console.log('[SpotifyWidget] Fetching from:', this.apiUrl);
             const response = await fetch(this.apiUrl, {
                 method: "GET",
                 headers: {
@@ -71,16 +76,20 @@ class SpotifyWidget {
 
             clearTimeout(timeoutId);
 
-            console.log(`[SpotifyWidget] API response status: ${response.status}`);
+            console.log('[SpotifyWidget] Response status:', response.status);
+            console.log('[SpotifyWidget] Response headers:', [...response.headers.entries()]);
 
             if (!response.ok) {
                 const text = await response.text();
-                console.error(`[SpotifyWidget] API error body:`, text);
+                console.error('[SpotifyWidget] API error body:', text);
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
-            console.log(`[SpotifyWidget] API data:`, data);
+            console.log('[SpotifyWidget] Parsed JSON:', data);
+            console.log('[SpotifyWidget] is_playing:', data.is_playing);
+            console.log('[SpotifyWidget] has track:', !!data.track);
+            console.log('[SpotifyWidget] has fallback:', !!data.fallback);
             this.render(data);
         } catch (error) {
             console.error("[SpotifyWidget] Fetch error:", error);
@@ -203,13 +212,18 @@ class SpotifyWidget {
     }
 
     render(data) {
+        console.log('[SpotifyWidget] render() called with:', data);
+
         let html = "";
 
         if (data && data.is_playing && data.track) {
+            console.log('[SpotifyWidget] Rendering NOW PLAYING:', data.track.title);
             html = this.renderNowPlaying(data.track);
         } else if (data && data.fallback) {
+            console.log('[SpotifyWidget] Rendering FALLBACK:', data.fallback.title);
             html = this.renderFavorite(data.fallback);
         } else {
+            console.log('[SpotifyWidget] Rendering DEFAULT FALLBACK');
             html = this.renderFavorite(this.FALLBACK_SONG);
         }
 
@@ -252,6 +266,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const metaTag = document.querySelector('meta[name="spotify-api-url"]');
     const API_URL = window.SPOTIFY_API_URL || (metaTag ? metaTag.getAttribute("content") : "/api/spotify");
 
-    console.log("[SpotifyWidget] Initializing with API URL:", API_URL);
+    console.log('[SpotifyWidget] DOMContentLoaded fired');
+    console.log('[SpotifyWidget] Initializing with API URL:', API_URL);
+    console.log('[SpotifyWidget] Meta tag found:', !!metaTag);
+    console.log('[SpotifyWidget] window.SPOTIFY_API_URL:', window.SPOTIFY_API_URL);
     spotifyWidget = new SpotifyWidget("spotify-widget", API_URL);
 });
