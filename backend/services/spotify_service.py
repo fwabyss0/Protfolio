@@ -72,6 +72,12 @@ class SpotifyService:
         print(f"[Spotify] API request: {url}")
         response = requests.get(url, headers=headers, params=params, timeout=10)
         print(f"[Spotify] API response: {response.status_code}")
+
+        # Handle 204 No Content - nothing is playing
+        if response.status_code == 204:
+            print("[Spotify] 204 No Content - nothing playing")
+            return None
+
         response.raise_for_status()
         return response.json()
 
