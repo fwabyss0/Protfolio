@@ -1,6 +1,7 @@
 /**
  * music-player.js
  * Premium horizontal HTML5 Audio Player with localStorage persistence.
+ * Supports synchronized lyrics from LRC files.
  */
 
 class MusicPlayer {
@@ -20,7 +21,8 @@ class MusicPlayer {
         this.durationEl = document.getElementById('music-duration');
         this.artwork = document.getElementById('music-artwork');
         this.equalizer = document.getElementById('music-equalizer');
-        this.lyricText = document.getElementById('music-lyric-text');
+        this.lyricsScroll = document.getElementById('music-lyrics-scroll');
+        this.lyricsFallback = document.getElementById('music-lyrics-fallback');
 
         if (!this.audio || !this.player) {
             console.warn('[MusicPlayer] Required elements not found.');
@@ -36,49 +38,9 @@ class MusicPlayer {
             position: 'music_player_position',
         };
 
-        // Lyrics for "Yellow" by Coldplay
-        this.lyrics = [
-            { time: 0, text: '♪' },
-            { time: 6, text: 'Look at the stars' },
-            { time: 14, text: 'Look how they shine for you' },
-            { time: 24, text: 'And everything you do' },
-            { time: 32, text: 'Yeah, they were all yellow' },
-            { time: 44, text: 'I came along' },
-            { time: 52, text: 'I wrote a song for you' },
-            { time: 62, text: 'And all the things you do' },
-            { time: 72, text: 'And it was called, "Yellow"' },
-            { time: 88, text: 'So, then I took my turn' },
-            { time: 98, text: 'Oh, what a thing to have done' },
-            { time: 110, text: 'And it was all yellow' },
-            { time: 122, text: 'Your skin, oh yeah, your skin and bones' },
-            { time: 136, text: 'Turn into something beautiful' },
-            { time: 150, text: 'And you know' },
-            { time: 156, text: 'You know I love you so' },
-            { time: 170, text: 'You know I love you so' },
-            { time: 184, text: 'I swam across' },
-            { time: 192, text: 'I jumped across for you' },
-            { time: 204, text: 'Oh, what a thing to do' },
-            { time: 216, text: "'Cause you were all yellow" },
-            { time: 228, text: 'I drew a line' },
-            { time: 236, text: 'I drew a line for you' },
-            { time: 248, text: 'Oh, what a thing to do' },
-            { time: 260, text: 'And it was all yellow' },
-            { time: 272, text: 'And your skin, oh yeah, your skin and bones' },
-            { time: 286, text: 'Turn into something beautiful' },
-            { time: 300, text: 'And you know, for you' },
-            { time: 308, text: "I'd bleed myself dry" },
-            { time: 320, text: 'For you, I\'d bleed myself dry' },
-            { time: 335, text: "It's true" },
-            { time: 345, text: 'Look how they shine for you' },
-            { time: 358, text: 'Look how they shine for you' },
-            { time: 370, text: 'Look how they shine for you' },
-            { time: 388, text: 'Look how they shine' },
-            { time: 398, text: 'Look at the stars' },
-            { time: 408, text: 'Look how they shine for you' },
-            { time: 420, text: 'And all the things that you do' },
-            { time: 450, text: '♪' }
-        ];
+        this.lrcLines = [];
         this.currentLyricIndex = -1;
+        this.lyricRafId = null;
 
         this.init();
     }
@@ -89,6 +51,7 @@ class MusicPlayer {
         this.updatePlayIcon();
         this.updateVolumeIcon();
         this.updateLoopIcon();
+        this.loadLyrics();
 
         this.audio.addEventListener('loadedmetadata', () => {
             const savedPosition = localStorage.getItem(this.storageKeys.position);
@@ -96,12 +59,12 @@ class MusicPlayer {
                 this.audio.currentTime = parseFloat(savedPosition);
             }
             this.updateDuration();
+            this.syncLyrics();
         });
 
         this.audio.addEventListener('timeupdate', () => {
             if (!this.isDragging) {
                 this.updateProgress();
-                this.updateLyrics();
                 localStorage.setItem(this.storageKeys.position, this.audio.currentTime);
             }
         });
@@ -117,6 +80,7 @@ class MusicPlayer {
                 this.progressFill.style.width = '0%';
                 this.progressHandle.style.left = '0%';
                 this.currentTimeEl.textContent = '00:00';
+                this.stopLyricSync();
             }
         });
 
@@ -134,6 +98,7 @@ class MusicPlayer {
             this.isPlaying = false;
             this.updatePlayIcon();
             this.player.classList.remove('playing');
+            this.stopLyricSync();
         });
 
         if (this.isPlaying) {
@@ -144,113 +109,138 @@ class MusicPlayer {
         }
     }
 
-    bindEvents() {
-        this.playBtn.addEventListener('click', () => this.togglePlay());
+    parseLRC(text) {
+        const lines = text.split('\n');
+        const result = [];
+        const regex = /\[(\d{2}):(\d{2})\.(\d{2,3})\](.*)/;
 
-        this.prevBtn.addEventListener('click', () => {
-            this.audio.currentTime = 0;
-            this.updateProgress();
-        });
-
-        this.nextBtn.addEventListener('click', () => {
-            this.audio.currentTime = 0;
-            this.updateProgress();
-        });
-
-        this.loopBtn.addEventListener('click', () => this.toggleLoop());
-
-        this.muteBtn.addEventListener('click', () => this.toggleMute());
-
-        this.volumeSlider.addEventListener('input', () => {
-            this.audio.volume = parseFloat(this.volumeSlider.value);
-            this.audio.muted = false;
-            localStorage.setItem(this.storageKeys.volume, this.audio.volume);
-            localStorage.setItem(this.storageKeys.muted, 'false');
-            this.updateVolumeIcon();
-        });
-
-        this.progressWrapper.addEventListener('click', (e) => {
-            if (!this.audio.duration) return;
-            const rect = this.progressWrapper.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            this.audio.currentTime = percent * this.audio.duration;
-            this.updateProgress();
-        });
-
-        this.progressWrapper.addEventListener('mousedown', (e) => {
-            if (!this.audio.duration) return;
-            this.isDragging = true;
-            this.handleDrag(e);
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (this.isDragging) this.handleDrag(e);
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (this.isDragging) this.isDragging = false;
-        });
-
-        this.progressWrapper.addEventListener('touchstart', (e) => {
-            if (!this.audio.duration) return;
-            this.isDragging = true;
-            this.handleDrag(e.touches[0]);
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (this.isDragging) this.handleDrag(e.touches[0]);
-        });
-
-        document.addEventListener('touchend', () => {
-            if (this.isDragging) this.isDragging = false;
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            switch (e.code) {
-                case 'Space':
-                    e.preventDefault();
-                    this.togglePlay();
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.audio.currentTime = Math.max(0, this.audio.currentTime - 5);
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.audio.currentTime = Math.min(this.audio.duration || 0, this.audio.currentTime + 5);
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    this.audio.volume = Math.min(1, this.audio.volume + 0.05);
-                    this.volumeSlider.value = this.audio.volume;
-                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    this.audio.volume = Math.max(0, this.audio.volume - 0.05);
-                    this.volumeSlider.value = this.audio.volume;
-                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
-                    break;
-                case 'KeyM':
-                    this.toggleMute();
-                    break;
-                case 'KeyL':
-                    this.toggleLoop();
-                    break;
+        for (const line of lines) {
+            const match = line.match(regex);
+            if (!match) continue;
+            const minutes = parseInt(match[1], 10);
+            const seconds = parseInt(match[2], 10);
+            const ms = parseInt(match[3].padEnd(3, '0'), 10);
+            const time = minutes * 60 + seconds + ms / 1000;
+            const lyricText = match[4].trim();
+            if (lyricText || result.length === 0) {
+                result.push({ time, text: lyricText });
             }
-        });
+        }
+
+        return result;
     }
 
-    handleDrag(e) {
-        if (!this.audio.duration) return;
-        const rect = this.progressWrapper.getBoundingClientRect();
-        let percent = (e.clientX - rect.left) / rect.width;
-        percent = Math.max(0, Math.min(1, percent));
-        this.audio.currentTime = percent * this.audio.duration;
-        this.updateProgress();
+    async loadLyrics() {
+        if (!this.audio || !this.audio.src) return;
+
+        const src = this.audio.src || this.audio.getAttribute('src') || '';
+        const filename = src.split('/').pop().split('?')[0];
+        const basename = filename.replace(/\.[^/.]+$/, '');
+        const lrcPath = `/static/lyrics/${encodeURIComponent(basename)}.lrc`;
+
+        try {
+            const res = await fetch(lrcPath);
+            if (!res.ok) throw new Error('LRC not found');
+            const text = await res.text();
+            this.lrcLines = this.parseLRC(text);
+            if (this.lrcLines.length === 0) throw new Error('Empty LRC');
+            this.renderLyrics();
+        } catch (e) {
+            this.lrcLines = [];
+            this.renderLyrics();
+        }
+    }
+
+    renderLyrics() {
+        if (!this.lyricsScroll) return;
+
+        if (this.lrcLines.length === 0) {
+            this.lyricsScroll.innerHTML = '';
+            if (this.lyricsFallback) {
+                this.lyricsFallback.style.display = 'flex';
+            }
+            return;
+        }
+
+        if (this.lyricsFallback) {
+            this.lyricsFallback.style.display = 'none';
+        }
+
+        this.lyricsScroll.innerHTML = this.lrcLines.map((line, index) => `
+            <div class="music-lyric-line" data-index="${index}">${this.escapeHtml(line.text)}</div>
+        `).join('');
+
+        this.currentLyricIndex = -1;
+        this.syncLyrics();
+    }
+
+    syncLyrics() {
+        if (this.lrcLines.length === 0 || !this.lyricsScroll) return;
+
+        const currentTime = this.audio.currentTime;
+        let activeIndex = -1;
+
+        for (let i = this.lrcLines.length - 1; i >= 0; i--) {
+            if (currentTime >= this.lrcLines[i].time) {
+                activeIndex = i;
+                break;
+            }
+        }
+
+        if (activeIndex === this.currentLyricIndex) return;
+
+        const prevIndex = this.currentLyricIndex;
+        this.currentLyricIndex = activeIndex;
+
+        const lines = this.lyricsScroll.querySelectorAll('.music-lyric-line');
+        lines.forEach((el, idx) => {
+            el.classList.remove('previous', 'active');
+            if (idx === activeIndex) {
+                el.classList.add('active');
+            } else if (idx < activeIndex) {
+                el.classList.add('previous');
+            }
+        });
+
+        this.scrollToLyric(activeIndex, prevIndex);
+    }
+
+    scrollToLyric(newIndex, oldIndex) {
+        if (!this.lyricsScroll || newIndex < 0) return;
+
+        const container = this.lyricsScroll.parentElement;
+        if (!container) return;
+
+        const containerHeight = container.clientHeight;
+        const activeLine = this.lyricsScroll.querySelector(`.music-lyric-line[data-index="${newIndex}"]`);
+        if (!activeLine) return;
+
+        const lineTop = activeLine.offsetTop;
+        const lineHeight = activeLine.offsetHeight;
+        const scrollTop = lineTop - (containerHeight / 2) + (lineHeight / 2);
+
+        this.lyricsScroll.style.transform = `translateY(-${scrollTop}px)`;
+    }
+
+    startLyricSync() {
+        if (this.lyricRafId) return;
+        if (this.lrcLines.length === 0) return;
+
+        const check = () => {
+            this.syncLyrics();
+            if (this.isPlaying) {
+                this.lyricRafId = requestAnimationFrame(check);
+            }
+        };
+
+        this.lyricRafId = requestAnimationFrame(check);
+    }
+
+    stopLyricSync() {
+        if (this.lyricRafId) {
+            cancelAnimationFrame(this.lyricRafId);
+            this.lyricRafId = null;
+        }
     }
 
     togglePlay() {
@@ -259,6 +249,7 @@ class MusicPlayer {
                 this.isPlaying = true;
                 this.updatePlayIcon();
                 this.player.classList.add('playing');
+                this.startLyricSync();
             }).catch((err) => {
                 console.error('[MusicPlayer] Playback failed:', err);
             });
@@ -267,6 +258,7 @@ class MusicPlayer {
             this.isPlaying = false;
             this.updatePlayIcon();
             this.player.classList.remove('playing');
+            this.stopLyricSync();
         }
     }
 
@@ -326,35 +318,17 @@ class MusicPlayer {
         this.durationEl.textContent = this.formatTime(this.audio.duration);
     }
 
-    updateLyrics() {
-        if (!this.lyricText) return;
-        const currentTime = this.audio.currentTime;
-        let activeIndex = -1;
-
-        for (let i = this.lyrics.length - 1; i >= 0; i--) {
-            if (currentTime >= this.lyrics[i].time) {
-                activeIndex = i;
-                break;
-            }
-        }
-
-        if (activeIndex !== this.currentLyricIndex) {
-            this.currentLyricIndex = activeIndex;
-            const lyric = this.lyrics[activeIndex] || { text: '♪' };
-            this.lyricText.classList.add('fading');
-
-            setTimeout(() => {
-                this.lyricText.textContent = lyric.text;
-                this.lyricText.classList.remove('fading');
-            }, 600);
-        }
-    }
-
     formatTime(seconds) {
         if (!seconds || isNaN(seconds)) return '00:00';
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     loadState() {
@@ -368,6 +342,120 @@ class MusicPlayer {
         if (savedMuted === 'true') {
             this.audio.muted = true;
         }
+    }
+
+    bindEvents() {
+        this.playBtn.addEventListener('click', () => this.togglePlay());
+
+        this.prevBtn.addEventListener('click', () => {
+            this.audio.currentTime = 0;
+            this.updateProgress();
+            this.syncLyrics();
+        });
+
+        this.nextBtn.addEventListener('click', () => {
+            this.audio.currentTime = 0;
+            this.updateProgress();
+            this.syncLyrics();
+        });
+
+        this.loopBtn.addEventListener('click', () => this.toggleLoop());
+
+        this.muteBtn.addEventListener('click', () => this.toggleMute());
+
+        this.volumeSlider.addEventListener('input', () => {
+            this.audio.volume = parseFloat(this.volumeSlider.value);
+            this.audio.muted = false;
+            localStorage.setItem(this.storageKeys.volume, this.audio.volume);
+            localStorage.setItem(this.storageKeys.muted, 'false');
+            this.updateVolumeIcon();
+        });
+
+        this.progressWrapper.addEventListener('click', (e) => {
+            if (!this.audio.duration) return;
+            const rect = this.progressWrapper.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            this.audio.currentTime = percent * this.audio.duration;
+            this.updateProgress();
+            this.syncLyrics();
+        });
+
+        this.progressWrapper.addEventListener('mousedown', (e) => {
+            if (!this.audio.duration) return;
+            this.isDragging = true;
+            this.handleDrag(e);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (this.isDragging) this.handleDrag(e);
+        });
+
+        document.addEventListener('mouseup', () => {
+            this.isDragging = false;
+        });
+
+        this.progressWrapper.addEventListener('touchstart', (e) => {
+            if (!this.audio.duration) return;
+            this.isDragging = true;
+            this.handleDrag(e.touches[0]);
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (this.isDragging) this.handleDrag(e.touches[0]);
+        });
+
+        document.addEventListener('touchend', () => {
+            this.isDragging = false;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            switch (e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    this.togglePlay();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.audio.currentTime = Math.max(0, this.audio.currentTime - 5);
+                    this.syncLyrics();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.audio.currentTime = Math.min(this.audio.duration || 0, this.audio.currentTime + 5);
+                    this.syncLyrics();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    this.audio.volume = Math.min(1, this.audio.volume + 0.05);
+                    this.volumeSlider.value = this.audio.volume;
+                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    this.audio.volume = Math.max(0, this.audio.volume - 0.05);
+                    this.volumeSlider.value = this.audio.volume;
+                    localStorage.setItem(this.storageKeys.volume, this.audio.volume);
+                    break;
+                case 'KeyM':
+                    this.toggleMute();
+                    break;
+                case 'KeyL':
+                    this.toggleLoop();
+                    break;
+            }
+        });
+    }
+
+    handleDrag(e) {
+        if (!this.audio.duration) return;
+        const rect = this.progressWrapper.getBoundingClientRect();
+        let percent = (e.clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        this.audio.currentTime = percent * this.audio.duration;
+        this.updateProgress();
+        this.syncLyrics();
     }
 }
 
