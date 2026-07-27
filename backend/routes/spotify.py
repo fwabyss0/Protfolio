@@ -67,18 +67,12 @@ def get_spotify_data():
             print("[Spotify] No track found (nothing playing, no recent history)")
             result = {
                 "is_playing": False,
-                "error": None,
-                "is_configured": True,
-                "no_recent": True,
-                "message": "Nothing recently played.",
+                "track": None,
             }
         else:
             print(f"[Spotify] Track found: {track.get('title')} by {track.get('artist')}")
             result = {
                 "is_playing": track.get("is_playing", False),
-                "error": None,
-                "is_configured": True,
-                "no_recent": False,
                 "track": {
                     "title": track.get("title", "Unknown"),
                     "artist": track.get("artist", "Unknown Artist"),
