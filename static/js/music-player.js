@@ -20,6 +20,7 @@ class MusicPlayer {
         this.durationEl = document.getElementById('music-duration');
         this.artwork = document.getElementById('music-artwork');
         this.equalizer = document.getElementById('music-equalizer');
+        this.lyricText = document.getElementById('music-lyric-text');
 
         if (!this.audio || !this.player) {
             console.warn('[MusicPlayer] Required elements not found.');
@@ -34,6 +35,25 @@ class MusicPlayer {
             muted: 'music_player_muted',
             position: 'music_player_position',
         };
+
+        // Demo lyrics for "Yellow" by Coldplay
+        this.lyrics = [
+            { time: 0, text: '♪' },
+            { time: 4, text: 'Look at the stars' },
+            { time: 18, text: 'Look how they shine' },
+            { time: 38, text: 'For you...' },
+            { time: 58, text: 'And everything you do' },
+            { time: 82, text: 'Yeah, you\'re the one' },
+            { time: 108, text: 'Look at the stars' },
+            { time: 132, text: 'And it hurts sometimes' },
+            { time: 158, text: 'Because I shine' },
+            { time: 182, text: 'Just for you' },
+            { time: 208, text: 'Look at the stars' },
+            { time: 238, text: 'Look how they shine' },
+            { time: 262, text: 'For you...' },
+            { time: 288, text: '♪' }
+        ];
+        this.currentLyricIndex = -1;
 
         this.init();
     }
@@ -56,6 +76,7 @@ class MusicPlayer {
         this.audio.addEventListener('timeupdate', () => {
             if (!this.isDragging) {
                 this.updateProgress();
+                this.updateLyrics();
                 localStorage.setItem(this.storageKeys.position, this.audio.currentTime);
             }
         });
@@ -278,6 +299,30 @@ class MusicPlayer {
 
     updateDuration() {
         this.durationEl.textContent = this.formatTime(this.audio.duration);
+    }
+
+    updateLyrics() {
+        if (!this.lyricText) return;
+        const currentTime = this.audio.currentTime;
+        let activeIndex = -1;
+
+        for (let i = this.lyrics.length - 1; i >= 0; i--) {
+            if (currentTime >= this.lyrics[i].time) {
+                activeIndex = i;
+                break;
+            }
+        }
+
+        if (activeIndex !== this.currentLyricIndex) {
+            this.currentLyricIndex = activeIndex;
+            const lyric = this.lyrics[activeIndex] || { text: '♪' };
+            this.lyricText.classList.add('fading');
+
+            setTimeout(() => {
+                this.lyricText.textContent = lyric.text;
+                this.lyricText.classList.remove('fading');
+            }, 600);
+        }
     }
 
     formatTime(seconds) {
