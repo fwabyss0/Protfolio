@@ -14,6 +14,7 @@ from ..services.memory_service import add_message, get_history, clear_history
 from ..services.portfolio_service import get_portfolio_response, is_portfolio_query
 from ..services.weather_service import get_weather
 from ..services.github_service import get_github_data
+from ..services.marvel_service import get_marvel_response, is_marvel_query
 from ..services.ai_service import generate_response
 
 chatbot_bp = Blueprint("chatbot", __name__)
@@ -36,7 +37,7 @@ def _evaluate_math(expression: str) -> str | None:
         pct = float(pct_match.group(1))
         total = float(pct_match.group(2))
         result = (pct / 100) * total
-        return f"### 🧮 Math Result\n- **Calculation:** `{pct}% of {total}`\n- **Result:** **`{_fmt(result)}`**"
+        return f"🧮 `{pct}% of {total}` = **{_fmt(result)}**"
 
     # Word replacements
     for word, sym in [("plus", "+"), ("minus", "-"), ("times", "*"), ("multiplied by", "*"),
@@ -64,7 +65,7 @@ def _evaluate_math(expression: str) -> str | None:
     try:
         result = eval(expr, {"__builtins__": {}}, {"math": math, "abs": abs})  # noqa: S307
         if isinstance(result, (int, float)) and not (result != result):  # not NaN
-            return f"### 🧮 Math Result\n- **Calculation:** `{expression.strip()}`\n- **Result:** **`{_fmt(result)}`**"
+            return f"🧮 `{expression.strip()}` = **{_fmt(result)}**"
     except Exception:
         return None
 
@@ -86,10 +87,10 @@ def _get_time_response(message: str) -> str:
     tz = "Asia/Kathmandu"
 
     if ("time" in msg or "clock" in msg) and "date" not in msg and "day" not in msg:
-        return f"🕒 Current Time: **{time_str}** ({tz})"
+        return f"🕒 {time_str} ({tz})"
     if ("date" in msg or "today" in msg) and "time" not in msg:
-        return f"📅 Today's Date: **{date_str}**"
-    return f"🕒 **{time_str}** on 📅 **{date_str}** ({tz})"
+        return f"📅 {date_str}"
+    return f"🕒 {time_str} | 📅 {date_str} ({tz})"
 
 
 # ── Main Chat Endpoint ───────────────────────────────────────────────────────
@@ -121,19 +122,31 @@ def chat():
 
         elif intent == "weather":
             weather_data = get_weather(user_message)
-            response_text = generate_response(user_message, history, live_context=weather_data)
+            if weather_data:
+                response_text = weather_data
+            else:
+                response_text = "⚠️ Live weather is currently unavailable. Please try again later."
 
         elif intent == "github":
             github_data = get_github_data()
-            response_text = generate_response(user_message, history, live_context=github_data)
+            if github_data:
+                response_text = github_data
+            else:
+                response_text = "⚠️ Live GitHub data is currently unavailable. Please try again later."
 
         elif intent == "math":
             math_result = _evaluate_math(user_message)
             if math_result:
                 response_text = math_result
             else:
-                # Let AI solve complex math
                 response_text = generate_response(user_message, history)
+
+        elif intent == "marvel":
+            marvel_data = get_marvel_response(user_message)
+            if marvel_data:
+                response_text = marvel_data
+            else:
+                response_text = "I couldn't find Marvel information for that. Try asking about a specific character, movie, or comic! 🦸"
 
         elif intent == "portfolio":
             # Let AI handle the query dynamically (using system prompt context)
@@ -171,6 +184,7 @@ def health():
             "openweather": "configured" if os.getenv("OPENWEATHER_API_KEY") else "not configured",
             "ollama": os.getenv("OLLAMA_HOST", "http://localhost:11434"),
             "github_user": os.getenv("GITHUB_USERNAME", "fwabyss0"),
+            "marvel": "configured" if os.getenv("MARVEL_PUBLIC_KEY") else "not configured",
         },
         "message": "Abyss AI Chatbot Backend Active 🤖"
     })

@@ -1522,6 +1522,68 @@ img {
     background: linear-gradient(135deg, rgba(199, 125, 255, 0.07), rgba(255, 107, 157, 0.05));
 }
 
+.chatbot-container {
+    background: linear-gradient(135deg, rgba(20, 241, 217, 0.07), rgba(255, 225, 65, 0.05));
+}
+
+.chatbot-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.chatbot-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--yellow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #000;
+    box-shadow: 0 0 20px rgba(20, 241, 217, 0.3);
+    animation: floatBob 3s ease-in-out infinite;
+}
+
+.chatbot-bubble {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: bubbleIn 0.5s ease forwards;
+}
+
+.bubble-1 { animation-delay: 0.2s; }
+.bubble-2 { animation-delay: 0.6s; }
+.bubble-3 { animation-delay: 1s; }
+
+.chatbot-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(20, 241, 217, 0.08), transparent 70%);
+    pointer-events: none;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes bubbleIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
 /* Travel project animation */
 .earth-wrapper {
     position: relative;
@@ -1694,6 +1756,7 @@ img {
 .pt-yellow   { background: rgba(255, 225, 65, 0.14); color: var(--yellow); }
 .pt-teal     { background: rgba(20, 241, 217, 0.11); color: var(--teal); }
 .pt-green    { background: rgba(181, 255, 109, 0.11); color: var(--green); }
+.pt-purple   { background: rgba(199, 125, 255, 0.14); color: #C77DFF; }
 
 .pc-links {
     display: flex;
@@ -2196,6 +2259,41 @@ img {
 .typing-text {
     color: var(--muted);
     font-style: italic;
+}
+
+/* Chatbot resize handle */
+.chatbot-resize-handle {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    cursor: nwse-resize;
+    z-index: 10;
+}
+
+.chatbot-resize-handle::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    opacity: 0.6;
+}
+
+.chatbot.expanded {
+    width: 600px;
+    max-height: 700px;
+    resize: both;
+    overflow: auto;
+}
+
+.chatbot.expanded .chatbot-resize-handle {
+    display: block;
 }
 
 /* ── 14. ANIMATIONS ───────────────────────────────────────────── */

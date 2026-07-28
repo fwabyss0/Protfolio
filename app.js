@@ -340,12 +340,72 @@ function initializeChatbot() {
 
     let isTyping = false;
 
+    function scrollToBottom() {
+        requestAnimationFrame(() => {
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        });
+    }
+
+    function initChatbotResize() {
+        const handle = document.getElementById('chatbot-resize-handle');
+        const header = document.getElementById('chatbot-header');
+        if (!handle || !header || !chatbot) return;
+
+        let isResizing = false;
+        let startX = 0;
+        let startY = 0;
+        let startWidth = 0;
+        let startHeight = 0;
+
+        handle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = chatbot.offsetWidth;
+            startHeight = chatbot.offsetHeight;
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const newWidth = Math.max(320, startWidth + (e.clientX - startX));
+            const newHeight = Math.max(250, startHeight + (e.clientY - startY));
+            chatbot.style.width = newWidth + 'px';
+            chatbot.style.maxHeight = newHeight + 'px';
+            chatbot.classList.add('expanded');
+            scrollToBottom();
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.userSelect = '';
+            }
+        });
+
+        header.addEventListener('dblclick', () => {
+            if (chatbot.classList.contains('expanded')) {
+                chatbot.classList.remove('expanded');
+                chatbot.style.width = '';
+                chatbot.style.maxHeight = '';
+            } else {
+                chatbot.classList.add('expanded');
+                chatbot.style.width = '600px';
+                chatbot.style.maxHeight = '700px';
+            }
+            scrollToBottom();
+        });
+    }
+
     // Toggle chatbot visibility
     chatbotToggle?.addEventListener('click', function () {
         chatbot.classList.toggle('active');
 
         if (chatbot.classList.contains('active')) {
             chatbotInput.focus();
+            initChatbotResize();
+            scrollToBottom();
 
             // Initialize initial option button listeners
             initializeInitialOptionButtons();
@@ -486,7 +546,7 @@ function initializeChatbot() {
         chatbotMessages.appendChild(messageDiv);
 
         // Scroll to bottom
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
     }
 
     // Clear all chat messages with loading state
@@ -506,7 +566,7 @@ function initializeChatbot() {
                 <p><span class="typing-text">Clearing chat...</span></p>
             `;
             chatbotMessages.appendChild(clearingDiv);
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            scrollToBottom();
 
             // After 2 seconds, clear everything and restore default state
             setTimeout(() => {
@@ -546,7 +606,7 @@ function initializeChatbot() {
         // Re-initialize the option button listeners
         initializeInitialOptionButtons();
 
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
     }
 
     // Show typing indicator with Abyss logo
@@ -575,7 +635,7 @@ function initializeChatbot() {
         typingDiv.appendChild(avatar);
         typingDiv.appendChild(messageP);
         chatbotMessages.appendChild(typingDiv);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
     }
 
     // Remove typing indicator
@@ -666,7 +726,7 @@ function initializeChatbot() {
 
         if (chatbotMessages) {
             chatbotMessages.appendChild(socialOptionsDiv);
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            scrollToBottom();
             console.log('Social media options added to chat'); // Debug log
         } else {
             console.error('chatbotMessages element not found');
@@ -728,7 +788,7 @@ function initializeChatbot() {
         });
 
         chatbotMessages.appendChild(newQuickActionsDiv);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
     }
 
     // Add quick action buttons to chatbot
@@ -754,7 +814,7 @@ function initializeChatbot() {
         });
 
         chatbotMessages.appendChild(quickActionsDiv);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
     }
 
     // Handle quick action button clicks
@@ -813,6 +873,10 @@ function initializeChatbot() {
         // Expanded keyword recognition list (fuzzy matching)
         const categories = {
             clear: ["clear", "reset", "clean", "delete messages", "start over", "new conversation"],
+            time: ["time", "clock", "date", "today", "day"],
+            weather: ["weather", "temperature", "forecast", "climate", "how hot", "how cold", "is it raining", "temp in", "rain in"],
+            math: ["calculate", "solve", "math:", "what is", "how much is"],
+            marvel: ["marvel", "mcu", "avengers", "spider-man", "iron man", "thor", "captain america", "black panther", "doctor strange", "guardians", "x-men", "fantastic four", "infinity stones", "thanos", "loki", "wolverine", "deadpool", "multiverse"],
             age: ["age", "old", "years", "birthday", "born", "birth", "when", "how old"],
             alish: ["alish", "who", "about", "introduce", "background", "person"],
             abyss: ["abyss", "you", "chatbot", "ai assistant", "who are you", "yourself", "what are you", "tell me about you", "your name"],
@@ -1032,6 +1096,33 @@ function initializeChatbot() {
 
             case 'coding_explanation':
                 return "Coding or programming is the process of writing instructions that a computer can understand and execute. It allows us to build software, games, websites, and AI systems. Alish codes in Python and JavaScript to build applications and neural networks!";
+
+            case 'time': {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const msg = message.toLowerCase();
+                if ((msg.includes('time') || msg.includes('clock')) && !msg.includes('date') && !msg.includes('day')) {
+                    return `🕒 ${timeStr} (${timezone})`;
+                }
+                if ((msg.includes('date') || msg.includes('today')) && !msg.includes('time')) {
+                    return `📅 ${dateStr}`;
+                }
+                return `🕒 ${timeStr} | 📅 ${dateStr} (${timezone})`;
+            }
+
+            case 'weather':
+                return "🌤️ I can check live weather! But the backend server needs to be running. Make sure the Python backend is active on port 5000.";
+
+            case 'math': {
+                const mathRes = evaluateMathClient(message);
+                if (mathRes) return mathRes;
+                return "🧮 I can calculate that! Try simpler expressions like `25 * 4` or `15% of 200`.";
+            }
+
+            case 'marvel':
+                return "🦸 I love Marvel! Ask me about characters like Iron Man, Spider-Man, or movies like Avengers. The backend can fetch live Marvel data when connected.";
         }
 
         return "I'm Abyss, your AI assistant! Ask me anything about programming, math calculations, technology, general knowledge, or Alish Shrestha's portfolio! 🤖✨";
@@ -1039,6 +1130,7 @@ function initializeChatbot() {
 
     // Session Memory History Array
     let chatSessionHistory = [];
+    let currentSessionId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36);
 
     // Markdown Parser for Chatbot Responses
     function parseMarkdownToHtml(markdownText) {
@@ -1125,14 +1217,15 @@ function initializeChatbot() {
 
     // Send message to bot backend with real-time streaming & conversation memory
     async function sendToBot(message) {
-        // Record user message in history (max 16 messages)
         chatSessionHistory.push({ role: 'user', content: message });
         if (chatSessionHistory.length > 16) {
             chatSessionHistory = chatSessionHistory.slice(-16);
         }
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
         try {
-            // Send message and conversation history to backend
             const response = await fetch('http://localhost:5000/chat', {
                 method: 'POST',
                 headers: {
@@ -1140,15 +1233,17 @@ function initializeChatbot() {
                 },
                 body: JSON.stringify({
                     message: message,
-                    history: chatSessionHistory
-                })
+                    history: chatSessionHistory,
+                    session_id: currentSessionId
+                }),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
             if (response.ok) {
                 const data = await response.json();
                 const botResponse = data.response;
-
-                // Record assistant response in history
+                currentSessionId = data.session_id || currentSessionId;
                 chatSessionHistory.push({ role: 'assistant', content: botResponse });
 
                 setTimeout(() => {
@@ -1158,12 +1253,11 @@ function initializeChatbot() {
                 return;
             }
         } catch (error) {
-            console.log('Backend server offline, falling back to intelligent client-side engine');
+            clearTimeout(timeoutId);
+            console.log('Backend server offline or timeout, falling back to intelligent client-side engine:', error.message);
         }
 
-        // Fallback intelligent response
         const fallbackResponse = generateResponse(message);
-
         if (fallbackResponse !== null) {
             chatSessionHistory.push({ role: 'assistant', content: fallbackResponse });
             setTimeout(() => {
@@ -1208,7 +1302,7 @@ function initializeChatbot() {
         }
 
         chatbotMessages.appendChild(messageDiv);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        scrollToBottom();
 
         if (type === 'bot') {
             const renderedHtml = parseMarkdownToHtml(text);
@@ -1216,7 +1310,7 @@ function initializeChatbot() {
             // If text contains HTML elements, code blocks or tables, render directly for visual perfection
             if (text.includes('```') || text.includes('|') || text.includes('<a href')) {
                 messageP.innerHTML = renderedHtml;
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                scrollToBottom();
             } else {
                 // Word-by-word streaming effect
                 const words = text.split(' ');
@@ -1228,7 +1322,7 @@ function initializeChatbot() {
                         currentText += (wIdx === 0 ? '' : ' ') + words[wIdx];
                         messageP.innerHTML = parseMarkdownToHtml(currentText);
                         wIdx++;
-                        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                        scrollToBottom();
                         setTimeout(typeWord, 20);
                     } else {
                         messageP.innerHTML = renderedHtml;
@@ -1254,6 +1348,45 @@ function throttle(func, limit) {
             setTimeout(() => inThrottle = false, limit);
         }
     }
+}
+
+function evaluateMathClient(message) {
+    try {
+        let expr = message.toLowerCase().trim();
+        for (const prefix of ["what is", "calculate", "solve", "how much is"]) {
+            expr = expr.replace(prefix, "").trim();
+        }
+        expr = expr.replace(/\?/g, "").trim();
+
+        const pctMatch = expr.match(/^(\d+(?:\.\d+)?)\s*%\s*of\s*(\d+(?:\.\d+)?)$/);
+        if (pctMatch) {
+            const pct = parseFloat(pctMatch[1]);
+            const total = parseFloat(pctMatch[2]);
+            const result = (pct / 100) * total;
+            return `🧮 \`${pct}% of ${total}\` = **${Number.isInteger(result) ? result : result.toFixed(6).replace(/\.?0+$/, "")}**`;
+        }
+
+        const replacements = [
+            ["plus", "+"], ["minus", "-"], ["times", "*"], ["multiplied by", "*"],
+            ["divided by", "/"], ["over", "/"], ["power of", "**"], ["x", "*"]
+        ];
+        for (const [word, sym] of replacements) {
+            expr = expr.replace(new RegExp(word, "g"), sym);
+        }
+        expr = expr.replace(/\^/g, "**");
+
+        const sanitized = expr.replace(/[^0-9+\-*/.%() ]/g, "");
+        if (!sanitized) return null;
+
+        const result = Function('"use strict"; return (' + sanitized + ')')();
+        if (typeof result === 'number' && !isNaN(result) && isFinite(result)) {
+            const display = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+            return `🧮 \`${message.trim()}\` = **${display}**`;
+        }
+    } catch {
+        return null;
+    }
+    return null;
 }
 
 // Add smooth page transitions

@@ -12,6 +12,7 @@ def detect_intent(message: str) -> str:
       'weather'    → weather_service
       'github'     → github_service
       'math'       → math evaluation
+      'marvel'     → marvel_service
       'portfolio'  → portfolio_service
       'clear'      → clear chat
       'ai'         → ai_service (general)
@@ -31,6 +32,20 @@ def detect_intent(message: str) -> str:
     weather_kws = ["weather", "temperature", "forecast", "climate", "how hot", "how cold", "is it raining", "temp in", "rain in"]
     if any(kw in msg for kw in weather_kws):
         return "weather"
+
+    # --- Marvel (before GitHub so character queries don't go to GitHub) ---
+    marvel_kws = [
+        "marvel", "mcu", "avengers", "spider-man", "iron man", "thor",
+        "captain america", "black panther", "doctor strange", "guardians",
+        "x-men", "fantastic four", "infinity stones", "thanos", "loki",
+        "wolverine", "deadpool", "multiverse", "secret wars", "doctor doom",
+        "kang", "celestials", "wakanda", "asgard", "ant-man", "scarlet witch",
+        "vision", "falcon", "winter soldier", "shield", "hydra",
+        "spider-verse", "nick fury", "daredevil", "jessica jones",
+        "luke cage", "iron fist", "punisher", "ghost rider",
+    ]
+    if any(kw in msg for kw in marvel_kws):
+        return "marvel"
 
     # --- GitHub ---
     github_kws = ["github stats", "github profile", "github repos", "github repositories",

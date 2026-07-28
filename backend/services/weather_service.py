@@ -71,13 +71,9 @@ def _get_from_openweathermap(city: str, api_key: str) -> str | None:
         wind_kmh = round(data["wind"]["speed"] * 3.6, 1)
 
         return (
-            f"### {emoji} Weather for **{name}, {country}**\n\n"
-            f"- **Condition:** {description} {emoji}\n"
-            f"- **Temperature:** {temp_c:.1f}°C ({temp_f}°F)\n"
-            f"- **Feels Like:** {feels_c:.1f}°C\n"
-            f"- **Humidity:** {humidity}%\n"
-            f"- **Wind Speed:** {wind_kmh} km/h\n\n"
-            f"*Data provided in real-time by OpenWeatherMap.*"
+            f"{emoji} **{name}**: {description}\n"
+            f"🌡️ {temp_c:.1f}°C | Feels {feels_c:.1f}°C\n"
+            f"💧 {humidity}% | 🌬️ {wind_kmh} km/h"
         )
     except Exception as e:
         print(f"[WeatherService] OpenWeatherMap error: {e}")
@@ -114,10 +110,7 @@ def _get_from_open_meteo(city: str) -> str | None:
         wind = curr["windspeed"]
 
         return (
-            f"### 🌤️ Weather for **{place}**\n\n"
-            f"- **Temperature:** {temp_c}°C ({temp_f}°F)\n"
-            f"- **Wind Speed:** {wind} km/h\n\n"
-            f"*Data provided in real-time by Open-Meteo.*"
+            f"🌤️ **{place}**: {temp_c}°C | Wind {wind} km/h"
         )
     except Exception as e:
         print(f"[WeatherService] Open-Meteo error: {e}")

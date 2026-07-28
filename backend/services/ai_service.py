@@ -217,18 +217,15 @@ def generate_response(message: str, history: list[dict], live_context: str = "")
     Generate an AI response.
     Priority: OpenRouter → Ollama → Fallback generator
     """
-    # Trim history to last 8 exchanges
     trimmed_history = history[-8:] if len(history) > 8 else history
 
-    # 1. Try OpenRouter
-    result = _call_openrouter(trimmed_history + [{"role": "user", "content": message}], live_context)
-    if result:
-        return result
+    if os.getenv("OPENROUTER_API_KEY"):
+        result = _call_openrouter(trimmed_history + [{"role": "user", "content": message}], live_context)
+        if result:
+            return result
 
-    # 2. Try Ollama
     result = _call_ollama(trimmed_history + [{"role": "user", "content": message}], live_context)
     if result:
         return result
 
-    # 3. Built-in fallback
     return _fallback_response(message, history)
