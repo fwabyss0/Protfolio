@@ -52,10 +52,13 @@ def _evaluate_math(expression: str) -> str | None:
     expr = re.sub(r'\btan\(', 'math.tan(', expr)
     expr = re.sub(r'\babs\(', 'abs(', expr)
     expr = re.sub(r'\blog\(', 'math.log10(', expr)
-    expr = expr.replace("pi", str(math.pi)).replace(" e ", str(math.e))
+    expr = re.sub(r'\bpi\b', str(math.pi), expr)
+    expr = re.sub(r'\be\b', str(math.e), expr)
 
     # Sanitize — allow only safe chars
-    if not re.match(r'^[0-9\+\-\*\/\%\.\(\)\s\,math\.sqrtsincogtabpile\*]+$', expr):
+    sanitized = re.sub(r'(?:math\.(?:sqrt|sin|cos|tan|log10)\()', '', expr)
+    sanitized = re.sub(r'\babs\(', '', sanitized)
+    if not re.match(r'^[0-9\+\-\*\/\%\.\(\)\s\,]+$', sanitized):
         return None
 
     try:

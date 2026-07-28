@@ -38,7 +38,43 @@ async function getCryptoData(message) {
         return cryptoCache.data;
     }
 
-    // Try Binance API first
+    // Try CoinCap API first (no key required, more reliable)
+    try {
+        const ids = 'bitcoin,ethereum,solana,dogecoin,cardano';
+        const url = `https://api.coincap.io/v2/assets?ids=${ids}`;
+        const data = await fetchJson(url);
+
+        if (data && Array.isArray(data.data) && data.data.length > 0) {
+            let result = "### 🪙 Live Cryptocurrency Prices (USD)\n\n";
+            result += `| Coin | Symbol | Price (USD) |\n`;
+            result += `| :--- | :--- | :--- |\n`;
+
+            const nameMap = {
+                'bitcoin': { name: 'Bitcoin', code: 'BTC' },
+                'ethereum': { name: 'Ethereum', code: 'ETH' },
+                'solana': { name: 'Solana', code: 'SOL' },
+                'dogecoin': { name: 'Dogecoin', code: 'DOGE' },
+                'cardano': { name: 'Cardano', code: 'ADA' }
+            };
+
+            data.data.forEach(item => {
+                const meta = nameMap[item.id];
+                if (meta) {
+                    const priceNum = parseFloat(item.priceUsd);
+                    const formatted = priceNum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+                    result += `| **${meta.name}** | \`${meta.code}\` | **$${formatted}** |\n`;
+                }
+            });
+
+            result += "\n*Data provided in real-time by CoinCap API.*";
+            cryptoCache = { data: result, timestamp: Date.now() };
+            return result;
+        }
+    } catch (coincapErr) {
+        console.error('CoinCap API error:', coincapErr.message);
+    }
+
+    // Fallback to Binance API
     try {
         const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'DOGEUSDT', 'ADAUSDT'];
         const url = `https://api.binance.com/api/v3/ticker/price?symbols=${encodeURIComponent(JSON.stringify(symbols))}`;
@@ -72,21 +108,6 @@ async function getCryptoData(message) {
         }
     } catch (binanceErr) {
         console.error('Binance API error:', binanceErr.message);
-    }
-
-    // Fallback to CoinGecko
-    try {
-        const data = await fetchJson('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,dogecoin&vs_currencies=usd');
-        if (data && data.bitcoin) {
-            let result = "### 🪙 Live Cryptocurrency Prices (USD)\n\n";
-            result += `- **Bitcoin (BTC):** $${data.bitcoin.usd.toLocaleString()}\n`;
-            result += `- **Ethereum (ETH):** $${data.ethereum.usd.toLocaleString()}\n`;
-            result += `- **Solana (SOL):** $${data.solana ? data.solana.usd.toLocaleString() : 'N/A'}\n`;
-            result += `- **Dogecoin (DOGE):** $${data.dogecoin ? data.dogecoin.usd : 'N/A'}\n`;
-            return result;
-        }
-    } catch (geckoErr) {
-        console.error('CoinGecko API error:', geckoErr.message);
     }
 
     return "Live cryptocurrency prices are currently unavailable right now. Please try again later.";

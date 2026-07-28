@@ -33,12 +33,14 @@ _load_env()
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from .routes.chatbot import chatbot_bp
+from .routes.music import music_bp
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="../static", static_url_path="/static")
     CORS(app, resources={r"/*": {"origins": "*"}})
 
     app.register_blueprint(chatbot_bp)
+    app.register_blueprint(music_bp)
 
     @app.route("/")
     def serve_index():

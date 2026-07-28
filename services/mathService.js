@@ -62,11 +62,10 @@ function evaluateMath(expression) {
                    .replace(/\bpi\b/g, 'Math.PI')
                    .replace(/\be\b/g, 'Math.E');
 
-        // Sanitize: only allow numbers, math symbols, and Math object functions
-        if (!/^[0-9\+\-\*\/\%\.\(\)\s]|Math\.(sqrt|sin|cos|tan|abs|log10|PI|E)+$/.test(expr.replace(/Math\.(sqrt|sin|cos|tan|abs|log10|PI|E)/g, ''))) {
-            // Strict sanitization check
-            const allowed = /^[0-9\+\-\*\/\%\.\(\)\s,]|Math\.(sqrt|sin|cos|tan|abs|log10|PI|E)/;
-            if (!allowed.test(expr)) return null;
+        // Sanitize: strip known safe function wrappers, then allow only numbers/operators/parens
+        const sanitized = expr.replace(/Math\.(?:sqrt|sin|cos|tan|log10|PI|E)/g, '');
+        if (!/^[0-9\+\-\*\/\%\.\(\)\s]+$/.test(sanitized)) {
+            return null;
         }
 
         // Safe Function evaluation

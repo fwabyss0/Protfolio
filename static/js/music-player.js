@@ -1,7 +1,7 @@
 /**
  * music-player.js
  * Premium horizontal HTML5 Audio Player with localStorage persistence.
- * Supports synchronized lyrics from LRC files.
+ * Supports synchronized lyrics from LRC files and multi-song playlist.
  */
 
 class MusicPlayer {
@@ -20,6 +20,8 @@ class MusicPlayer {
         this.currentTimeEl = document.getElementById('music-current');
         this.durationEl = document.getElementById('music-duration');
         this.artwork = document.getElementById('music-artwork');
+        this.titleEl = document.getElementById('music-title');
+        this.artistEl = document.getElementById('music-artist');
         this.equalizer = document.getElementById('music-equalizer');
         this.lyricsScroll = document.getElementById('music-lyrics-scroll');
         this.lyricsFallback = document.getElementById('music-lyrics-fallback');
@@ -38,9 +40,12 @@ class MusicPlayer {
             position: 'music_player_position',
         };
 
+        this.playlist = [];
+        this.currentIndex = -1;
         this.lrcLines = [];
         this.currentLyricIndex = -1;
         this.lyricRafId = null;
+        this.initialized = false;
 
         this.init();
     }
@@ -51,12 +56,15 @@ class MusicPlayer {
         this.updatePlayIcon();
         this.updateVolumeIcon();
         this.updateLoopIcon();
-        this.loadLyrics();
+        this.loadPlaylist();
 
         this.audio.addEventListener('loadedmetadata', () => {
-            const savedPosition = localStorage.getItem(this.storageKeys.position);
-            if (savedPosition && !isNaN(parseFloat(savedPosition))) {
-                this.audio.currentTime = parseFloat(savedPosition);
+            if (!this.initialized) {
+                const savedPosition = localStorage.getItem(this.storageKeys.position);
+                if (savedPosition && !isNaN(parseFloat(savedPosition))) {
+                    this.audio.currentTime = parseFloat(savedPosition);
+                }
+                this.initialized = true;
             }
             this.updateDuration();
             this.syncLyrics();
@@ -70,18 +78,7 @@ class MusicPlayer {
         });
 
         this.audio.addEventListener('ended', () => {
-            if (this.isLooping) {
-                this.audio.currentTime = 0;
-                this.audio.play();
-            } else {
-                this.isPlaying = false;
-                this.updatePlayIcon();
-                this.player.classList.remove('playing');
-                this.progressFill.style.width = '0%';
-                this.progressHandle.style.left = '0%';
-                this.currentTimeEl.textContent = '00:00';
-                this.stopLyricSync();
-            }
+            this.onSongEnded();
         });
 
         this.audio.addEventListener('waiting', () => {
@@ -100,12 +97,128 @@ class MusicPlayer {
             this.player.classList.remove('playing');
             this.stopLyricSync();
         });
+    }
 
-        if (this.isPlaying) {
-            this.audio.play().catch(() => {
-                this.isPlaying = false;
-                this.updatePlayIcon();
-            });
+    async loadPlaylist() {
+        try {
+            const res = await fetch('/api/music');
+            this.playlist = await res.json();
+        } catch (e) {
+            console.error('[MusicPlayer] Failed to load playlist:', e);
+            this.playlist = [];
+        }
+
+        if (this.playlist.length === 0) {
+            this.playlist = [
+                {
+                    title: 'Yellow',
+                    artist: 'Coldplay',
+                    cover: 'static/images/album-cover.jpg',
+                    file: 'static/music/song.mp3',
+                    lyrics: 'static/lyrics/song.lrc',
+                },
+                {
+                    title: 'Gantabya',
+                    artist: 'Ghanshyam Ghimirey',
+                    cover: 'static/images/song2.jpg',
+                    file: 'static/music/song2.mp3',
+                    lyrics: 'static/lyrics/song2.lrc',
+                },
+            ];
+        }
+
+        this.loadSong(0, false);
+    }
+
+    loadSong(index, autoPlay = true) {
+        if (index < 0 || index >= this.playlist.length) return;
+
+        const wasPlaying = this.isPlaying;
+        this.stopLyricSync();
+
+        this.currentIndex = index;
+        const song = this.playlist[index];
+
+        this.audio.src = song.file;
+        this.audio.load();
+        this.artwork.src = song.cover;
+        this.titleEl.textContent = song.title || 'Unknown Title';
+        this.artistEl.textContent = song.artist || 'Unknown Artist';
+        this.durationEl.textContent = '00:00';
+        this.progressFill.style.width = '0%';
+        this.progressHandle.style.left = '0%';
+        this.currentTimeEl.textContent = '00:00';
+        this.currentLyricIndex = -1;
+        this.updatePlayIcon();
+        this.loadLyrics(song.lyrics);
+
+        if (autoPlay && wasPlaying) {
+            this.playWhenReady();
+        }
+    }
+
+    play() {
+        this.audio.play().then(() => {
+            this.isPlaying = true;
+            this.updatePlayIcon();
+            this.player.classList.add('playing');
+            this.startLyricSync();
+        }).catch((err) => {
+            console.error('[MusicPlayer] Playback failed:', err);
+        });
+    }
+
+    playWhenReady() {
+        if (this.audio.readyState >= 2) {
+            this.play();
+        } else {
+            const onCanPlay = () => {
+                this.play();
+                this.audio.removeEventListener('canplay', onCanPlay);
+            };
+            this.audio.addEventListener('canplay', onCanPlay);
+        }
+    }
+
+    pause() {
+        this.audio.pause();
+        this.isPlaying = false;
+        this.updatePlayIcon();
+        this.player.classList.remove('playing');
+        this.stopLyricSync();
+    }
+
+    togglePlay() {
+        if (this.audio.paused) {
+            this.play();
+        } else {
+            this.pause();
+        }
+    }
+
+    playNext() {
+        if (this.playlist.length === 0) return;
+        const nextIndex = (this.currentIndex + 1) % this.playlist.length;
+        this.loadSong(nextIndex, this.isPlaying);
+    }
+
+    playPrev() {
+        if (this.playlist.length === 0) return;
+        const prevIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
+        this.loadSong(prevIndex, this.isPlaying);
+    }
+
+    onSongEnded() {
+        if (this.isLooping) {
+            this.audio.currentTime = 0;
+            this.playWhenReady();
+        } else if (this.currentIndex < this.playlist.length - 1) {
+            this.playNext();
+        } else {
+            this.isPlaying = false;
+            this.updatePlayIcon();
+            this.player.classList.remove('playing');
+            this.stopLyricSync();
         }
     }
 
@@ -130,13 +243,12 @@ class MusicPlayer {
         return result;
     }
 
-    async loadLyrics() {
-        if (!this.audio || !this.audio.src) return;
-
-        const src = this.audio.src || this.audio.getAttribute('src') || '';
-        const filename = src.split('/').pop().split('?')[0];
-        const basename = filename.replace(/\.[^/.]+$/, '');
-        const lrcPath = `/static/lyrics/${encodeURIComponent(basename)}.lrc`;
+    async loadLyrics(lrcPath) {
+        if (!lrcPath) {
+            this.lrcLines = [];
+            this.renderLyrics();
+            return;
+        }
 
         try {
             const res = await fetch(lrcPath);
@@ -189,7 +301,6 @@ class MusicPlayer {
 
         if (activeIndex === this.currentLyricIndex) return;
 
-        const prevIndex = this.currentLyricIndex;
         this.currentLyricIndex = activeIndex;
 
         const lines = this.lyricsScroll.querySelectorAll('.music-lyric-line');
@@ -202,10 +313,10 @@ class MusicPlayer {
             }
         });
 
-        this.scrollToLyric(activeIndex, prevIndex);
+        this.scrollToLyric(activeIndex);
     }
 
-    scrollToLyric(newIndex, oldIndex) {
+    scrollToLyric(newIndex) {
         if (!this.lyricsScroll || newIndex < 0) return;
 
         const container = this.lyricsScroll.parentElement;
@@ -240,25 +351,6 @@ class MusicPlayer {
         if (this.lyricRafId) {
             cancelAnimationFrame(this.lyricRafId);
             this.lyricRafId = null;
-        }
-    }
-
-    togglePlay() {
-        if (this.audio.paused) {
-            this.audio.play().then(() => {
-                this.isPlaying = true;
-                this.updatePlayIcon();
-                this.player.classList.add('playing');
-                this.startLyricSync();
-            }).catch((err) => {
-                console.error('[MusicPlayer] Playback failed:', err);
-            });
-        } else {
-            this.audio.pause();
-            this.isPlaying = false;
-            this.updatePlayIcon();
-            this.player.classList.remove('playing');
-            this.stopLyricSync();
         }
     }
 
@@ -348,15 +440,11 @@ class MusicPlayer {
         this.playBtn.addEventListener('click', () => this.togglePlay());
 
         this.prevBtn.addEventListener('click', () => {
-            this.audio.currentTime = 0;
-            this.updateProgress();
-            this.syncLyrics();
+            this.playPrev();
         });
 
         this.nextBtn.addEventListener('click', () => {
-            this.audio.currentTime = 0;
-            this.updateProgress();
-            this.syncLyrics();
+            this.playNext();
         });
 
         this.loopBtn.addEventListener('click', () => this.toggleLoop());
