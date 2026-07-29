@@ -1,6 +1,7 @@
 """
-portfolio_service.py
+backend/services/portfolio_service.py
 Handles all portfolio-related queries locally (no AI call needed).
+Keeps the same function signatures for compatibility.
 """
 import random
 
@@ -18,35 +19,35 @@ PORTFOLIO_DATA = {
         "programming": ["Python", "JavaScript", "HTML5", "CSS3", "C++", "C#"],
         "ai_ml": ["TensorFlow", "PyTorch", "Machine Learning", "Neural Networks", "Deep Learning", "Data Science"],
         "tools": ["VS Code", "GitHub", "Git", "Terminal", "Arduino"],
-        "creative": ["Photography", "Video Editing", "UI/UX Design", "Communication"]
+        "creative": ["Photography", "Video Editing", "UI/UX Design", "Communication"],
     },
     "projects": [
         {
             "name": "Yatra Travel Agency",
             "description": "Travel booking & tour guide website built for Nepal tourism.",
             "link": "https://yatrala.netlify.app",
-            "github": "https://github.com/fwabyss0/Yatra.git"
+            "github": "https://github.com/fwabyss0/Yatra.git",
         },
         {
             "name": "Printing Resolution",
             "description": "Online printing service platform for custom prints and designs.",
             "link": "https://printresolution.netlify.app",
-            "github": "https://github.com/fwabyss0/pr"
+            "github": "https://github.com/fwabyss0/pr",
         },
         {
             "name": "Interactive Portfolio & AI Assistant (Abyss)",
             "description": "Personal interactive web portfolio featuring real-time AI assistant.",
-            "github": "https://github.com/fwabyss0/Protfolio.git"
-        }
+            "github": "https://github.com/fwabyss0/Protfolio.git",
+        },
     ],
     "social": {
         "github": "https://github.com/fwabyss0",
         "linkedin": "https://www.linkedin.com/in/alish-shrestha-4276b8379/",
         "instagram": "https://www.instagram.com/aliisshhhhhh/",
         "facebook": "https://www.facebook.com/alish.shrestha.138982",
-        "discord": "fwabyss"
+        "discord": "fwabyss",
     },
-    "cv": "Alish_Shrestha_CV.pdf"
+    "cv": "Alish_Shrestha_CV.pdf",
 }
 
 PORTFOLIO_KEYWORDS = {
@@ -80,16 +81,14 @@ def get_portfolio_response(message: str) -> str | None:
     msg = message.lower()
     d = PORTFOLIO_DATA
 
-    # Greetings
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["greeting"]):
         return random.choice([
             "Hello! 👋 I'm Abyss, Alish's AI assistant! How can I help you today?",
             "Hi there! 😊 I'm Abyss! What can I tell you about Alish?",
             "Hey! 🎉 Abyss here — ask me anything about Alish or anything else!",
-            "Namaste! 🙏 I'm Abyss. How can I help you?"
+            "Namaste! 🙏 I'm Abyss. How can I help you?",
         ])
 
-    # Abyss identity
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["abyss"]) and "alish" not in msg:
         return (
             "I'm **Abyss** 🤖 — Alish Shrestha's personal AI assistant! "
@@ -97,58 +96,48 @@ def get_portfolio_response(message: str) -> str | None:
             "fetch crypto prices, solve math problems, and much more. What would you like to know?"
         )
 
-    # Social media — Discord
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["social_discord"]):
         return f"🎮 Add Alish on Discord: **{d['social']['discord']}** — send him a friend request to chat!"
 
-    # Social media — GitHub
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["social_github"]):
         return (
             f"👨‍💻 Check out Alish's code on GitHub:\n\n"
             f"[github.com/fwabyss0]({d['social']['github']})"
         )
 
-    # Social media — LinkedIn
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["social_linkedin"]):
         return (
             f"💼 Connect with Alish on LinkedIn:\n\n"
             f"[Alish Shrestha LinkedIn]({d['social']['linkedin']})"
         )
 
-    # Social media — Instagram
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["social_instagram"]):
         return (
             f"📸 Follow Alish on Instagram:\n\n"
             f"[@aliisshhhhhh]({d['social']['instagram']})"
         )
 
-    # Social media — Facebook
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["social_facebook"]):
         return (
             f"👥 Connect with Alish on Facebook:\n\n"
             f"[Alish Shrestha]({d['social']['facebook']})"
         )
 
-    # CV / Resume
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["cv"]):
         return f"📄 You can download Alish's official CV here: [{d['cv']}]({d['cv']})"
 
-    # Contact / Email
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["contact"]):
         return (
             f"📧 You can reach Alish directly at: [{d['email']}](mailto:{d['email']})\n\n"
             f"Or connect via LinkedIn, GitHub, or Instagram!"
         )
 
-    # Location
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["location"]):
         return f"📍 Alish is from **{d['location']}** — a beautiful UNESCO heritage city in Nepal! 🇳🇵"
 
-    # Age
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["age"]):
         return f"🎂 Alish is **{d['age']} years old** — young and full of ambition!"
 
-    # Education
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["education"]):
         return (
             f"🎓 **Alish's Education:**\n\n"
@@ -157,7 +146,6 @@ def get_portfolio_response(message: str) -> str | None:
             f"- **Primary:** {d['primary_school']}"
         )
 
-    # Skills
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["skills"]):
         skills = d["skills"]
         return (
@@ -168,7 +156,6 @@ def get_portfolio_response(message: str) -> str | None:
             f"- **Creative:** {', '.join(skills['creative'])}"
         )
 
-    # Projects
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["projects"]):
         lines = ["🚀 **Alish's Projects:**\n"]
         for i, p in enumerate(d["projects"], 1):
@@ -180,7 +167,6 @@ def get_portfolio_response(message: str) -> str | None:
             lines.append(line)
         return "\n".join(lines)
 
-    # About Alish
     if any(kw in msg for kw in PORTFOLIO_KEYWORDS["about"]):
         return (
             f"👤 **About Alish Shrestha:**\n\n"

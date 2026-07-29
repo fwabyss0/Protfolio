@@ -1,55 +1,53 @@
 """
-memory_service.py
-Lightweight in-memory conversation history store for multi-turn chat sessions.
+services/memory_service.py
+Persistent chat history and user memory via SQLite.
 """
-from collections import defaultdict
-from datetime import datetime
+from __future__ import annotations
 
-# Stores histories keyed by session_id
-_histories: dict[str, list[dict]] = defaultdict(list)
-MAX_HISTORY = 16  # Max messages kept per session
+import logging
+from typing import Optional
+
+from ..database.models import (
+    add_message as db_add_message,
+    get_history as db_get_history,
+    clear_history as db_clear_history,
+    get_session_ids as db_get_session_ids,
+    get_context_string as db_get_context_string,
+    set_memory as db_set_memory,
+    get_memory as db_get_memory,
+    get_all_memories as db_get_all_memories,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def add_message(session_id: str, role: str, content: str) -> None:
-    """Add a message to session history. role = 'user' | 'assistant'."""
-    _histories[session_id].append({
-        "role": role,
-        "content": content,
-        "timestamp": datetime.utcnow().isoformat()
-    })
-    # Trim to max history
-    if len(_histories[session_id]) > MAX_HISTORY:
-        _histories[session_id] = _histories[session_id][-MAX_HISTORY:]
+    db_add_message(session_id, role, content)
 
 
-def get_history(session_id: str) -> list[dict]:
-    """Return message history for a session (without internal timestamps)."""
-    return [
-        {"role": m["role"], "content": m["content"]}
-        for m in _histories.get(session_id, [])
-    ]
+def get_history(session_id: str, limit: int = 50) -> list[dict]:
+    return db_get_history(session_id, limit=limit)
 
 
 def clear_history(session_id: str) -> None:
-    """Clear all history for a session."""
-    _histories[session_id] = []
+    db_clear_history(session_id)
 
 
 def get_session_ids() -> list[str]:
-    """Return all active session IDs."""
-    return list(_histories.keys())
+    return db_get_session_ids()
 
 
 def get_context_string(session_id: str) -> str:
-    """
-    Returns last few messages as a simple context string.
-    Useful for detecting follow-up questions.
-    """
-    history = get_history(session_id)
-    if not history:
-        return ""
-    lines = []
-    for msg in history[-6:]:
-        prefix = "User" if msg["role"] == "user" else "Abyss"
-        lines.append(f"{prefix}: {msg['content']}")
-    return "\n".join(lines)
+    return db_get_context_string(session_id)
+
+
+def remember_fact(key: str, value: str) -> None:
+    db_set_memory(key, value)
+
+
+def recall_fact(key: str) -> Optional[str]:
+    return db_get_memory(key)
+
+
+def recall_all_facts() -> dict[str, str]:
+    return db_get_all_memories()
