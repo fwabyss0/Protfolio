@@ -704,51 +704,688 @@
     <!-- ══ CHATBOT ══ -->
     <div id="chatbot" class="chatbot">
         <div class="chatbot-header" id="chatbot-header">
-            <h1 class="chatbot-name">Abyss</h1>
-            <button id="chatbot-close" class="chatbot-close">&times;</button>
-        </div>
-        <div class="chatbot-messages" id="chatbot-messages">
-            <div class="message bot-message">
-                <div class="message-avatar assistant">
-                    <img src="a.png" alt="Abyss Avatar" class="avatar-image">
+            <div class="chatbot-title">
+                <div class="chatbot-avatar">
+                    <img src="a.png" alt="Abyss" class="avatar-image">
                 </div>
-                <p>Hi! I'm Abyss, Alish's AI assistant. How can I help you today?</p>
-            </div>
-            <div class="initial-options">
-                <h4>Quick Options:</h4>
-                <div class="initial-option-buttons">
-                    <button class="option-btn" data-action="about">About Alish</button>
-                    <button class="option-btn" data-action="age">Age</button>
-                    <button class="option-btn" data-action="skills">Skills</button>
-                    <button class="option-btn" data-action="location">Location</button>
+                <div class="chatbot-info">
+                    <h1 class="chatbot-name">Abyss</h1>
+                    <span class="chatbot-status">Online</span>
                 </div>
             </div>
+            <div class="chatbot-controls">
+                <button id="chatbot-fullscreen" class="chatbot-control-btn" title="Fullscreen">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                </button>
+                <button id="chatbot-clear" class="chatbot-control-btn" title="Clear chat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button id="chatbot-retry" class="chatbot-control-btn" title="Retry">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                </button>
+                <button id="chatbot-close" class="chatbot-close">&times;</button>
+            </div>
         </div>
+        <div class="chatbot-messages" id="chatbot-messages"></div>
         <div class="chatbot-input">
-            <input type="text" id="chatbot-input-field" placeholder="Ask me something...">
-            <button id="chatbot-send">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            <input type="text" id="chatbot-input-field" placeholder="Ask me something..." autocomplete="off">
+            <button id="chatbot-send" class="chatbot-send-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
             </button>
         </div>
-        <div id="loading-indicator" class="message bot-message" style="display:none">
-            <div class="message-avatar assistant">
-                <img src="a.png" alt="Abyss Avatar" class="avatar-image">
-            </div>
-            <div class="message-content">
-                <span class="dot-flashing"></span>
-            </div>
-        </div>
-        <div class="chatbot-resize-handle" id="chatbot-resize-handle" title="Drag to resize"></div>
     </div>
 
     <!-- Chatbot Toggle -->
     <button id="chatbot-toggle" class="chatbot-toggle">
-        <i class="fas fa-comments"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
     </button>
 
-    <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.js"></script>
+    <script type="module" src="static/js/chatbot/main.js"></script>
+    <script type="module" src="app.js"></script>
+    <script>
+        (function() {
+            const chatbot = document.getElementById('chatbot');
+            const toggle = document.getElementById('chatbot-toggle');
+            const close = document.getElementById('chatbot-close');
+            const send = document.getElementById('chatbot-send');
+            const input = document.getElementById('chatbot-input-field');
+            const fullscreen = document.getElementById('chatbot-fullscreen');
+            const clear = document.getElementById('chatbot-clear');
+            const retry = document.getElementById('chatbot-retry');
+
+            if (toggle && chatbot) {
+                let hasShownWelcome = false;
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    chatbot.classList.toggle('active');
+                    if (chatbot.classList.contains('active') && !hasShownWelcome) {
+                        hasShownWelcome = true;
+                        const container = getMessagesContainer();
+                        if (container) {
+                            container.innerHTML = '';
+                            const welcome = document.createElement('div');
+                            welcome.className = 'message bot-message';
+                            welcome.innerHTML = '<div class="message-avatar bot"><img src="a.png" class="avatar-image" alt="Abyss"></div><div class="message-content"><p>Hi! I\'m Abyss, Alish\'s AI assistant. How can I help you today?</p><div class="message-time">' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                            container.appendChild(welcome);
+                            addQuickActions();
+                        }
+                    }
+                });
+            }
+
+            if (close && chatbot) {
+                close.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    chatbot.classList.remove('active');
+                });
+            }
+
+            function getMessagesContainer() {
+                return document.getElementById('chatbot-messages');
+            }
+
+            function appendUserMessage(text) {
+                const container = getMessagesContainer();
+                if (!container) return;
+                const msg = document.createElement('div');
+                msg.className = 'message user-message';
+                msg.innerHTML = '<div class="message-content"><p>' + text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p><div class="message-time">' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                container.appendChild(msg);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const container = getMessagesContainer();
+                if (!container) return;
+                const typing = document.createElement('div');
+                typing.id = 'typing-indicator';
+                typing.className = 'message bot-message';
+                typing.innerHTML = '<div class="message-avatar bot"><img src="a.png" class="avatar-image" alt="Abyss"></div><div class="message-content"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+                container.appendChild(typing);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const typing = document.getElementById('typing-indicator');
+                if (typing) typing.remove();
+            }
+
+            function playUserSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                } catch (e) {
+                    console.log('Sound error:', e);
+                }
+            }
+
+            function playBotSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                    oscillator.frequency.linearRampToValueAtTime(450, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.25);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.25);
+                } catch (e) {
+                    console.log('Sound error:', e);
+                }
+            }
+
+            function playTypingSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                } catch (e) {
+                    console.log('Sound error:', e);
+                }
+            }
+
+            function addQuickActions() {
+                const container = getMessagesContainer();
+                if (!container) return;
+                const actions = document.createElement('div');
+                actions.className = 'quick-actions';
+                actions.innerHTML = `
+                    <h4>Quick Info:</h4>
+                    <div class="action-buttons">
+                        <button class="action-btn" data-action="about">About</button>
+                        <button class="action-btn" data-action="age">Age</button>
+                        <button class="action-btn" data-action="skills">Skills</button>
+                        <button class="action-btn" data-action="location">Location</button>
+                    </div>
+                `;
+                actions.querySelectorAll('.action-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const action = btn.dataset.action;
+                        const messages = {
+                            about: "Tell me about Alish",
+                            age: "How old is Alish?",
+                            skills: "What are Alish's skills?",
+                            location: "Where is Alish from?"
+                        };
+                        if (messages[action]) {
+                            input.value = messages[action];
+                            if (send) send.click();
+                        }
+                        actions.remove();
+                    });
+                });
+                container.appendChild(actions);
+            }
+
+            function appendBotMessage(text) {
+                const container = getMessagesContainer();
+                if (!container) return;
+                const msg = document.createElement('div');
+                msg.className = 'message bot-message';
+                msg.innerHTML = '<div class="message-avatar bot"><img src="a.png" class="avatar-image" alt="Abyss"></div><div class="message-content"><p>' + text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p><div class="message-time">' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                container.appendChild(msg);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            async function getWeather(city) {
+                try {
+                    const apiKey = 'c4babc6f060dd6a90513fd541c6c8d42';
+                    const geoUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + encodeURIComponent(city) + '&limit=1&appid=' + apiKey;
+                    const geoResp = await fetch(geoUrl);
+                    const geoData = await geoResp.json();
+                    if (!geoData.length) return 'Weather in ' + city + ': City not found.';
+                    
+                    const lat = geoData[0].lat;
+                    const lon = geoData[0].lon;
+                    const name = geoData[0].name;
+                    const country = geoData[0].country;
+                    const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey + '&units=metric';
+                    const weatherResp = await fetch(weatherUrl);
+                    const weatherData = await weatherResp.json();
+                    
+                    const temp = weatherData.main.temp;
+                    const feels = weatherData.main.feels_like;
+                    const desc = weatherData.weather[0].description;
+                    const humidity = weatherData.main.humidity;
+                    const wind = weatherData.wind.speed;
+                    const pressure = weatherData.main.pressure;
+                    const sunrise = new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const sunset = new Date(weatherData.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    return name + ', ' + country + ':\n🌡️ Temp: ' + temp + '°C (Feels like ' + feels + '°C)\n☁️ ' + desc.charAt(0).toUpperCase() + desc.slice(1) + '\n💧 Humidity: ' + humidity + '%\n🌬️ Wind: ' + wind + ' m/s\n👁️ Pressure: ' + pressure + ' hPa\n☀️ Sunrise: ' + sunrise + ' | Sunset: ' + sunset;
+                } catch (e) {
+                    console.error('Weather error:', e);
+                    return 'Weather in ' + city + ': Unable to fetch weather data right now.';
+                }
+            }
+            
+            async function getMarvelInfo(query) {
+                try {
+                    const ts = Date.now().toString();
+                    const pub = 'c3Uc6oO0LGsMgK8Bat9p06uPfpdlLrLhNjU8sFom';
+                    const priv = 'ilrQVrcDBSpMzPih9kCkHbB9CTTMctGFQesZ2eR7WH4ShyVzqbYJoSkIoWLNQSrB1gRbWTW2UBAw57KzO9Iz3MpzdVk5G7Xa8WYWSkSFtr7HK7gLUqLyKmMbY6f1tvcU';
+                    const hash = md5(ts + priv + pub);
+                    const url = 'https://gateway.marvel.com/v1/public/characters?nameStartsWith=' + encodeURIComponent(query) + '&limit=1&ts=' + ts + '&apikey=' + pub + '&hash=' + hash;
+                    
+                    const resp = await fetch(url);
+                    if (!resp.ok) {
+                        console.warn('Marvel API error:', resp.status);
+                        return marvelFallback(query);
+                    }
+                    const data = await resp.json();
+                    if (data.code !== 200) {
+                        console.warn('Marvel API error:', data.status);
+                        return marvelFallback(query);
+                    }
+                    const chars = data.data?.results || [];
+                    if (!chars.length) return marvelFallback(query);
+                    
+                    const c = chars[0];
+                    const name = c.name || 'Unknown';
+                    const desc = (c.description || 'No description available.').trim();
+                    const shortDesc = desc.length > 200 ? desc.substring(0, 197) + '...' : desc;
+                    const comics = c.comics?.available || 0;
+                    
+                    return '🦸 ' + name + ': ' + shortDesc + ' (Comics: ' + comics + ')';
+                } catch (e) {
+                    console.error('Marvel error:', e);
+                    return marvelFallback(query);
+                }
+            }
+            
+            function marvelFallback(query) {
+                const q = query.toLowerCase().trim();
+                const fallbacks = {
+                    'spider-man': 'Spider-Man (Peter Parker): Teenage superhero with spider powers. Iconic Avengers member known for agility, web-slinging, and spider-sense.',
+                    'iron man': 'Iron Man (Tony Stark): Genius billionaire inventor who built a powered suit of armor. Founding member of the Avengers.',
+                    'thor': 'Thor Odinson: The Asgardian God of Thunder. Wields Mjolnir and is a founding member of the Avengers.',
+                    'captain america': 'Captain America (Steve Rogers): WWII super-soldier enhanced to peak human potential. Wields a vibranium shield and is the moral center of the Avengers.',
+                    'black panther': 'Black Panther (T\'Challa): King of Wakanda and protector of his nation. Enhanced by the Heart-Shaped Herb and a vibranium suit.',
+                    'doctor strange': 'Doctor Strange (Stephen Strange): Former neurosurgeon turned Sorcerer Supreme. Guards the mystic arts and protects Earth from magical threats.',
+                    'loki': 'Loki: The God of Mischief from Asgard. Thor\'s adoptive brother, known for cunning, magic, shape-shifting, and the TVA saga.',
+                    'hulk': 'Hulk (Bruce Banner): Gamma-radiation scientist who transforms into a giant green powerhouse with immense strength.',
+                    'black widow': 'Black Widow (Natasha Romanoff): Former Russian spy turned elite Avenger. Expert in espionage and martial arts.',
+                    'thanos': 'Thanos: Powerful Titan warlord obsessed with balance. Seeks the Infinity Stones to wipe out half the universe. Marvel\'s greatest villain.',
+                    'wolverine': 'Wolverine (Logan): Mutant with enhanced senses, healing factor, and adamantium claws. Legendary X-Men member.',
+                    'deadpool': 'Deadpool (Wade Wilson): Mercenary with twisted humor, fourth-wall-breaking, and regenerative healing factor. The \'Merc with a Mouth\'.',
+                    'guardians': 'Guardians of the Galaxy: Cosmic team including Star-Lord, Gamora, Drax, Rocket Raccoon, and Groot. Protect the galaxy from interstellar threats.',
+                    'x-men': 'X-Men: Mutant heroes led by Professor X, including Cyclops, Storm, and Wolverine. Fight for peaceful coexistence between mutants and humans.',
+                    'fantastic four': 'Fantastic Four: Mr. Fantastic, Invisible Woman, Human Torch, and The Thing. Cosmic explorers who gained powers from cosmic radiation.',
+                    'avengers': 'The Avengers: Earth\'s mightiest heroes founded by Iron Man, Captain America, Thor, Hulk, Black Widow, and Hawkeye. United against threats no single hero can face.',
+                    'scarlet witch': 'Scarlet Witch (Wanda Maximoff): Powerful Avenger with reality-warping and chaos magic abilities. One of the strongest beings in the Marvel Universe.',
+                    'vision': 'Vision: Synthezoid Avenger created by Ultron and powered by the Mind Stone. Has superhuman strength and density control.',
+                    'ant-man': 'Ant-Man (Scott Lang): Former thief turned hero who uses Pym Particles to shrink and grow. Can communicate with ants.',
+                    'wasp': 'Wasp (Hope van Dyne): Hero who uses Pym Particles to shrink, grow, and fly with insect wings. Daughter of Hank Pym.',
+                    'hawkeye': 'Hawkeye (Clint Barton): Master archer and marksman with no superpowers but exceptional skill and precision. Loyal Avenger.',
+                    'falcon': 'Falcon (Sam Wilson): Veteran Air Force paratrooper with advanced winged flight gear. Close ally of Captain America.',
+                    'winter soldier': 'Winter Soldier (Bucky Barnes): Captain America\'s childhood friend turned brainwashed assassin. Later redeemed as a hero.',
+                    'nick fury': 'Nick Fury: Director of S.H.I.E.L.D. and master strategist. Assembled the Avengers and operates from the shadows.',
+                    'gamora': 'Gamora: Deadliest assassin in the galaxy and adopted daughter of Thanos. Member of the Guardians of the Galaxy.',
+                    'rocket': 'Rocket Raccoon: Genetically modified bounty hunter and weapons expert. Founding Guardian with sharp wit.',
+                    'groot': 'Groot: Tree-like humanoid from planet Xandar. Loyal Guardian who communicates by saying \'I am Groot\'.',
+                };
+                for (const [key, value] of Object.entries(fallbacks)) {
+                    if (q.includes(key)) {
+                        return '🦸 ' + value;
+                    }
+                }
+                return '🦸 Marvel API is having issues. Try asking about specific characters like Spider-Man, Iron Man, or Thor!';
+            }
+            
+            function md5(string) {
+                function rotateLeft(lValue, iShiftBits) {
+                    return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+                }
+                function addUnsigned(lX, lY) {
+                    const lX8 = lX & 0x80000000;
+                    const lY8 = lY & 0x80000000;
+                    const lX4 = lX & 0x40000000;
+                    const lY4 = lY & 0x40000000;
+                    const lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
+                    if (lX4 & lY4) return lResult ^ 0x80000000 ^ lX8 ^ lY8;
+                    if (lX4 | lY4) {
+                        if (lResult & 0x40000000) return lResult ^ 0xC0000000 ^ lX8 ^ lY8;
+                        return lResult ^ 0x40000000 ^ lX8 ^ lY8;
+                    }
+                    return lResult ^ lX8 ^ lY8;
+                }
+                function f(x, y, z) { return (x & y) | ((~x) & z); }
+                function g(x, y, z) { return (x & z) | ((~y) & z); }
+                function h(x, y, z) { return x ^ y ^ z; }
+                function i(x, y, z) { return y ^ (x | (~z)); }
+                function ff(a, b, c, d, x, s, ac) {
+                    a = addUnsigned(a, addUnsigned(addUnsigned(f(b, c, d), x), ac));
+                    return addUnsigned(rotateLeft(a, s), b);
+                }
+                function gg(a, b, c, d, x, s, ac) {
+                    a = addUnsigned(a, addUnsigned(addUnsigned(g(b, c, d), x), ac));
+                    return addUnsigned(rotateLeft(a, s), b);
+                }
+                function hh(a, b, c, d, x, s, ac) {
+                    a = addUnsigned(a, addUnsigned(addUnsigned(h(b, c, d), x), ac));
+                    return addUnsigned(rotateLeft(a, s), b);
+                }
+                function ii(a, b, c, d, x, s, ac) {
+                    a = addUnsigned(a, addUnsigned(addUnsigned(i(b, c, d), x), ac));
+                    return addUnsigned(rotateLeft(a, s), d);
+                }
+                function convertToWordArray(string) {
+                    let lWordCount;
+                    const lMessageLength = string.length;
+                    const lNumberOfWordsTemp1 = lMessageLength + 8;
+                    const lNumberOfWordsTemp2 = (lNumberOfWordsTemp1 - (lNumberOfWordsTemp1 % 64)) / 64;
+                    const lNumberOfWords = (lNumberOfWordsTemp2 + 1) * 16;
+                    const lWordArray = new Array(lNumberOfWords - 1);
+                    let lBytePosition = 0;
+                    let lByteCount = 0;
+                    while (lByteCount < lMessageLength) {
+                        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+                        lBytePosition = (lByteCount % 4) * 8;
+                        lWordArray[lWordCount] = lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition);
+                        lByteCount++;
+                    }
+                    lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+                    lBytePosition = (lByteCount % 4) * 8;
+                    lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+                    lWordArray[lNumberOfWords - 2] = lMessageLength * 8;
+                    lWordArray[lNumberOfWords - 1] = 0;
+                    return lWordArray;
+                }
+                function wordToHex(lValue) {
+                    let wordToHexValue = '', wordToHexValueTemp = '', lByte;
+                    for (let lCount = 0; lCount <= 3; lCount++) {
+                        lByte = (lValue >>> (lCount * 8)) & 255;
+                        wordToHexValueTemp = '0' + lByte.toString(16);
+                        wordToHexValue += wordToHexValueTemp.substr(wordToHexValueTemp.length - 2, 2);
+                    }
+                    return wordToHexValue;
+                }
+                const x = convertToWordArray(string);
+                let a = 0x67452301, b = 0xEFCDAB89, c = 0x98BADCFE, d = 0x10325476;
+                const S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+                const S21 = 5, S22 = 9, S23 = 14, S24 = 20;
+                const S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+                const S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+                for (let k = 0; k < x.length; k += 16) {
+                    let AA = a, BB = b, CC = c, DD = d;
+                    a = ff(a, b, c, d, x[k + 0], S11, 0xD76AA478);
+                    d = ff(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
+                    c = ff(c, d, a, b, x[k + 2], S13, 0x242070DB);
+                    b = ff(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
+                    a = ff(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
+                    d = ff(d, a, b, c, x[k + 5], S12, 0x4787C62A);
+                    c = ff(c, d, a, b, x[k + 6], S13, 0xA8304613);
+                    b = ff(b, c, d, a, x[k + 7], S14, 0xFD469501);
+                    a = ff(a, b, c, d, x[k + 8], S11, 0x698098D8);
+                    d = ff(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
+                    c = ff(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
+                    b = ff(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
+                    a = ff(a, b, c, d, x[k + 12], S11, 0x6B901122);
+                    d = ff(d, a, b, c, x[k + 13], S12, 0xFD987193);
+                    c = ff(c, d, a, b, x[k + 14], S13, 0xA679438E);
+                    b = ff(b, c, d, a, x[k + 15], S14, 0x49B40821);
+                    a = gg(a, b, c, d, x[k + 1], S21, 0xF61E2562);
+                    d = gg(d, a, b, c, x[k + 6], S22, 0xC040B340);
+                    c = gg(c, d, a, b, x[k + 11], S23, 0x265E5A51);
+                    b = ff(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
+                    a = gg(a, b, c, d, x[k + 5], S21, 0xD62F105D);
+                    d = gg(d, a, b, c, x[k + 10], S22, 0x2441453);
+                    c = gg(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
+                    b = gg(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
+                    a = gg(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
+                    d = gg(d, a, b, c, x[k + 14], S22, 0xC33707D6);
+                    c = gg(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
+                    b = gg(b, c, d, a, x[k + 8], S24, 0x455A14ED);
+                    a = gg(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
+                    d = gg(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
+                    c = gg(c, d, a, b, x[k + 7], S23, 0x676F02D9);
+                    b = gg(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
+                    a = hh(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
+                    d = hh(d, a, b, c, x[k + 8], S32, 0x8771F681);
+                    c = hh(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
+                    b = hh(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
+                    a = hh(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
+                    d = hh(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
+                    c = hh(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
+                    b = hh(b, c, d, a, x[k + 8], S34, 0xBEBFBC70);
+                    a = hh(a, b, c, d, x[k + 11], S31, 0x289B7EC6);
+                    d = hh(d, a, b, c, x[k + 14], S32, 0xEAA127FA);
+                    c = hh(c, d, a, b, x[k + 1], S33, 0xD4EF3085);
+                    b = hh(b, c, d, a, x[k + 12], S34, 0x4881D05);
+                    a = hh(a, b, c, d, x[k + 7], S31, 0xD9D4D039);
+                    d = hh(d, a, b, c, x[k + 10], S32, 0xE6DB99E5);
+                    c = hh(c, d, a, b, x[k + 13], S33, 0x1FA27CF8);
+                    b = hh(b, c, d, a, x[k + 0], S34, 0xC4AC5665);
+                    a = ii(a, b, c, d, x[k + 2], S41, 0xF7537E82);
+                    d = ii(d, a, b, c, x[k + 7], S42, 0xBD3AF235);
+                    c = ii(c, d, a, b, x[k + 12], S43, 0x2AD7D2BB);
+                    b = ii(b, c, d, a, x[k + 15], S44, 0xEB86D391);
+                    a = ii(a, b, c, d, x[k + 10], S41, 0x5787CDD);
+                    d = ii(d, a, b, c, x[k + 3], S42, 0x2D019DDF);
+                    c = ii(c, d, a, b, x[k + 8], S43, 0x3EA2E9A0);
+                    b = ii(b, c, d, a, x[k + 13], S44, 0x4C3A8F8);
+                    a = addUnsigned(a, AA); b = addUnsigned(b, BB); c = addUnsigned(c, CC); d = addUnsigned(d, DD);
+                }
+                let tempValue = wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
+                return tempValue.toLowerCase();
+            }
+            
+            async function processMessageLocally(message) {
+                const msg = message.toLowerCase().trim();
+                
+                if (msg.includes('who are you') || msg.includes('about you') || msg.includes('tell me about you') || msg.includes('what are you') || msg.includes('abyss')) {
+                    return "I'm Abyss, Alish's AI assistant. I can help you learn about Alish, do calculations, check weather, look up Marvel characters, and more!";
+                }
+                
+                if (msg.includes('who is alish') || msg.includes('who alish') || msg.includes('about alish') || msg.includes('introduce alish') || msg.includes('alish shrestha') || msg.includes('tell me about alish') || (msg.includes('who') && msg.includes('alish'))) {
+                    return "Alish Shrestha is a 19-year-old student from Changu Narayan-01, Bhaktapur, Nepal. He's studying Computer Science & AI at Softwarica College of IT & E-Commerce, affiliated with Coventry University, UK. He's passionate about AI, web development, and creative design.";
+                }
+                
+                if (msg.includes('age') || msg.includes('old') || msg.includes('years') || msg.includes('birthday') || msg.includes('born') || msg.includes('birth') || (msg.includes('when') && msg.includes('old'))) {
+                    return "Alish is 19 years old.";
+                }
+                
+                if (msg.includes('location') || msg.includes('where') || msg.includes('from') || msg.includes('live') || msg.includes('based') || msg.includes('address') || msg.includes('place') || msg.includes('nepal') || msg.includes('bhaktapur')) {
+                    return "Alish is from Changu Narayan-01, Bhaktapur, Nepal.";
+                }
+                
+                if (msg.includes('college') || msg.includes('university') || msg.includes('education') || msg.includes('study') || msg.includes('studying') || msg.includes('pursuing') || msg.includes('softwarica') || msg.includes('coventry') || msg.includes('higher secondary') || msg.includes('12th grade') || msg.includes('+2') || msg.includes('intermediate')) {
+                    return "Alish is studying Computer Science & AI at Softwarica College of IT & E-Commerce, affiliated with Coventry University, UK.";
+                }
+                
+                if (msg.includes('secondary') || msg.includes('secondary school') || msg.includes('secondary education') || msg.includes('khwopa') || msg.includes('high school')) {
+                    return "Alish completed his secondary education at Khwopa Secondary School in Dekocha-06, Bhaktapur (2023-2025).";
+                }
+                
+                if (msg.includes('primary') || msg.includes('primary school') || msg.includes('elementary') || msg.includes('elementary school') || msg.includes('primary education') || msg.includes('childhood school') || msg.includes('north east')) {
+                    return "Alish completed his primary education at North East English Secondary School in Bhaktapur.";
+                }
+                
+                if (msg.includes('skill') || msg.includes('abilities') || msg.includes('can do') || msg.includes('technologies') || msg.includes('what skills') || msg.includes('good at')) {
+                    return "Alish's skills include: Python, JavaScript, HTML/CSS, TensorFlow, AI/ML, UI/UX, photography, and video editing. He uses tools like VS Code, GitHub, Git, and Terminal.";
+                }
+                
+                if (msg.includes('programming') || msg.includes('coding') || msg.includes('development') || msg.includes('software development') || msg.includes('web development') || msg.includes('app development') || msg.includes('languages') || msg.includes('python') || msg.includes('javascript') || msg.includes('html') || msg.includes('css')) {
+                    return "Alish is proficient in Python, JavaScript, HTML/CSS, and AI/ML frameworks like TensorFlow. He builds web applications and creative digital experiences.";
+                }
+                
+                if (msg.includes('creative') || msg.includes('design') || msg.includes('photography') || msg.includes('video editing') || msg.includes('ui/ux') || msg.includes('graphic design') || msg.includes('creative skills')) {
+                    return "Alish has creative skills in UI/UX design, photography, and video editing. He combines technical expertise with artistic vision.";
+                }
+                
+                if (msg.includes('tools') || msg.includes('platforms') || msg.includes('software') || msg.includes('vs code') || msg.includes('vscode') || msg.includes('terminal') || msg.includes('command line') || msg.includes('github') || msg.includes('git') || msg.includes('tensorflow')) {
+                    return "Alish uses tools like VS Code, GitHub, Git, Terminal, and TensorFlow for development and AI projects.";
+                }
+                
+                if (msg.includes('experience') || msg.includes('work') || msg.includes('projects') || msg.includes('portfolio') || msg.includes('built') || msg.includes('created') || msg.includes('developed') || msg.includes('made')) {
+                    return "Alish has built projects like Yatra (travel website) and Printing Resolution (printing services site). He's focused on AI-powered applications and creative web experiences.";
+                }
+                
+                if (msg.includes('contact') || msg.includes('email') || msg.includes('reach') || msg.includes('gmail') || msg.includes('mail') || msg.includes('contact email') || msg.includes('reach out')) {
+                    return 'You can reach Alish at <a href="mailto:shresthaalish444@gmail.com" style="color: #FFE141; text-decoration: underline;">shresthaalish444@gmail.com</a>.';
+                }
+                
+                if (msg.includes('linkedin')) {
+                    return "Connect with Alish on LinkedIn: https://www.linkedin.com/in/alish-shrestha-4276b8379/";
+                }
+                
+                if (msg.includes('facebook') || msg.includes('fb') || msg.includes('social') || msg.includes('friends')) {
+                    return "Feel free to connect with Alish on social media!";
+                }
+                
+                if (msg.includes('discord') || msg.includes('gaming') || msg.includes('chat') || msg.includes('fwabyss') || msg.includes('friend request')) {
+                    return "Add Alish on Discord: fwabyss";
+                }
+                
+                if (msg.includes('github') || msg.includes('git') || msg.includes('code') || msg.includes('repositories') || msg.includes('coding')) {
+                    return "Check out Alish's code on GitHub: https://github.com/fwabyss0";
+                }
+                
+                if (msg.includes('resume') || msg.includes('cv') || msg.includes('curriculum vitae') || msg.includes('download cv') || msg.includes('get cv') || msg.includes('curriculum') || msg.includes('vitae')) {
+                    return "You can download Alish's CV from the portfolio page. It contains all his skills, education, and experience.";
+                }
+                
+                if (msg.includes('hobby') || msg.includes('hobbies') || msg.includes('interest') || msg.includes('interests') || msg.includes('free time') || msg.includes('passionate')) {
+                    return "Alish is passionate about AI, web development, photography, video editing, and creative design.";
+                }
+                
+                if (msg.includes('weather')) {
+                    const cityMatch = message.match(/(?:weather|temperature|forecast|climate|how hot|how cold|is it raining|temp in|rain in)\s+(?:in|at|for)?\s*([a-zA-Z\s,]+?)(?:\?|$|\s*please)/i);
+                    const city = cityMatch ? cityMatch[1].trim() : 'Bhaktapur';
+                    return await getWeather(city);
+                }
+                
+                if (msg.includes('time') || msg.includes('clock') || msg.includes('date') || msg.includes('today') || msg.includes('day') || msg.includes('what time') || msg.includes('current time') || msg.includes('timezone')) {
+                    const now = new Date();
+                    const tz = now.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop() || 'Local';
+                    return 'Current time: ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) + ' | ' + now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' (' + tz + ')';
+                }
+                
+                if (msg.includes('calculate') || msg.includes('solve') || msg.includes('math') || msg.includes('compute') || msg.includes('what is') || msg.includes('how much is') || msg.includes('equals') || msg.includes('=') || msg.includes('sqrt') || msg.includes('square root') || msg.includes('percent') || msg.includes('%') || msg.includes('bmi') || msg.includes('convert')) {
+                    const expr = message.replace(/^(calculate|solve|what is|how much is|compute|find|eval|=|\?)/g, '').trim();
+                    if (expr) {
+                        try {
+                            if (typeof math !== 'undefined' && math.evaluate) {
+                                const result = math.evaluate(expr);
+                                if (typeof result === 'number' && !isNaN(result) && isFinite(result)) {
+                                    return '🧮 ' + expr + ' = ' + result;
+                                }
+                            } else {
+                                const sanitized = expr.replace(/[^0-9+\-*/().^% ]/g, '').trim();
+                                if (sanitized) {
+                                    const jsExpr = sanitized.replace(/\^/g, '**');
+                                    const result = Function('"use strict"; return (' + jsExpr + ')')();
+                                    if (typeof result === 'number' && !isNaN(result) && isFinite(result)) {
+                                        return '🧮 ' + expr + ' = ' + result;
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Calc error:', e);
+                        }
+                    }
+                    return "I can calculate! Try simpler expressions like `25 * 4` or `15% of 200`.";
+                }
+                
+                if (msg.includes('marvel') || msg.includes('mcu') || msg.includes('avengers') || msg.includes('spider-man') || msg.includes('iron man') || msg.includes('thor') || msg.includes('captain america') || msg.includes('black panther') || msg.includes('doctor strange') || msg.includes('guardians') || msg.includes('x-men') || msg.includes('fantastic four') || msg.includes('infinity stones') || msg.includes('thanos') || msg.includes('loki') || msg.includes('wolverine') || msg.includes('deadpool') || msg.includes('multiverse') || msg.includes('superhero') || msg.includes('comic') || msg.includes('comics')) {
+                    const query = message.replace(/[?!!]/g, '').trim() || 'Spider-Man';
+                    return await getMarvelInfo(query);
+                }
+                
+                if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('good morning') || msg.includes('good afternoon') || msg.includes('good evening') || msg.includes('namaste') || msg.includes('howdy')) {
+                    return "Hello! I'm Abyss, Alish's AI assistant. How can I help you today? Feel free to ask about his work, skills, or anything else!";
+                }
+                
+                if (msg.includes('thank') || msg.includes('thanks') || msg.includes('appreciate')) {
+                    return "You're welcome! Is there anything else I can help you with?";
+                }
+                
+                if (msg.includes('bye') || msg.includes('goodbye') || msg.includes('see you') || msg.includes('later') || msg.includes('take care')) {
+                    return "Goodbye! Have a great day. Come back anytime you want to chat!";
+                }
+                
+                if (msg.includes('clear') || msg.includes('clear chat') || msg.includes('reset') || msg.includes('clean') || msg.includes('delete messages') || msg.includes('start over') || msg.includes('new conversation')) {
+                    return "__CLEAR_CHAT__";
+                }
+                
+                if (msg.includes('help') || msg.includes('what can you do') || msg.includes('features') || msg.includes('assist')) {
+                    return "I can help you with: \n- Info about Alish (age, location, education, skills, projects)\n- Calculations (math, BMI, unit conversions)\n- Weather updates\n- Marvel character info\n- Current time and date\n- Contact info\n\nJust ask me anything!";
+                }
+                
+                return null;
+            }
+
+            if (send && input) {
+                send.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    const msg = input.value.trim();
+                    if (!msg) return;
+                    
+                    input.value = '';
+                    appendUserMessage(msg);
+                    playUserSound();
+                    showTypingIndicator();
+                    playTypingSound();
+
+                    const event = new CustomEvent('chatbot-message', {
+                        detail: { message: msg, history: [], sessionId: 'inline-' + Date.now() },
+                        bubbles: true,
+                    });
+                    document.dispatchEvent(event);
+
+                    setTimeout(async () => {
+                        if (document.getElementById('typing-indicator')) {
+                            removeTypingIndicator();
+                            const localReply = await processMessageLocally(msg);
+                            if (localReply) {
+                                if (localReply === '__CLEAR_CHAT__') {
+                                    const container = getMessagesContainer();
+                                    if (container) {
+                                        container.innerHTML = '';
+                                        const welcome = document.createElement('div');
+                                        welcome.className = 'message bot-message';
+                                        welcome.innerHTML = '<div class="message-avatar bot"><img src="a.png" class="avatar-image" alt="Abyss"></div><div class="message-content"><p>Chat cleared! How can I help you today?</p><div class="message-time">' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                                        container.appendChild(welcome);
+                                        addQuickActions();
+                                    }
+                                } else {
+                                    appendBotMessage(localReply);
+                                    playBotSound();
+                                }
+                            } else {
+                                appendBotMessage("I'm not sure how to answer that. Try asking about Alish, his skills, projects, or contact info!");
+                                playBotSound();
+                            }
+                        }
+                    }, 15000);
+                });
+            }
+
+            if (input) {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (send) send.click();
+                    }
+                });
+            }
+
+            if (fullscreen && chatbot) {
+                fullscreen.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    chatbot.classList.toggle('fullscreen');
+                });
+            }
+
+            if (clear) {
+                clear.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const container = getMessagesContainer();
+                    if (container) {
+                        container.innerHTML = '';
+                        const welcome = document.createElement('div');
+                        welcome.className = 'message bot-message';
+                        welcome.innerHTML = '<div class="message-avatar bot"><img src="a.png" class="avatar-image" alt="Abyss"></div><div class="message-content"><p>Chat cleared! How can I help you today?</p><div class="message-time">' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                        container.appendChild(welcome);
+                        addQuickActions();
+                    }
+                });
+            }
+
+            if (retry && input) {
+                retry.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    input.value = '';
+                    input.focus();
+                });
+            }
+        })();
+    </script>
 
     <!-- Music Player -->
     <script src="static/js/music-player.js"></script>

@@ -1,9 +1,0 @@
-@echo off
-echo 🤖 Starting Alish's AI Chatbot...
-echo.
-echo 🦙 Checking Ollama status...
-echo Make sure Ollama is running: ollama run llama3.2
-echo.
-echo 🚀 Starting chatbot server...
-node chatbot-server.js
-pause

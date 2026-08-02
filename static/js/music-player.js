@@ -549,6 +549,10 @@ class MusicPlayer {
 
 // Initialize player when DOM is ready
 let musicPlayer;
-document.addEventListener('DOMContentLoaded', function () {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+        musicPlayer = new MusicPlayer();
+    });
+} else {
     musicPlayer = new MusicPlayer();
-});
+}
