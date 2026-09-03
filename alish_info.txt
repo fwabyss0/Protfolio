@@ -1,0 +1,80 @@
+====================================================
+                    ALISH SHRESTHA
+====================================================
+
+AGE:         19
+LOCATION:    Changu Narayan-01, Bhaktapur, Nepal
+NATIONALITY: Nepali 🇳🇵
+
+────────────────────────────────────────────────────
+                    BIO
+────────────────────────────────────────────────────
+
+Passionate about artificial intelligence and web
+development. Building innovative solutions from the
+beautiful mountains of Nepal. Currently studying
+Artificial Intelligence at Softwarica College
+(Coventry University).
+
+Currently working as Manager at Print Village —
+handling operations, client relations, and print
+production.
+
+────────────────────────────────────────────────────
+                    EDUCATION
+────────────────────────────────────────────────────
+
+• Secondary Education — Khwopa Secondary School
+  (2023 – 2025), Bhaktapur, Nepal
+  Computer Science specialization
+
+• Higher Education — Softwarica College
+  (Coventry University), Kathmandu, Nepal
+  Pursuing Bachelor's in Artificial Intelligence
+
+────────────────────────────────────────────────────
+                    SKILLS
+────────────────────────────────────────────────────
+
+Programming:    Python, JavaScript, HTML, CSS
+AI & ML:        TensorFlow, Neural Networks, Data Science,
+                Deep Learning
+Tools:          VS Code, GitHub, Git, DevTools
+Creative:       Video Editing, UI/UX Design, Photography,
+                Communication
+
+────────────────────────────────────────────────────
+                   PROJECTS
+────────────────────────────────────────────────────
+
+1. Yatra Travel Agency
+   https://github.com/fwabyss0/Yatra.git
+   https://yatrala.netlify.app
+
+2. Printing Resolution
+   https://github.com/fwabyss0/pr
+   https://printresolution.netlify.app/
+
+3. Abyss AI Chatbot
+   https://github.com/fwabyss0/Protfolio.git
+
+────────────────────────────────────────────────────
+                 SOCIAL MEDIA
+────────────────────────────────────────────────────
+
+GitHub:    https://github.com/fwabyss0
+LinkedIn:  https://www.linkedin.com/in/alish-shrestha-4276b8379/
+Instagram: https://www.instagram.com/aliisshhhhhh/
+Facebook:  https://www.facebook.com/alish.shrestha.138982
+Discord:   fwabyss
+
+────────────────────────────────────────────────────
+                    CONTACT
+────────────────────────────────────────────────────
+
+Email:     shresthaalish444@gmail.com
+Location:  Changu Narayan-01, Bhaktapur, Nepal
+
+====================================================
+       © 2024 Alish Shrestha. All rights reserved.
+====================================================

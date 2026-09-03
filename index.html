@@ -14,7 +14,6 @@
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
-    <link rel="stylesheet" href="static/css/music-player.css">
     <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 </head>
 
@@ -84,6 +83,53 @@
         <div class="hero-orb hero-orb-2"></div>
         <div class="hero-orb hero-orb-3"></div>
 
+        <!-- Cinematic crow video -->
+        <div class="hero-crow-video">
+            <video autoplay loop muted playsinline>
+                <source src="crow-trimmed.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- Cinematic crow elements -->
+        <div class="hero-crow crow-1"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-2"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-3"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-4"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-5"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-6"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-7"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+        <div class="hero-crow crow-8"><svg class="crow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C8 2 5 5 4 8c-2 1-3 3-2 5 1 2 3 3 5 3h1l-1 3h2l1-3h4l1 3h2l-1-3h1c2 0 4-1 5-3 1-2 0-4-2-5-1-3-4-6-8-6z" />
+            </svg></div>
+
+        <!-- Atmospheric overlays -->
+        <div class="hero-atmosphere">
+            <div class="hero-vignette"></div>
+            <div class="hero-fog"></div>
+        </div>
+
         <div class="hero-wrap">
             <div class="hero-left">
                 <div class="hero-badge">Hi there! 👋 Welcome to my portfolio</div>
@@ -110,80 +156,6 @@
                     </a>
                 </div>
 
-                <!-- Premium Horizontal Music Player -->
-                <div id="music-player" class="music-player">
-                    <div class="music-player-glow"></div>
-                    <div class="music-player-inner">
-                        <!-- Left: Circular Album Art -->
-                        <div class="music-artwork-wrapper">
-                            <div class="music-artwork-ring"></div>
-                            <img src="static/images/album-cover.jpg" alt="Album Cover" class="music-artwork" id="music-artwork">
-                        </div>
-
-                        <!-- Center: Track Info + Equalizer + Lyrics -->
-                        <div class="music-center">
-                            <div class="music-info">
-                                <div class="music-title" id="music-title">Yellow</div>
-                                <div class="music-artist" id="music-artist">Coldplay</div>
-                            </div>
-                            <div class="music-equalizer" id="music-equalizer">
-                                <span class="eq-bar"></span>
-                                <span class="eq-bar"></span>
-                                <span class="eq-bar"></span>
-                                <span class="eq-bar"></span>
-                                <span class="eq-bar"></span>
-                            </div>
-                            <div class="music-lyrics" id="music-lyrics">
-                                <div class="music-lyrics-scroll" id="music-lyrics-scroll"></div>
-                                <div class="music-lyrics-fallback" id="music-lyrics-fallback" style="display:none;">No synchronized lyrics available.</div>
-                            </div>
-                        </div>
-
-                        <!-- Right: Controls + Progress -->
-                        <div class="music-right">
-                            <div class="music-controls">
-                                <button class="music-btn" id="music-loop" title="Loop">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
-                                </button>
-                                <button class="music-btn" id="music-prev" title="Previous">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                                </button>
-                                <button class="music-btn music-btn-play" id="music-play" title="Play">
-                                    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                                    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                                </button>
-                                <button class="music-btn" id="music-next" title="Next">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                                </button>
-                                <div class="music-volume-wrapper">
-                                    <button class="music-btn" id="music-mute" title="Mute">
-                                        <svg class="icon-volume" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                                        <svg class="icon-muted" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
-                                    </button>
-                                    <div class="music-volume-slider-wrapper">
-                                        <input type="range" class="music-volume-slider" id="music-volume" min="0" max="1" step="0.01" value="1">
-                                    </div>
-                                </div>
-                                <button class="music-btn" id="music-more" title="More">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                                </button>
-                            </div>
-                            <div class="music-progress-section">
-                                <div class="music-progress-bar-wrapper" id="music-progress-wrapper">
-                                    <div class="music-progress-fill" id="music-progress-fill"></div>
-                                    <div class="music-progress-handle" id="music-progress-handle"></div>
-                                </div>
-                                <div class="music-time">
-                                    <span id="music-current">00:00</span>
-                                    <span id="music-duration">00:00</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <audio id="music-audio" preload="metadata" src="static/music/song.mp3"></audio>
-                    </div>
-                </div>
-
                 <div class="avail-row">
                     <span class="avail-dot"></span>
                     <span>Currently Available for opportunities</span>
@@ -192,21 +164,9 @@
 
             <div class="hero-right">
                 <div class="photo-frame" id="photo-frame-parallax">
-                    <!-- Decorative rings -->
-                    <div class="pr-ring pr-ring-2"></div>
-                    <div class="pr-ring pr-ring-3"></div>
-                    <div class="pr-ring pr-ring-4"></div>
-                    <div class="pr-ring pr-ring-5"></div>
-                    <!-- Glowing orbs -->
-                    <div class="pr-orb pr-orb-1"></div>
-                    <div class="pr-orb pr-orb-2"></div>
-                    <div class="pr-orb pr-orb-3"></div>
-                    <div class="pr-orb pr-orb-4"></div>
                     <!-- Photo -->
                     <div class="photo-card" id="photo-card">
-                        <div class="photo-border-glow"></div>
-                        <div class="photo-shine"></div>
-                        <img src="IMG_3012.png" alt="Alish Shrestha" id="profile-img" class="hero-photo">
+                        <img src="image.png" alt="Alish Shrestha" id="profile-img" class="hero-photo">
                     </div>
                     <div class="photo-sticker ps-top">🧠 AI Student</div>
                     <div class="photo-sticker ps-bottom">📍 Nepal, 19</div>
@@ -565,50 +525,6 @@
                     </div>
                 </div>
 
-                <!-- Abyss AI Chatbot -->
-                <div class="project-card">
-                    <div class="pc-chrome">
-                        <div class="pc-dots">
-                            <span></span><span></span><span></span>
-                        </div>
-                        <div class="pc-url">🤖 Abyss AI Chatbot</div>
-                    </div>
-                    <div class="project-visual chatbot-container">
-                        <div class="chatbot-visual">
-                            <div class="chatbot-avatar">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="chatbot-bubble bubble-1">
-                                <span>Hi!</span>
-                            </div>
-                            <div class="chatbot-bubble bubble-2">
-                                <span>✨</span>
-                            </div>
-                            <div class="chatbot-bubble bubble-3">
-                                <span>...</span>
-                            </div>
-                            <div class="chatbot-glow"></div>
-                        </div>
-                    </div>
-                    <div class="pc-body">
-                        <h3>Abyss AI Chatbot</h3>
-                        <p>An intelligent modular AI assistant built for Marvel Comics discussions and normal chats. Features real-time weather, math evaluation, Wikipedia lookup, GitHub stats, web search, and persistent memory — all powered by free services.</p>
-                        <div class="pc-tags">
-                            <span class="pt pt-purple">Python</span>
-                            <span class="pt pt-teal">AI/ML</span>
-                            <span class="pt pt-yellow">JavaScript</span>
-                            <span class="pt pt-green">APIs</span>
-                        </div>
-                        <div class="pc-links">
-                            <a href="https://github.com/fwabyss0/Protfolio.git" target="_blank" class="pl-btn">
-                                <i class="fab fa-github"></i> Code
-                            </a>
-                            <a href="javascript:void(0)" class="pl-btn pl-accent" onclick="document.getElementById('chatbot-toggle').click(); return false;">
-                                <i class="fas fa-comments"></i> Demo
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -715,13 +631,22 @@
             </div>
             <div class="chatbot-controls">
                 <button id="chatbot-fullscreen" class="chatbot-control-btn" title="Fullscreen">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                    </svg>
                 </button>
                 <button id="chatbot-clear" class="chatbot-control-btn" title="Clear chat">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
                 </button>
                 <button id="chatbot-retry" class="chatbot-control-btn" title="Retry">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10" />
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
                 </button>
                 <button id="chatbot-close" class="chatbot-close">&times;</button>
             </div>
@@ -730,7 +655,8 @@
         <div class="chatbot-input">
             <input type="text" id="chatbot-input-field" placeholder="Ask me something..." autocomplete="off">
             <button id="chatbot-send" class="chatbot-send-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
@@ -740,7 +666,8 @@
 
     <!-- Chatbot Toggle -->
     <button id="chatbot-toggle" class="chatbot-toggle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </button>
@@ -749,7 +676,7 @@
     <script type="module" src="static/js/chatbot/main.js"></script>
     <script type="module" src="app.js"></script>
     <script>
-        (function() {
+        (function () {
             const chatbot = document.getElementById('chatbot');
             const toggle = document.getElementById('chatbot-toggle');
             const close = document.getElementById('chatbot-close');
@@ -761,7 +688,7 @@
 
             if (toggle && chatbot) {
                 let hasShownWelcome = false;
-                toggle.addEventListener('click', function(e) {
+                toggle.addEventListener('click', function (e) {
                     e.preventDefault();
                     chatbot.classList.toggle('active');
                     if (chatbot.classList.contains('active') && !hasShownWelcome) {
@@ -780,7 +707,7 @@
             }
 
             if (close && chatbot) {
-                close.addEventListener('click', function(e) {
+                close.addEventListener('click', function (e) {
                     e.preventDefault();
                     chatbot.classList.remove('active');
                 });
@@ -919,7 +846,7 @@
                     const geoResp = await fetch(geoUrl);
                     const geoData = await geoResp.json();
                     if (!geoData.length) return 'Weather in ' + city + ': City not found.';
-                    
+
                     const lat = geoData[0].lat;
                     const lon = geoData[0].lon;
                     const name = geoData[0].name;
@@ -927,7 +854,7 @@
                     const weatherUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey + '&units=metric';
                     const weatherResp = await fetch(weatherUrl);
                     const weatherData = await weatherResp.json();
-                    
+
                     const temp = weatherData.main.temp;
                     const feels = weatherData.main.feels_like;
                     const desc = weatherData.weather[0].description;
@@ -936,14 +863,14 @@
                     const pressure = weatherData.main.pressure;
                     const sunrise = new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     const sunset = new Date(weatherData.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    
+
                     return name + ', ' + country + ':\n🌡️ Temp: ' + temp + '°C (Feels like ' + feels + '°C)\n☁️ ' + desc.charAt(0).toUpperCase() + desc.slice(1) + '\n💧 Humidity: ' + humidity + '%\n🌬️ Wind: ' + wind + ' m/s\n👁️ Pressure: ' + pressure + ' hPa\n☀️ Sunrise: ' + sunrise + ' | Sunset: ' + sunset;
                 } catch (e) {
                     console.error('Weather error:', e);
                     return 'Weather in ' + city + ': Unable to fetch weather data right now.';
                 }
             }
-            
+
             async function getMarvelInfo(query) {
                 try {
                     const ts = Date.now().toString();
@@ -951,7 +878,7 @@
                     const priv = 'ilrQVrcDBSpMzPih9kCkHbB9CTTMctGFQesZ2eR7WH4ShyVzqbYJoSkIoWLNQSrB1gRbWTW2UBAw57KzO9Iz3MpzdVk5G7Xa8WYWSkSFtr7HK7gLUqLyKmMbY6f1tvcU';
                     const hash = md5(ts + priv + pub);
                     const url = 'https://gateway.marvel.com/v1/public/characters?nameStartsWith=' + encodeURIComponent(query) + '&limit=1&ts=' + ts + '&apikey=' + pub + '&hash=' + hash;
-                    
+
                     const resp = await fetch(url);
                     if (!resp.ok) {
                         console.warn('Marvel API error:', resp.status);
@@ -964,20 +891,20 @@
                     }
                     const chars = data.data?.results || [];
                     if (!chars.length) return marvelFallback(query);
-                    
+
                     const c = chars[0];
                     const name = c.name || 'Unknown';
                     const desc = (c.description || 'No description available.').trim();
                     const shortDesc = desc.length > 200 ? desc.substring(0, 197) + '...' : desc;
                     const comics = c.comics?.available || 0;
-                    
+
                     return '🦸 ' + name + ': ' + shortDesc + ' (Comics: ' + comics + ')';
                 } catch (e) {
                     console.error('Marvel error:', e);
                     return marvelFallback(query);
                 }
             }
-            
+
             function marvelFallback(query) {
                 const q = query.toLowerCase().trim();
                 const fallbacks = {
@@ -1016,7 +943,7 @@
                 }
                 return '🦸 Marvel API is having issues. Try asking about specific characters like Spider-Man, Iron Man, or Thor!';
             }
-            
+
             function md5(string) {
                 function rotateLeft(lValue, iShiftBits) {
                     return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
@@ -1154,98 +1081,98 @@
                 let tempValue = wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
                 return tempValue.toLowerCase();
             }
-            
+
             async function processMessageLocally(message) {
                 const msg = message.toLowerCase().trim();
-                
+
                 if (msg.includes('who are you') || msg.includes('about you') || msg.includes('tell me about you') || msg.includes('what are you') || msg.includes('abyss')) {
                     return "I'm Abyss, Alish's AI assistant. I can help you learn about Alish, do calculations, check weather, look up Marvel characters, and more!";
                 }
-                
+
                 if (msg.includes('who is alish') || msg.includes('who alish') || msg.includes('about alish') || msg.includes('introduce alish') || msg.includes('alish shrestha') || msg.includes('tell me about alish') || (msg.includes('who') && msg.includes('alish'))) {
                     return "Alish Shrestha is a 19-year-old student from Changu Narayan-01, Bhaktapur, Nepal. He's studying Computer Science & AI at Softwarica College of IT & E-Commerce, affiliated with Coventry University, UK. He's passionate about AI, web development, and creative design.";
                 }
-                
+
                 if (msg.includes('age') || msg.includes('old') || msg.includes('years') || msg.includes('birthday') || msg.includes('born') || msg.includes('birth') || (msg.includes('when') && msg.includes('old'))) {
                     return "Alish is 19 years old.";
                 }
-                
+
                 if (msg.includes('location') || msg.includes('where') || msg.includes('from') || msg.includes('live') || msg.includes('based') || msg.includes('address') || msg.includes('place') || msg.includes('nepal') || msg.includes('bhaktapur')) {
                     return "Alish is from Changu Narayan-01, Bhaktapur, Nepal.";
                 }
-                
+
                 if (msg.includes('college') || msg.includes('university') || msg.includes('education') || msg.includes('study') || msg.includes('studying') || msg.includes('pursuing') || msg.includes('softwarica') || msg.includes('coventry') || msg.includes('higher secondary') || msg.includes('12th grade') || msg.includes('+2') || msg.includes('intermediate')) {
                     return "Alish is studying Computer Science & AI at Softwarica College of IT & E-Commerce, affiliated with Coventry University, UK.";
                 }
-                
+
                 if (msg.includes('secondary') || msg.includes('secondary school') || msg.includes('secondary education') || msg.includes('khwopa') || msg.includes('high school')) {
                     return "Alish completed his secondary education at Khwopa Secondary School in Dekocha-06, Bhaktapur (2023-2025).";
                 }
-                
+
                 if (msg.includes('primary') || msg.includes('primary school') || msg.includes('elementary') || msg.includes('elementary school') || msg.includes('primary education') || msg.includes('childhood school') || msg.includes('north east')) {
                     return "Alish completed his primary education at North East English Secondary School in Bhaktapur.";
                 }
-                
+
                 if (msg.includes('skill') || msg.includes('abilities') || msg.includes('can do') || msg.includes('technologies') || msg.includes('what skills') || msg.includes('good at')) {
                     return "Alish's skills include: Python, JavaScript, HTML/CSS, TensorFlow, AI/ML, UI/UX, photography, and video editing. He uses tools like VS Code, GitHub, Git, and Terminal.";
                 }
-                
+
                 if (msg.includes('programming') || msg.includes('coding') || msg.includes('development') || msg.includes('software development') || msg.includes('web development') || msg.includes('app development') || msg.includes('languages') || msg.includes('python') || msg.includes('javascript') || msg.includes('html') || msg.includes('css')) {
                     return "Alish is proficient in Python, JavaScript, HTML/CSS, and AI/ML frameworks like TensorFlow. He builds web applications and creative digital experiences.";
                 }
-                
+
                 if (msg.includes('creative') || msg.includes('design') || msg.includes('photography') || msg.includes('video editing') || msg.includes('ui/ux') || msg.includes('graphic design') || msg.includes('creative skills')) {
                     return "Alish has creative skills in UI/UX design, photography, and video editing. He combines technical expertise with artistic vision.";
                 }
-                
+
                 if (msg.includes('tools') || msg.includes('platforms') || msg.includes('software') || msg.includes('vs code') || msg.includes('vscode') || msg.includes('terminal') || msg.includes('command line') || msg.includes('github') || msg.includes('git') || msg.includes('tensorflow')) {
                     return "Alish uses tools like VS Code, GitHub, Git, Terminal, and TensorFlow for development and AI projects.";
                 }
-                
+
                 if (msg.includes('experience') || msg.includes('work') || msg.includes('projects') || msg.includes('portfolio') || msg.includes('built') || msg.includes('created') || msg.includes('developed') || msg.includes('made')) {
                     return "Alish has built projects like Yatra (travel website) and Printing Resolution (printing services site). He's focused on AI-powered applications and creative web experiences.";
                 }
-                
+
                 if (msg.includes('contact') || msg.includes('email') || msg.includes('reach') || msg.includes('gmail') || msg.includes('mail') || msg.includes('contact email') || msg.includes('reach out')) {
                     return 'You can reach Alish at <a href="mailto:shresthaalish444@gmail.com" style="color: #FFE141; text-decoration: underline;">shresthaalish444@gmail.com</a>.';
                 }
-                
+
                 if (msg.includes('linkedin')) {
                     return "Connect with Alish on LinkedIn: https://www.linkedin.com/in/alish-shrestha-4276b8379/";
                 }
-                
+
                 if (msg.includes('facebook') || msg.includes('fb') || msg.includes('social') || msg.includes('friends')) {
                     return "Feel free to connect with Alish on social media!";
                 }
-                
+
                 if (msg.includes('discord') || msg.includes('gaming') || msg.includes('chat') || msg.includes('fwabyss') || msg.includes('friend request')) {
                     return "Add Alish on Discord: fwabyss";
                 }
-                
+
                 if (msg.includes('github') || msg.includes('git') || msg.includes('code') || msg.includes('repositories') || msg.includes('coding')) {
                     return "Check out Alish's code on GitHub: https://github.com/fwabyss0";
                 }
-                
+
                 if (msg.includes('resume') || msg.includes('cv') || msg.includes('curriculum vitae') || msg.includes('download cv') || msg.includes('get cv') || msg.includes('curriculum') || msg.includes('vitae')) {
                     return "You can download Alish's CV from the portfolio page. It contains all his skills, education, and experience.";
                 }
-                
+
                 if (msg.includes('hobby') || msg.includes('hobbies') || msg.includes('interest') || msg.includes('interests') || msg.includes('free time') || msg.includes('passionate')) {
                     return "Alish is passionate about AI, web development, photography, video editing, and creative design.";
                 }
-                
+
                 if (msg.includes('weather')) {
                     const cityMatch = message.match(/(?:weather|temperature|forecast|climate|how hot|how cold|is it raining|temp in|rain in)\s+(?:in|at|for)?\s*([a-zA-Z\s,]+?)(?:\?|$|\s*please)/i);
                     const city = cityMatch ? cityMatch[1].trim() : 'Bhaktapur';
                     return await getWeather(city);
                 }
-                
+
                 if (msg.includes('time') || msg.includes('clock') || msg.includes('date') || msg.includes('today') || msg.includes('day') || msg.includes('what time') || msg.includes('current time') || msg.includes('timezone')) {
                     const now = new Date();
                     const tz = now.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop() || 'Local';
                     return 'Current time: ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) + ' | ' + now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' (' + tz + ')';
                 }
-                
+
                 if (msg.includes('calculate') || msg.includes('solve') || msg.includes('math') || msg.includes('compute') || msg.includes('what is') || msg.includes('how much is') || msg.includes('equals') || msg.includes('=') || msg.includes('sqrt') || msg.includes('square root') || msg.includes('percent') || msg.includes('%') || msg.includes('bmi') || msg.includes('convert')) {
                     const expr = message.replace(/^(calculate|solve|what is|how much is|compute|find|eval|=|\?)/g, '').trim();
                     if (expr) {
@@ -1271,41 +1198,41 @@
                     }
                     return "I can calculate! Try simpler expressions like `25 * 4` or `15% of 200`.";
                 }
-                
+
                 if (msg.includes('marvel') || msg.includes('mcu') || msg.includes('avengers') || msg.includes('spider-man') || msg.includes('iron man') || msg.includes('thor') || msg.includes('captain america') || msg.includes('black panther') || msg.includes('doctor strange') || msg.includes('guardians') || msg.includes('x-men') || msg.includes('fantastic four') || msg.includes('infinity stones') || msg.includes('thanos') || msg.includes('loki') || msg.includes('wolverine') || msg.includes('deadpool') || msg.includes('multiverse') || msg.includes('superhero') || msg.includes('comic') || msg.includes('comics')) {
                     const query = message.replace(/[?!!]/g, '').trim() || 'Spider-Man';
                     return await getMarvelInfo(query);
                 }
-                
+
                 if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('good morning') || msg.includes('good afternoon') || msg.includes('good evening') || msg.includes('namaste') || msg.includes('howdy')) {
                     return "Hello! I'm Abyss, Alish's AI assistant. How can I help you today? Feel free to ask about his work, skills, or anything else!";
                 }
-                
+
                 if (msg.includes('thank') || msg.includes('thanks') || msg.includes('appreciate')) {
                     return "You're welcome! Is there anything else I can help you with?";
                 }
-                
+
                 if (msg.includes('bye') || msg.includes('goodbye') || msg.includes('see you') || msg.includes('later') || msg.includes('take care')) {
                     return "Goodbye! Have a great day. Come back anytime you want to chat!";
                 }
-                
+
                 if (msg.includes('clear') || msg.includes('clear chat') || msg.includes('reset') || msg.includes('clean') || msg.includes('delete messages') || msg.includes('start over') || msg.includes('new conversation')) {
                     return "__CLEAR_CHAT__";
                 }
-                
+
                 if (msg.includes('help') || msg.includes('what can you do') || msg.includes('features') || msg.includes('assist')) {
                     return "I can help you with: \n- Info about Alish (age, location, education, skills, projects)\n- Calculations (math, BMI, unit conversions)\n- Weather updates\n- Marvel character info\n- Current time and date\n- Contact info\n\nJust ask me anything!";
                 }
-                
+
                 return null;
             }
 
             if (send && input) {
-                send.addEventListener('click', async function(e) {
+                send.addEventListener('click', async function (e) {
                     e.preventDefault();
                     const msg = input.value.trim();
                     if (!msg) return;
-                    
+
                     input.value = '';
                     appendUserMessage(msg);
                     playUserSound();
@@ -1347,7 +1274,7 @@
             }
 
             if (input) {
-                input.addEventListener('keydown', function(e) {
+                input.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         if (send) send.click();
@@ -1356,14 +1283,14 @@
             }
 
             if (fullscreen && chatbot) {
-                fullscreen.addEventListener('click', function(e) {
+                fullscreen.addEventListener('click', function (e) {
                     e.preventDefault();
                     chatbot.classList.toggle('fullscreen');
                 });
             }
 
             if (clear) {
-                clear.addEventListener('click', function(e) {
+                clear.addEventListener('click', function (e) {
                     e.preventDefault();
                     const container = getMessagesContainer();
                     if (container) {
@@ -1378,7 +1305,7 @@
             }
 
             if (retry && input) {
-                retry.addEventListener('click', function(e) {
+                retry.addEventListener('click', function (e) {
                     e.preventDefault();
                     input.value = '';
                     input.focus();
@@ -1386,9 +1313,6 @@
             }
         })();
     </script>
-
-    <!-- Music Player -->
-    <script src="static/js/music-player.js"></script>
 
     <!-- ── Portfolio Enhancement Scripts ── -->
     <script>
