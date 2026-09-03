@@ -916,6 +916,111 @@ img {
     left: -18px;
 }
 
+/* ── Floating Eye ── */
+.floating-eye {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 1.2rem auto 0;
+    animation: eyeFloat 4s ease-in-out infinite;
+    cursor: none;
+    filter: drop-shadow(0 0 18px rgba(108, 92, 231, 0.55));
+    transition: transform 0.3s ease;
+}
+
+@keyframes eyeFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+}
+
+.eye-outer {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 38%, #fff 60%, #ddd6fe 100%);
+    border: 3px solid rgba(108, 92, 231, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2), inset 0 2px 6px rgba(0,0,0,0.12);
+    transition: transform 0.15s ease;
+}
+
+.floating-eye.blinking .eye-outer {
+    transform: scaleY(0.08);
+}
+
+.eye-iris {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #a29bfe, #6c5ce7 55%, #3d2fa3 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.08s linear;
+    box-shadow: 0 0 8px rgba(108, 92, 231, 0.6);
+}
+
+.eye-pupil {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #0a0a14;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 2px;
+}
+
+.eye-glint {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+}
+
+.eye-shine {
+    position: absolute;
+    top: 10px;
+    left: 13px;
+    width: 14px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transform: rotate(-30deg);
+    pointer-events: none;
+}
+
+/* Top lashes */
+.eye-lashes {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+}
+
+.eye-lashes span {
+    display: block;
+    width: 2px;
+    height: 8px;
+    background: rgba(108, 92, 231, 0.8);
+    border-radius: 2px;
+    transform-origin: bottom center;
+}
+.eye-lashes span:nth-child(1) { transform: rotate(-20deg); height: 6px; }
+.eye-lashes span:nth-child(2) { transform: rotate(-8deg);  height: 9px; }
+.eye-lashes span:nth-child(3) { transform: rotate(0deg);   height: 10px; }
+.eye-lashes span:nth-child(4) { transform: rotate(8deg);   height: 9px; }
+.eye-lashes span:nth-child(5) { transform: rotate(20deg);  height: 6px; }
+
+
+
 /* ── Welcome Popup ── */
 .welcome-popup {
     position: fixed;
