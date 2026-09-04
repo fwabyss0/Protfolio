@@ -1,7 +1,0 @@
-const CONFIG = {
-    MARVEL_PUBLIC_KEY: "c3Uc6oO0LGsMgK8Bat9p06uPfpdlLrLhNjU8sFom",
-    MARVEL_PRIVATE_KEY: "ilrQVrcDBSpMzPih9kCkHbB9CTTMctGFQesZ2eR7WH4ShyVzqbYJoSkIoWLNQSrB1gRbWTW2UBAw57KzO9Iz3MpzdVk5G7Xa8WYWSkSFtr7HK7gLUqLyKmMbY6f1tvcU",
-    WEATHER_API_KEY: "c4babc6f060dd6a90513fd541c6c8d42",
-    WEATHER_BASE_URL: "https://api.openweathermap.org/data/2.5",
-    TMDB_API_KEY: "8374984eee609823a3f80aee19ede44c",
-};

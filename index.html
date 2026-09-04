@@ -172,21 +172,6 @@
                     <div class="photo-sticker ps-top">🧠 AI Student</div>
                     <div class="photo-sticker ps-bottom">📍 Nepal, 19</div>
                 </div>
-
-                <!-- Cursor-tracking eye -->
-                <div class="floating-eye" id="floating-eye">
-                    <div class="eye-outer">
-                        <div class="eye-iris" id="eye-iris">
-                            <div class="eye-pupil">
-                                <div class="eye-glint"></div>
-                            </div>
-                        </div>
-                        <div class="eye-shine"></div>
-                    </div>
-                    <div class="eye-lashes">
-                        <span></span><span></span><span></span><span></span><span></span>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -289,10 +274,29 @@
                             <div>
                                 <strong>Location</strong>
                                 <span>Bhaktapur, Nepal</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
+
+                <!-- Enter The Abyss -->
+                <a href="/3d" class="project-card abyss-card">
+                    <div class="abyss-card-inner">
+                        <div class="abyss-icon">🦅</div>
+                        <h3>Enter The Abyss</h3>
+                        <p>Explore my portfolio in an immersive 3D dark fantasy world. Fly through the abyss and discover my work.</p>
+                        <span class="abyss-cta">Explore →</span>
+                    </div>
+                </div>
+
+                <!-- Enter The Abyss -->
+                <a href="/3d" class="project-card abyss-card">
+                    <div class="abyss-card-inner">
+                        <div class="abyss-icon">🦅</div>
+                        <h3>Enter The Abyss</h3>
+                        <p>Explore my portfolio in an immersive 3D dark fantasy world. Fly through the abyss and discover my work.</p>
+                        <span class="abyss-cta">Explore →</span>
+                    </div>
+                </a>
+
             </div>
         </div>
     </section>
@@ -540,6 +544,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Enter The Abyss -->
+                <a href="/3d" class="project-card abyss-card">
+                    <div class="abyss-card-inner">
+                        <div class="abyss-icon">🦅</div>
+                        <h3>Enter The Abyss</h3>
+                        <p>Explore my portfolio in an immersive 3D dark fantasy world. Fly through the abyss and discover my work.</p>
+                        <span class="abyss-cta">Explore →</span>
+                    </div>
+                </a>
 
             </div>
         </div>
@@ -960,36 +974,6 @@
             } else {
                 init();
             }
-        })();
-    </script>
-
-    <!-- Eye tracking script -->
-    <script>
-        (function () {
-            const eye = document.getElementById('floating-eye');
-            const iris = document.getElementById('eye-iris');
-            if (!eye || !iris) return;
-
-            document.addEventListener('mousemove', function (e) {
-                const rect = eye.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-                const dx = e.clientX - cx;
-                const dy = e.clientY - cy;
-                const angle = Math.atan2(dy, dx);
-                const dist = Math.min(Math.hypot(dx, dy), 10);
-                const ix = Math.cos(angle) * dist;
-                const iy = Math.sin(angle) * dist;
-                iris.style.transform = `translate(${ix}px, ${iy}px)`;
-            });
-
-            // Blink randomly
-            function blink() {
-                eye.classList.add('blinking');
-                setTimeout(() => eye.classList.remove('blinking'), 200);
-                setTimeout(blink, 2500 + Math.random() * 3000);
-            }
-            setTimeout(blink, 1500);
         })();
     </script>
 

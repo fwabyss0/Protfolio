@@ -433,15 +433,6 @@ function initializeSocialTracking() {
 
 // Keyboard navigation
 document.addEventListener('keydown', function (e) {
-    // ESC key closes chatbot
-    if (e.key === 'Escape') {
-        const chatbot = document.getElementById('chatbot');
-        if (chatbot && chatbot.classList.contains('active')) {
-            chatbot.classList.remove('active');
-        }
-    }
-
-    // Tab navigation improvements
     if (e.key === 'Tab') {
         document.body.classList.add('keyboard-nav');
     }
@@ -955,7 +946,7 @@ if ('serviceWorker' in navigator) {
    MAGNETIC BUTTON EFFECT
    ══════════════════════════════════════════════════════════════ */
 (function initMagneticButtons() {
-    const buttons = document.querySelectorAll('.btn, .chatbot-toggle, .nav-pill');
+    const buttons = document.querySelectorAll('.btn, .nav-pill');
 
     buttons.forEach(btn => {
         btn.addEventListener('mousemove', (e) => {
