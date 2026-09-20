@@ -3,70 +3,55 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alish Shrestha — Coming Soon</title>
-    <meta name="description" content="Something new is being built.">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+
+    <meta name="description" content="Alish Shrestha — Portfolio coming soon.">
+
+    <meta name="theme-color" content="#000000">
+
+    <title>Alish Shrestha | Coming Soon</title>
+
+    <link rel="stylesheet" href="style.css">\
+
 </head>
 
 <body>
-    <div class="cs-bg" aria-hidden="true"></div>
-    <div class="cs-glow" aria-hidden="true"></div>
-    <canvas class="cs-particles" id="cs-particles" aria-hidden="true"></canvas>
 
-    <main class="cs-content">
-        <div class="cs-eyebrow">ALISH SHRESTHA</div>
-        <h1 class="cs-heading">COMING SOON</h1>
-        <p class="cs-tagline">Something new is being built.</p>
+    <main class="page">
+
+        <!-- Animated background -->
+        <div class="stars" aria-hidden="true"></div>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <p class="name">
+                Alish Shrestha
+            </p>
+
+            <h2 class="title">
+                Coming Soon
+            </h2>
+
+            <p class="subtitle">
+                Something new is being built in the abyss.
+            </p>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>Under Construction</span>
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 Alish Shrestha
+        </footer>
+
     </main>
+    <script src="script.js"></script>
 
-    <script>
-        (function () {
-            var canvas = document.getElementById('cs-particles');
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
-            var ps = [];
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            function init() {
-                resize();
-                ps = [];
-                var n = Math.min(40, Math.floor(canvas.width * canvas.height / 25000));
-                for (var i = 0; i < n; i++) {
-                    ps.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        s: Math.random() * 1.5 + 0.3,
-                        vx: (Math.random() - 0.5) * 0.3,
-                        vy: (Math.random() - 0.5) * 0.3,
-                        o: Math.random() * 0.3 + 0.05
-                    });
-                }
-            }
-            function anim() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (var i = 0; i < ps.length; i++) {
-                    var p = ps[i];
-                    p.x += p.vx; p.y += p.vy;
-                    if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(155,77,202,' + p.o + ')';
-                    ctx.fill();
-                }
-                requestAnimationFrame(anim);
-            }
-            window.addEventListener('resize', init);
-            init(); anim();
-        })();
-    </script>
 </body>
 
 </html>
