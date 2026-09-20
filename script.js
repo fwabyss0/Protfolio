@@ -1,133 +1,99 @@
-(() => {
-    'use strict';
+// ===============================
+// ABYSS BACKGROUND
+// ===============================
 
-    const LAUNCH_DATE = new Date('2026-12-31T23:59:59').getTime();
-    const DAY_MS = 86400000;
-    const HOUR_MS = 3600000;
-    const MINUTE_MS = 60000;
-    const SECOND_MS = 1000;
+const page = document.querySelector(".page");
 
-    const elements = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds'),
-        form: document.getElementById('notifyForm'),
-        email: document.getElementById('email'),
-        btn: document.querySelector('.notify-btn'),
-        message: document.getElementById('formMessage')
-    };
+// Create particle container
+const abyss = document.createElement("div");
+abyss.className = "abyss-background";
+abyss.setAttribute("aria-hidden", "true");
 
-    function pad(n) {
-        return String(n).padStart(2, '0');
-    }
+page.prepend(abyss);
 
-    function updateCountdown() {
-        const now = Date.now();
-        const diff = LAUNCH_DATE - now;
+// --------------------------------
+// Floating abyss particles
+// --------------------------------
 
-        if (diff <= 0) {
-            elements.days.textContent = '00';
-            elements.hours.textContent = '00';
-            elements.minutes.textContent = '00';
-            elements.seconds.textContent = '00';
-            return;
-        }
+const particleCount = window.innerWidth < 600 ? 45 : 80;
 
-        const days = Math.floor(diff / DAY_MS);
-        const hours = Math.floor((diff % DAY_MS) / HOUR_MS);
-        const minutes = Math.floor((diff % HOUR_MS) / MINUTE_MS);
-        const seconds = Math.floor((diff % MINUTE_MS) / SECOND_MS);
+for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement("span");
 
-        elements.days.textContent = pad(days);
-        elements.hours.textContent = pad(hours);
-        elements.minutes.textContent = pad(minutes);
-        elements.seconds.textContent = pad(seconds);
-    }
+    particle.className = "abyss-particle";
 
-    function showMessage(text, type) {
-        elements.message.textContent = text;
-        elements.message.className = `form-message ${type}`;
-    }
+    const size = Math.random() * 3 + 1;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const duration = Math.random() * 15 + 10;
+    const delay = Math.random() * -20;
+    const drift = (Math.random() - 0.5) * 120;
 
-    function clearMessage() {
-        elements.message.textContent = '';
-        elements.message.className = 'form-message';
-    }
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${x}%`;
+    particle.style.top = `${y}%`;
 
-    function setLoading(loading) {
-        elements.btn.classList.toggle('loading', loading);
-        elements.btn.disabled = loading;
-        elements.email.disabled = loading;
-    }
+    particle.style.setProperty("--drift", `${drift}px`);
+    particle.style.animationDuration = `${duration}s`;
+    particle.style.animationDelay = `${delay}s`;
 
-    function validateEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+    abyss.appendChild(particle);
+}
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        clearMessage();
 
-        const email = elements.email.value.trim();
+// --------------------------------
+// Random glowing eyes
+// --------------------------------
 
-        if (!email) {
-            showMessage('Please enter your email address', 'error');
-            elements.email.focus();
-            return;
-        }
+const eyeCount = window.innerWidth < 600 ? 2 : 4;
 
-        if (!validateEmail(email)) {
-            showMessage('Please enter a valid email address', 'error');
-            elements.email.focus();
-            return;
-        }
+for (let i = 0; i < eyeCount; i++) {
+    const eyes = document.createElement("div");
 
-        setLoading(true);
+    eyes.className = "abyss-eyes";
 
-        try {
-            const res = await fetch('https://api.example.com/notify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            });
+    eyes.style.left = `${10 + Math.random() * 80}%`;
+    eyes.style.top = `${15 + Math.random() * 65}%`;
 
-            if (res.ok) {
-                showMessage('Thanks! You\'ll be the first to know.', 'success');
-                elements.form.reset();
-            } else {
-                throw new Error('Signup failed');
-            }
-        } catch {
-            showMessage('Thanks for your interest! We\'ll notify you at launch.', 'success');
-            elements.form.reset();
-        } finally {
-            setLoading(false);
-        }
-    }
+    eyes.style.animationDelay = `${Math.random() * 8}s`;
 
-    function init() {
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+    abyss.appendChild(eyes);
+}
 
-        elements.form.addEventListener('submit', handleSubmit);
 
-        elements.email.addEventListener('input', () => {
-            if (elements.message.classList.contains('error')) {
-                clearMessage();
-            }
-        });
+// --------------------------------
+// Mouse movement
+// --------------------------------
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                elements.email.blur();
-            }
-        });
-    }
+let mouseX = 0;
+let mouseY = 0;
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-})();
+window.addEventListener("mousemove", (event) => {
+    mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+
+    document.documentElement.style.setProperty(
+        "--mouse-x",
+        `${mouseX * 20}px`
+    );
+
+    document.documentElement.style.setProperty(
+        "--mouse-y",
+        `${mouseY * 20}px`
+    );
+});
+
+
+// --------------------------------
+// Occasional abyss pulse
+// --------------------------------
+
+setInterval(() => {
+    abyss.classList.add("abyss-pulse");
+
+    setTimeout(() => {
+        abyss.classList.remove("abyss-pulse");
+    }, 1200);
+
+}, 7000);
